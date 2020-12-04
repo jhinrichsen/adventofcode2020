@@ -1,0 +1,22 @@
+= Advent Of Code (AOC) 2020
+
+My take on the AOC, documenting my errors.
+This document does not include solutions.
+
+== Development setup
+- Go 1.15.5
+- vim, vim-go, gopls
+- VisualStudio Code for debugging
+
+The package name is aoc2020.
+Each day is separate in a `day{{.n}}.go` and `day{{.n}}_test.go` file.
+Unit test data, both examples and puzzle input, is in `testdata/day{{.n}}.txt`.
+
+== Day 1 
+Warmup, nice and smooth.
+
+== Day 2 
+Warmup, nice and smooth.
+
+== Day 3
+The example's unit test succeeded, but part 1 failed, 284 being too low.
