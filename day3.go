@@ -1,51 +1,42 @@
 package aoc2020
 
-import "fmt"
+type slopeFn = func(x, y uint) (uint, uint)
 
-const (
-	open = '.'
-	tree = '#'
-)
-
-// Day3 returns number of trees hit by a sled through the woods.
-func Day3(lines []string, part1 bool) (uint, error) {
-	area, err := parseDay3(lines)
-	if err != nil {
-		return 0, err
+// slope returns number of trees hit by a sled through the woods.
+func slope(lines []string, f slopeFn) uint {
+	x, y := uint(0), uint(0)
+	dimy := uint(len(lines))
+	onTree := func() bool {
+		return lines[y][x] == '#'
 	}
-	rightBorder := complex(float64(len(lines[0])), 0)
-	pos := 0 + 0i
-	hop := func() {
-		pos += 3 + 1i
-		// x world repeats forever
-		if real(pos) > real(rightBorder) {
-			pos -= rightBorder
-		}
-	}
-	bottomBorder := float64(len(lines))
 	trees := uint(0)
-	for imag(pos) < bottomBorder {
-		if area[pos] {
+	for y < dimy {
+		if onTree() {
 			trees++
 		}
-		hop()
+		x, y = f(x, y)
 	}
-	return trees, nil
+	return trees
 }
 
-func parseDay3(lines []string) (map[complex128]bool, error) {
-	trees := make(map[complex128]bool)
-	for y, line := range lines {
-		for x := range line {
-			if line[x] == open {
-				// NOP
-			} else if line[x] == tree {
-				trees[complex(float64(x), float64(y))] = true
-			} else {
-				return trees, fmt.Errorf("unknown type %q",
-					string(line[x]))
-			}
-		}
+// Day3 returns number of trees encountered for part1, otherwise product of
+// slopes (1,1), (3,1), (5,1), (7,1) and (1,2).
+func Day3(lines []string, part1 bool) uint {
+	border := uint(len(lines[0]))
+	if part1 {
+		return slope(lines, func(x, y uint) (uint, uint) {
+			return (x + 3) % border, y + 1
+		})
 	}
-	return trees, nil
+	return slope(lines, func(x, y uint) (uint, uint) {
+		return (x + 1) % border, y + 1
+	}) * slope(lines, func(x, y uint) (uint, uint) {
+		return (x + 3) % border, y + 1
+	}) * slope(lines, func(x, y uint) (uint, uint) {
+		return (x + 5) % border, y + 1
+	}) * slope(lines, func(x, y uint) (uint, uint) {
+		return (x + 7) % border, y + 1
+	}) * slope(lines, func(x, y uint) (uint, uint) {
+		return (x + 1) % border, y + 2
+	})
 }
