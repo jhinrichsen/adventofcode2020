@@ -20,3 +20,41 @@ Warmup, nice and smooth.
 
 == Day 3
 The example's unit test succeeded, but part 1 failed, 284 being too low.
+I refrained from implementing a too-complex implementation based on complex
+numbers (x/y), and operated directly on the indexable lines[][] area.
+Worked first time.
+
+== Day 4
+First try 234 again too low.
+Needed an extra blank line at the end of the file to make sure last pass was validated.
+
+For part 2, unit testing found an error before submitting the correct result.
+
+`Hair color` is defined as `a # followed by exactly six characters 0-9 or a-f`.
+So check for a leading '#', and then iterate the remaining slice:
+
+====
+----
+if s[0] != '#' {
+    return false
+}
+for i := range s[1:] {
+    if '0' <= s[i] && s[i] <= '9' { // WRONG
+        ...
+    }
+}
+----
+====
+
+`s[1:]` is the correct slice, `i` is `0` for the first iteration, indexing `s[i]` does _not_ index the slice but the original string, so it will point to `#`.
+
+====
+----
+num := s[1:]
+for i := range num {
+    if '0' <= num[i] && num[i] <= '9' { // CORRECT
+        ...
+    }
+}
+----
+====
