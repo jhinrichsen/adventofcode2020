@@ -1,16 +1,26 @@
 = Advent Of Code (AOC) 2020
 
 My take on the AOC, documenting my errors.
-This document does not include solutions.
 
-== Development setup
+Usually, i don't go for implementation speed, because that does not resonate well with me.
+My second highest priority is runtime performance, and priority number one is getting it right the first time.
+Therefore, i always provide complete coverage via unit tests.
+Go just makes this _so_ easy.
+
+This document does not include solutions so no worries to read it at any point in time.
+
+== Environment
 - Go 1.15.5
-- vim, vim-go, gopls
-- VisualStudio Code for debugging
+- vim, vim-go, gopls, fed by a HHKB
+- VisualStudio Code for debugging, fed by a MX Master 3
+- Fedora 33
+- AMD Ryzen 5 3400G on a Gigabyte B450
 
-The package name is aoc2020.
-Each day is separate in a `day{{.n}}.go` and `day{{.n}}_test.go` file.
-Unit test data, both examples and puzzle input, is in `testdata/day{{.n}}.txt`.
+The package name is `aoc2020`.
+
+Each day lives separately in a `day{{.n}}.go` and `day{{.n}}_test.go` file.
+Unit test data, both examples and puzzle input, is in
+`testdata/day{{.n}}.txt`, and `testdata/day{{.n}}_example.txt`.
 
 == Day 1 
 Warmup, nice and smooth.
@@ -58,3 +68,18 @@ for i := range num {
 }
 ----
 ====
+
+Benchmark for part 2:
+====
+----
+go test -benchmem -run=^$ -bench ^(BenchmarkDay4Part2|BenchmarkDay4Part2IncludingInput)$
+
+goos: linux
+goarch: amd64
+BenchmarkDay4Part2-8                 	    1064	   1220554 ns/op	  199106 B/op	    3504 allocs/op
+BenchmarkDay4Part2IncludingInput-8   	     757	   1547982 ns/op	  281552 B/op	    4327 allocs/op
+PASS
+----
+====
+
+A seven digit ns/op is a two digit ms/op, so 12 resp. 15 ms/op.

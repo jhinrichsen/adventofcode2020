@@ -24,3 +24,24 @@ func TestDay4Part1(t *testing.T) {
 func TestDay4Part2(t *testing.T) {
 	testDay4(t, filename(4), false, 194)
 }
+
+func BenchmarkDay4Part2(b *testing.B) {
+	lines, err := linesFromFilename(filename(4))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Day4(lines, false)
+	}
+}
+
+func BenchmarkDay4Part2IncludingInput(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		lines, err := linesFromFilename(filename(4))
+		if err != nil {
+			b.Fatal(err)
+		}
+		Day4(lines, false)
+	}
+}
