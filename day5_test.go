@@ -39,7 +39,6 @@ func TestDay5Samples(t *testing.T) {
 }
 
 func TestDay5Example(t *testing.T) {
-	const want = 13
 	testDay5(t, exampleFilename(5), true, 820)
 }
 
@@ -60,6 +59,5 @@ func BenchmarkDay5(b *testing.B) {
 }
 
 func TestDay5Part2(t *testing.T) {
-	const want = 669
-	testDay5(t, filename(5), false, 904)
+	testDay5(t, filename(5), false, 669)
 }
