@@ -47,6 +47,27 @@ func TestDay5(t *testing.T) {
 	testDay5(t, filename(5), true, 904)
 }
 
+func BenchmarkDay5Part1(b *testing.B) {
+	lines, err := linesFromFilename(filename(5))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Day5Part1(lines)
+	}
+}
+
+func BenchmarkDay5Part1IncludingInput(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		lines, err := linesFromFilename(filename(5))
+		if err != nil {
+			b.Fatal(err)
+		}
+		Day5Part1(lines)
+	}
+}
+
 func BenchmarkDay5(b *testing.B) {
 	lines, err := linesFromFilename(filename(5))
 	if err != nil {
@@ -54,6 +75,16 @@ func BenchmarkDay5(b *testing.B) {
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		Day5(lines, true)
+	}
+}
+
+func BenchmarkDay5IncludingInput(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		lines, err := linesFromFilename(filename(5))
+		if err != nil {
+			b.Fatal(err)
+		}
 		Day5(lines, true)
 	}
 }
