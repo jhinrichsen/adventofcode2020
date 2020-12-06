@@ -2,7 +2,7 @@ package aoc2020
 
 import "sort"
 
-// Day5 returns max seat ID for binary space partitioned seats.
+// Day5Part1 returns max seat ID for binary space partitioned seats.
 func Day5Part1(seats []string) uint {
 	max := uint(0)
 	for _, seat := range seats {
