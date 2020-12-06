@@ -43,7 +43,6 @@ func TestDay5Example(t *testing.T) {
 }
 
 func TestDay5(t *testing.T) {
-	const want = 904
 	testDay5(t, filename(5), true, 904)
 }
 
