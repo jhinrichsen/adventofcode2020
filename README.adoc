@@ -25,20 +25,27 @@ Unit test data, both examples and puzzle input, is in
 == Day 1 
 Warmup, nice and smooth.
 
+Blattschuss, Blattschuss (answer correct on first try).
+
 == Day 2 
 Warmup, nice and smooth.
+
+Blattschuss, Blattschuss.
 
 == Day 3
 The example's unit test succeeded, but part 1 failed, 284 being too low.
 I refrained from implementing a too-complex implementation based on complex
 numbers (x/y), and operated directly on the indexable lines[][] area.
-Worked first time.
+
+Fail, Blattschuss.
 
 == Day 4
 First try 234 again too low.
 Needed an extra blank line at the end of the file to make sure last pass was validated.
 
 For part 2, unit testing found an error before submitting the correct result.
+
+Fail, Blattschuss.
 
 `Hair color` is defined as `a # followed by exactly six characters 0-9 or a-f`.
 So check for a leading '#', and then iterate the remaining slice:
@@ -83,3 +90,15 @@ PASS
 ====
 
 A seven digit ns/op is a two digit ms/op, so 12 resp. 15 ms/op.
+
+== Day 5
+
+Blattschuss, Blattschuss.
+
+== Day 6
+
+Blattschuss, Blattschuss.
+
+== Day 7
+
+Blattschuss
