@@ -41,7 +41,8 @@ Fail, Blattschuss.
 
 == Day 4
 First try 234 again too low.
-Needed an extra blank line at the end of the file to make sure last pass was validated.
+Needed an extra blank line at the end of the file to make sure last pass was
+validated.
 
 For part 2, unit testing found an error before submitting the correct result.
 
@@ -63,8 +64,9 @@ for i := range s[1:] {
 ----
 ====
 
-`s[1:]` is the correct slice, `i` is `0` for the first iteration, indexing `s[i]` does _not_ index the slice but the original string, so it will point to `#`.
-
+`s[1:]` is the correct slice, `i` is `0` for the first iteration, indexing
+`s[i]` does _not_ index the slice but the original string, so it will point
+to `#`.
 ====
 ----
 num := s[1:]
@@ -102,3 +104,11 @@ Blattschuss, Blattschuss.
 == Day 7
 
 Blattschuss
+
+== Day 8
+
+Blattschuss.
+
+Part 2 ran like a champ, but the answer was not accepted, too low. After
+re-reading the instructions, the program must terminate at the last line, not
+somewhere.

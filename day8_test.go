@@ -9,7 +9,11 @@ func testDay8(t *testing.T, part1 bool, filename string, want int) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := Day8(lines, part1)
+	got, b := Day8(lines, part1)
+	// ignore ran-to-end for part1
+	if !part1 && !b {
+		t.Fatal("did not run to end, terminated abnormally")
+	}
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
@@ -24,6 +28,5 @@ func TestDay8Part1(t *testing.T) {
 }
 
 func TestDay8Part2(t *testing.T) {
-	t.Fatalf("2085 seems correct, program terminates, but is too low")
-	testDay8(t, false, filename(8), 2085)
+	testDay8(t, false, filename(8), 1000)
 }
