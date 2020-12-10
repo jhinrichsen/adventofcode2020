@@ -22,18 +22,38 @@ func testDay9(t *testing.T, filename string, part1 bool, preamble int, want int)
 	}
 }
 
-func TestDay9Example(t *testing.T) {
+func TestDay9ExamplePart1(t *testing.T) {
 	const (
+		part1    = true
 		preamble = 5
 		want     = 127
 	)
-	testDay9(t, exampleFilename(9), true, preamble, want)
+	testDay9(t, exampleFilename(9), part1, preamble, want)
 }
 
 func TestDay9Part1(t *testing.T) {
 	const (
+		part1    = true
 		preamble = 25
 		want     = 3199139634
 	)
-	testDay9(t, filename(9), true, preamble, want)
+	testDay9(t, filename(9), part1, preamble, want)
+}
+
+func TestDay9ExamplePart2(t *testing.T) {
+	const (
+		part1    = false
+		preamble = 5
+		want     = 62
+	)
+	testDay9(t, exampleFilename(9), part1, preamble, want)
+}
+
+func TestDay9Part2(t *testing.T) {
+	const (
+		part1    = false
+		preamble = 25
+		want     = 438559930
+	)
+	testDay9(t, filename(9), part1, preamble, want)
 }
