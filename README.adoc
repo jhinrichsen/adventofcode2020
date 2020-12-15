@@ -112,3 +112,13 @@ Blattschuss.
 Part 2 ran like a champ, but the answer was not accepted, too low. After
 re-reading the instructions, the program must terminate at the last line, not
 somewhere.
+
+== Day 9
+
+Blattschuss, Blattschuss.
+
+== Day 10
+
+Blattschuss, Blattschuss.
+
+I feel proud because i figured out the O(n) solution all by myself.
