@@ -31,3 +31,19 @@ func TestDay14Part1(t *testing.T) {
 	)
 	testDay14(t, filename(14), part1, want)
 }
+
+func TestDay14ExamplePart2(t *testing.T) {
+	const (
+		part1 = false
+		want  = 208
+	)
+	testDay14(t, "testdata/day14_example2.txt", part1, want)
+}
+
+func TestDay14Part2(t *testing.T) {
+	const (
+		part1 = false
+		want  = 4288986482164
+	)
+	testDay14(t, filename(14), part1, want)
+}
