@@ -156,3 +156,7 @@ BenchmarkDay13Part1-8                 	 4597266	       241 ns/op	       0 B/op	 
 BenchmarkDay13Part1IncludingInput-8   	  123601	      8659 ns/op	    1080 B/op	       6 allocs/op
 ----
 ====
+
+== Day 14
+
+Blattschuss.
