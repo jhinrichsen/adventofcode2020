@@ -6,10 +6,12 @@ const (
 	floor    = '.'
 )
 
+// Day11 holds a grid.
 type Day11 struct {
 	Grid [][]byte
 }
 
+// NewDay11 parses puzzle input into a Day11 struct.
 func NewDay11(lines []string) Day11 {
 	buf := make([][]byte, len(lines))
 	for y := 0; y < len(lines); y++ {
@@ -61,6 +63,7 @@ func (a *Day11) Adjacents(x, y int) (count uint) {
 	return
 }
 
+// Copy creates a clone of a Day11 structure, game of life operates on a framebuffer.
 func (a *Day11) Copy() Day11 {
 	cp := make([][]byte, len(a.Grid))
 	for i := 0; i < len(a.Grid); i++ {
@@ -70,6 +73,7 @@ func (a *Day11) Copy() Day11 {
 	return Day11{cp}
 }
 
+// Occupied returns number of occupied seats.
 func (a *Day11) Occupied() (n uint) {
 	for _, s := range a.Grid {
 		for _, c := range s {
@@ -81,6 +85,7 @@ func (a *Day11) Occupied() (n uint) {
 	return
 }
 
+// Redact returns a String representation of a Day 11 structure.
 func (a *Day11) Redact() []string {
 	var ss []string
 	for i := range a.Grid {
@@ -89,6 +94,7 @@ func (a *Day11) Redact() []string {
 	return ss
 }
 
+// Step processes one step in an atomic-like fashion.
 func (a *Day11) Step() bool {
 	var changed bool
 	fb := a.Copy()
