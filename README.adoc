@@ -3,14 +3,18 @@
 My take on the AOC, documenting my errors.
 
 Usually, i don't go for implementation speed, because that does not resonate well with me.
-My second highest priority is runtime performance, and priority number one is getting it right the first time.
+
+My second highest priority is runtime performance, and priority number one is
+getting it right the first time.
 Therefore, i always provide complete coverage via unit tests.
 Go just makes this _so_ easy.
 
 This document does not include solutions so no worries to read it at any point in time.
+Solutions are hardcoded into unit tests, so you won't see any solutions as
+long as you avoid looking at `*_test.go` files.
 
 == Environment
-- Go 1.15.5
+- Go 1.15.6
 - vim, vim-go, gopls, fed by a HHKB
 - VisualStudio Code for debugging, fed by a MX Master 3
 - Fedora 33
