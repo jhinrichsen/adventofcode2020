@@ -122,3 +122,22 @@ Blattschuss, Blattschuss.
 Blattschuss, Blattschuss.
 
 I feel proud because i figured out the O(n) solution all by myself.
+
+== Day 12
+
+Bad first guess for part #1. Upon debugging, i realized `turn` commands come
+with a number, so instead of `T` turning right, one needs to consider `T90`,
+`T180` and the like.
+The example contained a 'R90', but not multiple turns, so this one went
+unnoticed.
+Second try was correct.
+
+Implementation is based on complex numbers (again), and Go's native support shows in 0 allocations:
+
+====
+----
+BenchmarkDay12Part1-8   	  508400	      2472 ns/op	       0 B/op	       0 allocs/op
+----
+====
+
+2 to 3 μs for 774 commands, nice. Reading input not included.
