@@ -145,3 +145,14 @@ BenchmarkDay12Part1-8   	  508400	      2472 ns/op	       0 B/op	       0 allocs
 ====
 
 2 to 3 μs for 774 commands, nice. Reading input not included.
+
+== Day 13
+
+Blattschuss.
+
+====
+----
+BenchmarkDay13Part1-8                 	 4597266	       241 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay13Part1IncludingInput-8   	  123601	      8659 ns/op	    1080 B/op	       6 allocs/op
+----
+====
