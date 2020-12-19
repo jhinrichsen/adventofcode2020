@@ -160,3 +160,28 @@ BenchmarkDay13Part1IncludingInput-8   	  123601	      8659 ns/op	    1080 B/op	 
 == Day 14
 
 Blattschuss.
+
+== Day 15
+
+Blattschuss. Blattschuss.
+
+Started implementation using arrays and indices, but soon ran out of control with zero-based versus one-based and my beloved off-by-one.
+Restarted using a map, runs like a charm.
+
+No changes for part 2, benchmarks look ok:
+
+====
+----
+BenchmarkDay15Part2/[0_3_6]-8         	       1	7025673926 ns/op	1723750824 B/op	13671118 allocs/op
+BenchmarkDay15Part2/[1_3_2]-8         	       1	6637869463 ns/op	1725309776 B/op	13670596 allocs/op
+BenchmarkDay15Part2/[2_1_3]-8         	       1	7122904051 ns/op	1725006832 B/op	13670445 allocs/op
+BenchmarkDay15Part2/[1_2_3]-8         	       1	6876302588 ns/op	1724477424 B/op	13670918 allocs/op
+BenchmarkDay15Part2/[2_3_1]-8         	       1	7039378239 ns/op	1723657952 B/op	13669432 allocs/op
+BenchmarkDay15Part2/[3_2_1]-8         	       1	6679612463 ns/op	1724078544 B/op	13669214 allocs/op
+BenchmarkDay15Part2/[3_1_2]-8         	       1	6478310634 ns/op	1724842464 B/op	13671933 allocs/op
+----
+====
+
+That's about 6 to 7 seconds per sample.
+I expect interesting solutions from the guys that really squeeze for performance.
+Will be hard to come up with a O(1), i guess.
