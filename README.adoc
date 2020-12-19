@@ -185,3 +185,9 @@ BenchmarkDay15Part2/[3_1_2]-8         	       1	6478310634 ns/op	1724842464 B/op
 That's about 6 to 7 seconds per sample.
 I expect interesting solutions from the guys that really squeeze for performance.
 Will be hard to come up with a O(1), i guess.
+
+== Day16
+
+Blattschuss.
+
+
