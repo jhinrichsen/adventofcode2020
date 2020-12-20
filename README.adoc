@@ -238,7 +238,9 @@ Premature optimization is the root of all evil.
 
 == Day 18
 
+Blattschuss, Blattschuss.
+
 Shunting Yard to the rescue, see doc/MR35.PDF.
 Dijkstra, _1961_.
 
-
+Part 2 needed just a slight reconfiguration of operator precedence, lucky me.
