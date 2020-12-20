@@ -165,8 +165,9 @@ Blattschuss.
 
 Blattschuss. Blattschuss.
 
-Started implementation using arrays and indices, but soon ran out of control with zero-based versus one-based and my beloved off-by-one.
-Restarted using a map, runs like a charm.
+Started implementation using arrays and indices, but soon ran out of control
+with zero-based versus one-based and my beloved off-by-one. Restarted using a
+map, runs like a charm.
 
 No changes for part 2, benchmarks look ok:
 
@@ -186,8 +187,50 @@ That's about 6 to 7 seconds per sample.
 I expect interesting solutions from the guys that really squeeze for performance.
 Will be hard to come up with a O(1), i guess.
 
-== Day16
+== Day 16
 
 Blattschuss.
 
+
+== Day 17
+
+Bug #1: when figuring out the neighbours in 3D space, the number of neighbours
+is fixed 26.
+I created an array with appropriate capacity:
+
+====
+----
+cubes := make([]cube, 3*3*3-1)
+----
+====
+
+and then happily `append`ed
+====
+----
+cubes = append(cubes, neighbour)
+----
+====
+
+instead of writing directly to the array (`cubes[idx] = ...` ), creating 52 neighbours.
+Not sure how to categorize this kind of error - muscle memory?
+
+Bug #2: i started in optimized mode, in this puzzle z population grows
+symmetrically in -z and +z. Considering only z >= 0, and mirroring -z somehow
+into +z got me to 58 instead of 112 active cubes in the example. As soon as i
+dropped this idea, it worked.
+
+And yes, code became cleaner, and runtime performance, well...
+
+====
+----
+BenchmarkDay17Part1-8   	      13	  95051825 ns/op	24855773 B/op	   38779 allocs/op
+----
+====
+
+That's about 100 ms.
+Fast enough for all practical purposes.
+
+
+[quote, Donald Knuth]
+Premature optimization is the root of all evil.
 
