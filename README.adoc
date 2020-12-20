@@ -194,7 +194,9 @@ Blattschuss.
 
 == Day 17
 
-Bug #1: when figuring out the neighbours in 3D space, the number of neighbours
+Blattschuss.
+
+Nearly-bug #1: when figuring out the neighbours in 3D space, the number of neighbours
 is fixed 26.
 I created an array with appropriate capacity:
 
@@ -214,7 +216,7 @@ cubes = append(cubes, neighbour)
 instead of writing directly to the array (`cubes[idx] = ...` ), creating 52 neighbours.
 Not sure how to categorize this kind of error - muscle memory?
 
-Bug #2: i started in optimized mode, in this puzzle z population grows
+Nearly-bug #2: i started in optimized mode, in this puzzle z population grows
 symmetrically in -z and +z. Considering only z >= 0, and mirroring -z somehow
 into +z got me to 58 instead of 112 active cubes in the example. As soon as i
 dropped this idea, it worked.
@@ -233,4 +235,10 @@ Fast enough for all practical purposes.
 
 [quote, Donald Knuth]
 Premature optimization is the root of all evil.
+
+== Day 18
+
+Shunting Yard to the rescue, see doc/MR35.PDF.
+Dijkstra, _1961_.
+
 
