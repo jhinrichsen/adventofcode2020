@@ -191,7 +191,6 @@ Will be hard to come up with a O(1), i guess.
 
 Blattschuss.
 
-
 == Day 17
 
 Blattschuss.
@@ -213,7 +212,8 @@ cubes = append(cubes, neighbour)
 ----
 ====
 
-instead of writing directly to the array (`cubes[idx] = ...` ), creating 52 neighbours.
+instead of writing directly to the array (`cubes[idx] = ...` ), creating 52
+neighbours.
 Not sure how to categorize this kind of error - muscle memory?
 
 Nearly-bug #2: i started in optimized mode, in this puzzle z population grows
@@ -248,4 +248,23 @@ Part 2 needed just a slight reconfiguration of operator precedence, lucky me.
 == Day 19
 
 Blattschuss.
+
+== Day 20
+
+Blattschuss.
+
+This one needed a bit of trial and error.
+I keep vim open in an editing session terminal, and run continuous
+`go test -run=Day20 -timeout=10s` in a second window.
+
+The implemenation is pretty clumsy, but hey.
+
+====
+----
+BenchmarkDay20Part1-8   	     307	   3722067 ns/op	  335614 B/op	    4964 allocs/op
+----
+====
+
+3 ms, including loading puzzle input, finding corners, and validating expected
+result.
 
