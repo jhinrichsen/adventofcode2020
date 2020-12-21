@@ -244,3 +244,8 @@ Shunting Yard to the rescue, see doc/MR35.PDF.
 Dijkstra, _1961_.
 
 Part 2 needed just a slight reconfiguration of operator precedence, lucky me.
+
+== Day 19
+
+Blattschuss.
+
