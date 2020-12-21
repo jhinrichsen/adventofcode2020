@@ -1,6 +1,7 @@
 package aoc2020
 
 import (
+	"sort"
 	"strings"
 )
 
@@ -65,10 +66,12 @@ func (a *Day21) Delete(al allergen, in ingredient) {
 func (a *Day21) Part1() uint {
 backtrack:
 	// use a combination of reductions until stable
-	if a.reduce1() {
+	_, _, reduced := a.reduce1()
+	if reduced {
 		goto backtrack
 	}
-	if a.reduceN() {
+	_, _, reduced = a.reduceN()
+	if reduced {
 		goto backtrack
 	}
 
@@ -80,10 +83,41 @@ backtrack:
 	return n
 }
 
+// Part2 returns a comma separated list of ingredients, sorted by their
+// corresponding allergen.
+func (a *Day21) Part2() string {
+	m := make(map[allergen]ingredient)
+backtrack:
+	// use a combination of reductions until stable
+	al, in, reduced := a.reduce1()
+	if reduced {
+		m[al] = in
+		goto backtrack
+	}
+	al, in, reduced = a.reduceN()
+	if reduced {
+		m[al] = in
+		goto backtrack
+	}
+
+	// sort by allergen
+	var ss []string
+	for k := range m {
+		ss = append(ss, string(k))
+	}
+	sort.Strings(ss)
+
+	var result []string
+	for i := range ss {
+		result = append(result, string(m[allergen(ss[i])]))
+	}
+	return strings.Join(result, ",")
+}
+
 // reduce1 removes an allergen/ ingredient combination from a food if it is the
 // only combination.
 // returns true if reduced, false for no change.
-func (a *Day21) reduce1() bool {
+func (a *Day21) reduce1() (allergen, ingredient, bool) {
 	for i := range *a {
 		if len((*a)[i].allergens) == 1 &&
 			len((*a)[i].ingredients) == 1 {
@@ -91,10 +125,10 @@ func (a *Day21) reduce1() bool {
 			al := anyAllergen((*a)[i].allergens)
 			in := anyIngredient((*a)[i].ingredients)
 			a.Delete(al, in)
-			return true
+			return al, in, true
 		}
 	}
-	return false
+	return "", "", false
 }
 
 // reduceN searches for matching allergen/ ingredient combinations in all
@@ -103,7 +137,7 @@ func (a *Day21) reduce1() bool {
 // intersection of ingredients of f1 and f2 has exactly one element, it is
 // removed.
 // returns true if reduced, false for no change.
-func (a *Day21) reduceN() bool {
+func (a *Day21) reduceN() (allergen, ingredient, bool) {
 	as := a.Allergens()
 	sas := SortByOccurenceDesc(as)
 
@@ -134,9 +168,9 @@ func (a *Day21) reduceN() bool {
 		a.Delete(al, in)
 
 		// only one change per run, done for now
-		return true
+		return al, in, true
 	}
-	return false
+	return "", "", false
 }
 
 func SortByOccurenceDesc(m map[allergen]uint) []allergen {

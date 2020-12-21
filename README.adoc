@@ -270,9 +270,9 @@ result.
 
 == Day 21
 
-Blattschuss.
+Blattschuss. Blattschuss.
 
 It took me an hour to understand the problem, and i had to look for help in
-reddit to get going. Still did not understand anything, that's when i took a
-piece of paper and a pen to get going.
+reddit. Still did not understand anything, that's when i took a piece of paper
+and a pen to get going.
 
