@@ -268,3 +268,11 @@ BenchmarkDay20Part1-8   	     307	   3722067 ns/op	  335614 B/op	    4964 allocs
 3 ms, including loading puzzle input, finding corners, and validating expected
 result.
 
+== Day 21
+
+Blattschuss.
+
+It took me an hour to understand the problem, and i had to look for help in
+reddit to get going. Still did not understand anything, that's when i took a
+piece of paper and a pen to get going.
+
