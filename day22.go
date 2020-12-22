@@ -8,22 +8,13 @@ import (
 
 // Day22Part1 returns the score for a one game.
 func Day22Part1(p1, p2 []uint) (uint, error) {
-	var round uint
 	for len(p1) > 0 && len(p2) > 0 {
-		round++
-		// fmt.Printf("-- Round %d --\n", round)
-		// fmt.Printf("Player 1's deck: %+v\n", p1)
-		// fmt.Printf("Player 2's deck: %+v\n", p2)
 		n1 := pop(&p1)
-		// fmt.Printf("Player 1 plays: %d\n", n1)
 		n2 := pop(&p2)
-		// fmt.Printf("Player 2 plays: %d\n", n2)
 		if n1 > n2 {
-			// fmt.Printf("Player 1 wins the round!\n")
 			push(&p1, n1)
 			push(&p1, n2)
 		} else {
-			// fmt.Printf("Player 2 wins the round!\n")
 			push(&p2, n2)
 			push(&p2, n1)
 		}
@@ -46,38 +37,24 @@ func Day22Part2(p1, p2 []uint, game uint) uint {
 
 	// cannot use []uint as map key, using string rep instead
 	rep := func(deck []uint) string {
-		return fmt.Sprintf("%+v", deck)
+		return fmt.Sprintf("%v", deck)
 	}
-	previousDecks1 := make(map[string]bool)
-	previousDecks2 := make(map[string]bool)
+	seen1, seen2 := make(map[string]bool), make(map[string]bool)
 
-	// fmt.Printf("\n=== Game %d ===\n", game)
-	var round uint
 	var winner uint // 1 -> player 1, 2 -> player 2
 	for len(p1) > 0 && len(p2) > 0 {
-		round++
-		// fmt.Printf("\n-- Round %d (Game %d) --\n", round, game)
-		// fmt.Printf("Player 1's deck: %+v\n", p1)
-		// fmt.Printf("Player 2's deck: %+v\n", p2)
-
 		// avoid infinite recursion
-		if previousDecks1[rep(p1)] || previousDecks2[rep(p2)] {
+		if seen1[rep(p1)] || seen2[rep(p2)] {
 			winner = 1
 			break
 		}
-		previousDecks1[rep(p1)] = true
-		previousDecks2[rep(p2)] = true
+		seen1[rep(p1)], seen2[rep(p2)] = true, true
 
-		c1 := pop(&p1)
-		// fmt.Printf("Player 1 plays: %d\n", c1)
-		c2 := pop(&p2)
-		// fmt.Printf("Player 2 plays: %d\n", c2)
+		c1, c2 := pop(&p1), pop(&p2)
 
 		if recurse(c1, uint(len(p1)+1)) &&
 			recurse(c2, uint(len(p2)+1)) {
 
-			// fmt.Printf("Playing a sub-game to determine the " +
-			// 	"winner...\n")
 			cp1 := make([]uint, c1)
 			cp2 := make([]uint, c2)
 			copy(cp1, p1)
@@ -92,21 +69,14 @@ func Day22Part2(p1, p2 []uint, game uint) uint {
 			}
 		}
 		if winner == 1 {
-			// fmt.Printf("Player 1 wins round %d of game %d!\n",
-			//		round, game)
 			push(&p1, c1)
 			push(&p1, c2)
 		} else {
-			// fmt.Printf("Player 2 wins round %d of game %d!\n",
-			//	round, game)
 			push(&p2, c2)
 			push(&p2, c1)
 		}
 	}
 	if game > 1 {
-		// fmt.Printf("The winner of game %d is player %d!\n",
-		//	game, winner)
-		// fmt.Println("\n...anyway, back to game 1.")
 		return winner
 	}
 
