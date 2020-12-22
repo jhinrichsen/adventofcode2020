@@ -291,3 +291,76 @@ BenchmarkDay22Part2-8   	       1	1691123872 ns/op	127223480 B/op	 8367252 alloc
 
 That's 75μs for part #1, and 1.7s for part 2, including all I/O.
 
+Here's the CPU profile:
+
+----
+====
+(pprof) top 50
+Showing nodes accounting for 2.25s, 94.14% of 2.39s total
+Dropped 37 nodes (cum <= 0.01s)
+Showing top 50 nodes out of 62
+      flat  flat%   sum%        cum   cum%
+     0.33s 13.81% 13.81%      0.48s 20.08%  fmt.(*fmt).fmtInteger
+     0.27s 11.30% 25.10%      0.38s 15.90%  runtime.mallocgc
+     0.24s 10.04% 35.15%      0.27s 11.30%  runtime.(*itabTableType).find
+     0.22s  9.21% 44.35%      0.49s 20.50%  runtime.getitab
+     0.15s  6.28% 50.63%      1.99s 83.26%  fmt.(*pp).printValue
+     0.13s  5.44% 56.07%      0.13s  5.44%  runtime.memmove
+     0.10s  4.18% 60.25%      0.53s 22.18%  reflect.packEface
+     0.09s  3.77% 64.02%      0.15s  6.28%  fmt.(*fmt).pad
+     0.06s  2.51% 66.53%      0.61s 25.52%  fmt.(*pp).handleMethods
+     0.06s  2.51% 69.04%      0.59s 24.69%  reflect.valueInterface
+     0.06s  2.51% 71.55%      0.55s 23.01%  runtime.assertE2I2
+     0.05s  2.09% 73.64%      0.05s  2.09%  runtime.nextFreeFast (inline)
+     0.04s  1.67% 75.31%      0.06s  2.51%  fmt.(*buffer).write (inline)
+     0.04s  1.67% 76.99%      0.04s  1.67%  fmt.(*buffer).writeByte (inline)
+     0.04s  1.67% 78.66%      0.05s  2.09%  reflect.Value.Len
+     0.04s  1.67% 80.33%      0.30s 12.55%  reflect.unsafe_New
+     0.03s  1.26% 81.59%      0.62s 25.94%  reflect.Value.Interface (inline)
+     0.03s  1.26% 82.85%      0.04s  1.67%  runtime.evacuate_faststr
+     0.02s  0.84% 83.68%      0.02s  0.84%  aeshashbody
+     0.02s  0.84% 84.52%      2.07s 86.61%  fmt.(*pp).doPrintf
+     0.02s  0.84% 85.36%      0.50s 20.92%  fmt.(*pp).fmtInteger
+     0.02s  0.84% 86.19%      0.02s  0.84%  reflect.(*rtype).Kind (inline)
+     0.02s  0.84% 87.03%      0.04s  1.67%  reflect.Value.Index
+     0.02s  0.84% 87.87%      0.02s  0.84%  reflect.flag.kind (inline)
+     0.02s  0.84% 88.70%      0.02s  0.84%  reflect.ifaceIndir (inline)
+     0.02s  0.84% 89.54%      0.02s  0.84%  runtime.add (inline)
+     0.02s  0.84% 90.38%      0.02s  0.84%  runtime.memclrNoHeapPointers
+     0.02s  0.84% 91.21%      0.02s  0.84%  runtime.scanblock
+     0.01s  0.42% 91.63%      2.34s 97.91%  _/home/jot/repos/aoc2020.Day22Part2
+     0.01s  0.42% 92.05%      2.05s 85.77%  fmt.(*pp).printArg
+     0.01s  0.42% 92.47%      0.11s  4.60%  reflect.typedmemmove
+     0.01s  0.42% 92.89%      0.07s  2.93%  runtime.convTslice
+     0.01s  0.42% 93.31%      0.08s  3.35%  runtime.mapassign_faststr
+     0.01s  0.42% 93.72%      0.07s  2.93%  runtime.slicebytetostring
+     0.01s  0.42% 94.14%      0.07s  2.93%  runtime.systemstack
+         0     0% 94.14%      2.23s 93.31%  _/home/jot/repos/aoc2020.Day22Part2.func2 (inline)
+         0     0% 94.14%      2.34s 97.91%  _/home/jot/repos/aoc2020.TestDay22Part2
+         0     0% 94.14%      2.34s 97.91%  _/home/jot/repos/aoc2020.testDay22
+         0     0% 94.14%      2.16s 90.38%  fmt.Sprintf
+         0     0% 94.14%      0.02s  0.84%  reflect.ValueOf (inline)
+         0     0% 94.14%      0.02s  0.84%  reflect.unpackEface (inline)
+         0     0% 94.14%      0.02s  0.84%  runtime.(*mcache).nextFree
+====
+----
+
+Clearly, the memoization pattern `fmt.Sprintf("%v", deck)` needs some love.
+Switching card type from `uint` to `byte`, and using an MD5 checksum:
+
+
+----
+====
+BenchmarkDay22Part1-8   	   21796	     49385 ns/op	   10891 B/op	     151 allocs/op
+BenchmarkDay22Part2-8   	       4	 257035024 ns/op	21759206 B/op	   82268 allocs/op
+----
+====
+
+Runtime drops to 65%, i.e. the change shaved off 1/3 for part #1, which is more
+than i expected because part #1 does not use memoization at all.
+
+For part #2, runtime drops to 15%, i.e. 7 times faster.
+In absolute values, from 1.6s to 260ms.
+
+
+

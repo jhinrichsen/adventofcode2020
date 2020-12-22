@@ -1,12 +1,13 @@
 package aoc2020
 
 import (
+	"crypto/md5"
 	"fmt"
 	"strconv"
 	"strings"
 )
 
-type card = uint // type alias, not type
+type card = byte // type alias, not type
 
 // Day22Part1 returns the score for a one game.
 func Day22Part1(p1, p2 []card) (uint, error) {
@@ -37,11 +38,11 @@ func Day22Part2(p1, p2 []card, game uint) uint {
 		return false
 	}
 
-	// cannot use []uint as map key, using string rep instead
-	rep := func(deck []card) string {
-		return fmt.Sprintf("%v", deck)
+	type checksum [md5.Size]byte
+	rep := func(deck []card) checksum {
+		return md5.Sum(deck)
 	}
-	seen1, seen2 := make(map[string]bool), make(map[string]bool)
+	seen1, seen2 := make(map[checksum]bool), make(map[checksum]bool)
 
 	var winner uint // 1 -> player 1, 2 -> player 2
 	for len(p1) > 0 && len(p2) > 0 {
@@ -55,8 +56,8 @@ func Day22Part2(p1, p2 []card, game uint) uint {
 		c1, c2 := pop(&p1), pop(&p2)
 
 		if recurse(c1, p1) && recurse(c2, p2) {
-			cp1 := make([]uint, c1)
-			cp2 := make([]uint, c2)
+			cp1 := make([]card, c1)
+			cp2 := make([]card, c2)
 			copy(cp1, p1)
 			copy(cp2, p2)
 			winner = Day22Part2(cp1, cp2, game+1)
@@ -109,9 +110,9 @@ func NewDay22(lines []string) ([]card, []card, error) {
 			return nil, nil, fmt.Errorf(msg, i, lines[i])
 		}
 		if player1 {
-			p1 = append(p1, uint(n))
+			p1 = append(p1, card(n))
 		} else {
-			p2 = append(p2, uint(n))
+			p2 = append(p2, card(n))
 		}
 	}
 	return p1, p2, nil
@@ -127,11 +128,11 @@ func pop(a *[]card) card {
 	return m
 }
 
-func score(deck []uint) uint {
-	var n, times uint
+func score(deck []card) uint {
+	var multiplier, n uint
 	for i := len(deck) - 1; i >= 0; i-- {
-		times++
-		n += deck[i] * times
+		multiplier++
+		n += multiplier * uint(deck[i])
 	}
 	return n
 }
