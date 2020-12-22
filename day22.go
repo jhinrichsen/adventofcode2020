@@ -6,8 +6,10 @@ import (
 	"strings"
 )
 
+type card = uint // type alias, not type
+
 // Day22Part1 returns the score for a one game.
-func Day22Part1(p1, p2 []uint) (uint, error) {
+func Day22Part1(p1, p2 []card) (uint, error) {
 	for len(p1) > 0 && len(p2) > 0 {
 		n1 := pop(&p1)
 		n2 := pop(&p2)
@@ -27,16 +29,16 @@ func Day22Part1(p1, p2 []uint) (uint, error) {
 
 // Day22Part2 returns the score for a card game, or the winner (1 or 2) for
 // recursive games (`game > 1` ).
-func Day22Part2(p1, p2 []uint, game uint) uint {
-	recurse := func(draw uint, deck []uint) bool {
-		if draw <= uint(len(deck)) {
+func Day22Part2(p1, p2 []card, game uint) uint {
+	recurse := func(draw card, deck []card) bool {
+		if draw <= card(len(deck)) {
 			return true
 		}
 		return false
 	}
 
 	// cannot use []uint as map key, using string rep instead
-	rep := func(deck []uint) string {
+	rep := func(deck []card) string {
 		return fmt.Sprintf("%v", deck)
 	}
 	seen1, seen2 := make(map[string]bool), make(map[string]bool)
@@ -86,8 +88,8 @@ func Day22Part2(p1, p2 []uint, game uint) uint {
 
 // NewDay22 parses puzzle input into two sets of decks for player #1 and player
 // #2.
-func NewDay22(lines []string) ([]uint, []uint, error) {
-	var p1, p2 []uint
+func NewDay22(lines []string) ([]card, []card, error) {
+	var p1, p2 []card
 	var player1 bool
 	for i := range lines {
 		if lines[i] == "" {
@@ -115,11 +117,11 @@ func NewDay22(lines []string) ([]uint, []uint, error) {
 	return p1, p2, nil
 }
 
-func push(a *[]uint, n uint) {
+func push(a *[]card, n card) {
 	*a = append(*a, n)
 }
 
-func pop(a *[]uint) uint {
+func pop(a *[]card) card {
 	m := (*a)[0]
 	*a = (*a)[1:]
 	return m
