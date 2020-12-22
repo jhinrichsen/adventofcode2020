@@ -28,8 +28,8 @@ func Day22Part1(p1, p2 []uint) (uint, error) {
 // Day22Part2 returns the score for a card game, or the winner (1 or 2) for
 // recursive games (`game > 1` ).
 func Day22Part2(p1, p2 []uint, game uint) uint {
-	recurse := func(draw uint, deckSize uint) bool {
-		if draw < deckSize {
+	recurse := func(draw uint, deck []uint) bool {
+		if draw <= uint(len(deck)) {
 			return true
 		}
 		return false
@@ -52,9 +52,7 @@ func Day22Part2(p1, p2 []uint, game uint) uint {
 
 		c1, c2 := pop(&p1), pop(&p2)
 
-		if recurse(c1, uint(len(p1)+1)) &&
-			recurse(c2, uint(len(p2)+1)) {
-
+		if recurse(c1, p1) && recurse(c2, p2) {
 			cp1 := make([]uint, c1)
 			cp2 := make([]uint, c2)
 			copy(cp1, p1)
