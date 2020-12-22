@@ -8,15 +8,6 @@ import (
 
 // Day22Part1 returns the score for a one game.
 func Day22Part1(p1, p2 []uint) (uint, error) {
-	push := func(a *[]uint, n uint) {
-		*a = append(*a, n)
-	}
-	pop := func(a *[]uint) uint {
-		m := (*a)[0]
-		*a = (*a)[1:]
-		return m
-	}
-
 	var round uint
 	for len(p1) > 0 && len(p2) > 0 {
 		round++
@@ -46,14 +37,6 @@ func Day22Part1(p1, p2 []uint) (uint, error) {
 // Day22Part2 returns the score for a card game, or the winner (1 or 2) for
 // recursive games (`game > 1` ).
 func Day22Part2(p1, p2 []uint, game uint) uint {
-	push := func(a *[]uint, n uint) {
-		*a = append(*a, n)
-	}
-	pop := func(a *[]uint) uint {
-		m := (*a)[0]
-		*a = (*a)[1:]
-		return m
-	}
 	recurse := func(draw uint, deckSize uint) bool {
 		if draw < deckSize {
 			return true
@@ -162,6 +145,16 @@ func NewDay22(lines []string) ([]uint, []uint, error) {
 		}
 	}
 	return p1, p2, nil
+}
+
+func push(a *[]uint, n uint) {
+	*a = append(*a, n)
+}
+
+func pop(a *[]uint) uint {
+	m := (*a)[0]
+	*a = (*a)[1:]
+	return m
 }
 
 func score(deck []uint) uint {
