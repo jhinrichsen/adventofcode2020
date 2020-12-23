@@ -363,4 +363,35 @@ For part #2, runtime drops to 15%, i.e. 7 times faster.
 In absolute values, from 1.6s to 260ms.
 
 
+== Day 23
 
+Blattschuss.
+
+What a lovely number cruncher.
+It's puzzles like this i enjoy the most.
+Of course i got completely lost in index layers, off-by-one and the like, until
+i hit the DEL button and restarted from scratch.
+
+Criticism of Go mostly circles around missing generics, and that it is a
+garbage collected language.
+Unless you produce garbage, there's nothing to collect:
+
+----
+====
+BenchmarkDay23Example10-8     	 2150487	       582 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23Example100-8    	  218787	      5099 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23-8              	  217854	      4785 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23_10_000_000-8   	       3	 447351347 ns/op	       0 B/op	       0 allocs/op
+====
+----
+
+The first example (10 moves) executes in 582 _nanoseconds_, that's 0.6μs, or
+0.0006 milliseconds.
+Not optimized yet.
+
+Part #2 obviously picks a number range that is too high to compute (1 million
+cups, 10 million moves).
+With runtime performance like this (10 million moves for 10 cups in 0.5s), i'm
+tempted to number crunch part #2.
+The algorithm should be O(n), so 50.000s which is equal to half a day.
+Longer than Eric's usual runtime promise, but hey.
