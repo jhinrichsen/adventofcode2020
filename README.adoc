@@ -282,19 +282,19 @@ Blattschuss. Blattschus.
 
 1:56 h for both parts including full test coverage, no benchmarks.
 
-----
 ====
+----
 BenchmarkDay22Part1-8   	   18188	     75114 ns/op	   46359 B/op	     193 allocs/op
 BenchmarkDay22Part2-8   	       1	1691123872 ns/op	127223480 B/op	 8367252 allocs/op
-====
 ----
+====
 
 That's 75μs for part #1, and 1.7s for part 2, including all I/O.
 
 Here's the CPU profile:
 
-----
 ====
+----
 (pprof) top 50
 Showing nodes accounting for 2.25s, 94.14% of 2.39s total
 Dropped 37 nodes (cum <= 0.01s)
@@ -342,15 +342,15 @@ Showing top 50 nodes out of 62
          0     0% 94.14%      0.02s  0.84%  reflect.ValueOf (inline)
          0     0% 94.14%      0.02s  0.84%  reflect.unpackEface (inline)
          0     0% 94.14%      0.02s  0.84%  runtime.(*mcache).nextFree
-====
 ----
+====
 
 Clearly, the memoization pattern `fmt.Sprintf("%v", deck)` needs some love.
 Switching card type from `uint` to `byte`, and using an MD5 checksum:
 
 
-----
 ====
+----
 BenchmarkDay22Part1-8   	   21796	     49385 ns/op	   10891 B/op	     151 allocs/op
 BenchmarkDay22Part2-8   	       4	 257035024 ns/op	21759206 B/op	   82268 allocs/op
 ----
@@ -370,20 +370,20 @@ Blattschuss.
 What a lovely number cruncher.
 It's puzzles like this i enjoy the most.
 Of course i got completely lost in index layers, off-by-one and the like, until
-i hit the DEL button and restarted from scratch.
+i hit DEL and restarted from scratch.
 
 Criticism of Go mostly circles around missing generics, and that it is a
 garbage collected language.
 Unless you produce garbage, there's nothing to collect:
 
-----
 ====
+----
 BenchmarkDay23Example10-8     	 2150487	       582 ns/op	       0 B/op	       0 allocs/op
 BenchmarkDay23Example100-8    	  218787	      5099 ns/op	       0 B/op	       0 allocs/op
 BenchmarkDay23-8              	  217854	      4785 ns/op	       0 B/op	       0 allocs/op
 BenchmarkDay23_10_000_000-8   	       3	 447351347 ns/op	       0 B/op	       0 allocs/op
-====
 ----
+====
 
 The first example (10 moves) executes in 582 _nanoseconds_, that's 0.6μs, or
 0.0006 milliseconds.
@@ -395,3 +395,25 @@ With runtime performance like this (10 million moves for 10 cups in 0.5s), i'm
 tempted to number crunch part #2.
 The algorithm should be O(n), so 50.000s which is equal to half a day.
 Longer than Eric's usual runtime promise, but hey.
+
+== Day 24
+
+Blattschuss. Blattschuss.
+
+Again one of those absolutely adorable puzzles.
+Once i figured out on a piece of paper how to transform a hexagonal floor
+into something i can move on, it went smooth.
+
+Except for one nasty bug in part 2, when checking for active neighbours i
+traversed the list `for _, c := range []HexFloor{1 + 0i, 0 + 1i, 0 - 1i,
+-1 + 1i, 1 + 1i, -1 + 0i} {`, but should instead have traversed `for _, c := range
+[]HexFloor{1 + 0i, 0 + 1i, 0 - 1i, -1 + 1i, 1 - 1i, -1 + 0i} {`.
+
+Hard to spot.
+
+====
+----
+BenchmarkDay24Part1-8   	    2373	    631966 ns/op	  377559 B/op	    2256 allocs/op
+BenchmarkDay24Part2-8   	       2	 613236738 ns/op	13700448 B/op	    9230 allocs/op
+----
+====

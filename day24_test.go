@@ -1,11 +1,10 @@
 package aoc2020
 
 import (
-	"fmt"
 	"testing"
 )
 
-func testDay24(t *testing.T, filename string, want uint) {
+func testDay24(t *testing.T, filename string, days, want uint) {
 	lines, err := linesFromFilename(filename)
 	if err != nil {
 		t.Fatal(err)
@@ -14,7 +13,9 @@ func testDay24(t *testing.T, filename string, want uint) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := d.Part1()
+	d.Part1()
+	d.Part2(days)
+	got := d.Flipped()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23,61 +24,66 @@ func testDay24(t *testing.T, filename string, want uint) {
 	}
 }
 
-func TestDay24Example(t *testing.T) {
+func TestDay24ExamplePart1(t *testing.T) {
 	const (
+		days = 0
 		want = 10
 	)
-	testDay24(t, exampleFilename(24), want)
+	testDay24(t, exampleFilename(24), days, want)
 }
 
-type direction int
-
-const (
-	east direction = iota
-	southEast
-	southWest
-	west
-	northWest
-	northEast
-)
-
-type Day24 struct {
-	directions [][]direction
+func TestDay24Part1(t *testing.T) {
+	const (
+		days = 0
+		want = 254 // Dec 24, 98 min after puzzle opened
+	)
+	testDay24(t, filename(24), days, want)
 }
 
-func (a Day24) Part1() uint {
-	return 0
+func TestDay24ExamplePart2(t *testing.T) {
+	const (
+		days = 100
+		want = 2208
+	)
+	testDay24(t, exampleFilename(24), days, want)
 }
 
-func NewDay24(lines []string) (Day24, error) {
-	var d Day24
-	for i, line := range lines {
-		var ds []direction
-		for j := 0; j < len(line); j++ {
-			// greedy directions first
-			if line[j] == 's' && line[j+1] == 'e' {
-				ds = append(ds, southEast)
-				j++
-			} else if line[j] == 's' && line[j+1] == 'w' {
-				ds = append(ds, southWest)
-				j++
-			} else if line[j] == 'n' && line[j+1] == 'w' {
-				ds = append(ds, northWest)
-				j++
-			} else if line[j] == 'n' && line[j+1] == 'e' {
-				ds = append(ds, northEast)
-				j++
-			} else if line[j] == 'e' {
-				ds = append(ds, east)
-			} else if line[j] == 'w' {
-				ds = append(ds, west)
-			} else {
-				msg := "line %d: want direction but got %q(%q)"
-				return d, fmt.Errorf(msg,
-					i, line[j], line[j+1])
-			}
+func TestDay24Part2(t *testing.T) {
+	const (
+		days = 100
+		want = 3697
+	)
+	testDay24(t, filename(24), days, want)
+}
+
+func BenchmarkDay24Part1(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		lines, err := linesFromFilename(filename(24))
+		if err != nil {
+			b.Fatal(err)
 		}
-		d.directions = append(d.directions, ds)
+		d, err := NewDay24(lines)
+		if err != nil {
+			b.Fatal(err)
+		}
+		d.Part1()
+		_ = d.Flipped()
 	}
-	return d, nil
+}
+
+func BenchmarkDay24Part2(b *testing.B) {
+	const days = 100
+	for i := 0; i < b.N; i++ {
+		lines, err := linesFromFilename(filename(24))
+		if err != nil {
+			b.Fatal(err)
+		}
+		d, err := NewDay24(lines)
+		if err != nil {
+			b.Fatal(err)
+		}
+		d.Part1()
+		d.Part2(days)
+		_ = d.Flipped()
+	}
 }
