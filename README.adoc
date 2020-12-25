@@ -15,8 +15,8 @@ long as you avoid looking at `*_test.go` files.
 
 == Environment
 - Go 1.15.6
-- vim, vim-go, gopls, fed by a HHKB
-- VisualStudio Code for debugging, fed by a MX Master 3
+- vim, vim-go, gopls, fed by an HHKB
+- VisualStudio Code for complex debugging scenarios
 - Fedora 33
 - AMD Ryzen 5 3400G on a Gigabyte B450
 
@@ -25,6 +25,39 @@ The package name is `aoc2020`.
 Each day lives separately in a `day{{.n}}.go` and `day{{.n}}_test.go` file.
 Unit test data, both examples and puzzle input, is in
 `testdata/day{{.n}}.txt`, and `testdata/day{{.n}}_example.txt`.
+
+|====
+| Day | Tries
+|  1  |  2
+|  1  |  2
+|  2  |  2
+|  2  |  2
+|  3  | *3*
+|  3  |  2
+|  4  | *3*
+|  5  |  2
+|  6  |  2
+|  7  |  2
+|  8  | *3*
+|  9  |  2
+| 10  |  2
+| 11  | (1)
+| 12  | (2)
+| 13  | (1)
+| 14  | (1)
+| 15  |  2
+| 16  | (1)
+| 17  | (1)
+| 18  |  2
+| 19  | (1)
+| 20  | (1)
+| 21  |  2
+| 22  |  2
+| 23  | (1)
+| 24  |  2
+| 25  | (1) Need all of the above puzzles resolved to open part #2
+|====
+Numbers in (brackets) indicate tries so far (part #2 not solved yet).
 
 == Day 1 
 Warmup, nice and smooth.
@@ -107,7 +140,9 @@ Blattschuss, Blattschuss.
 
 == Day 7
 
-Blattschuss
+Blattschuss, Blattschuss.
+
+Coming back to part #2, reusing the shunting yard algorithm from day 18.
 
 == Day 8
 
@@ -276,7 +311,7 @@ It took me an hour to understand the problem, and i had to look for help in
 reddit. Still did not understand anything, that's when i took a piece of paper
 and a pen to get going.
 
-= Day 22
+== Day 22
 
 Blattschuss. Blattschus.
 

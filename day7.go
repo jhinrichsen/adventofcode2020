@@ -2,7 +2,6 @@ package aoc2020
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -45,39 +44,70 @@ func Day7Part1(bags Bags) uint {
 
 // Day7Part2 returns number of bags embedded in a shiny gold bag.
 func Day7Part2(bags Bags) uint {
-	// find all leafs, i.e. bags without entries
-	leafs := make(map[color]bool)
-	for _, v := range bags {
-		for bag := range v {
-			if _, ok := bags[bag.Color]; !ok {
-				leafs[bag.Color] = true
-			}
-		}
-	}
-	log.Printf("found %d leaf(s): %+v\n", len(leafs), leafs)
+	const theBag = "shiny gold"
 
-	// from leafs, traverse up each path, multiplying as we go along
-	var n uint
-	for leaf := range leafs {
-		m := uint(1)
-		c := leaf
-		log.Printf("going up from leaf %+v\n", c)
-		// work our way up from leaf to shiny gold
-		for c != "shiny gold" {
-			for k, v := range bags {
-				for w := range v {
-					if w.Color == c {
-						m *= w.N
-						log.Printf("%q contains %d %q, bags: %d\n", k, w.N, w.Color, m)
-						log.Printf("traversing %+v -> %+v\n", c, k)
-						c = k
-					}
-				}
+	resolve1 := func(symbol string) []string { // resolve 1 symbol into its inner bags
+		embedded := bags[symbol]
+		n := len(embedded)
+		if n == 0 { // nothing embedded
+			return []string{"1"}
+		}
+
+		var ops []string
+
+		// this bag
+		ops = append(ops, "(", "1", "+")
+
+		// inner bags
+		i := 0 // i [0..n[
+		for k := range embedded {
+			ops = append(ops,
+				"(",
+				strconv.Itoa(int(k.N)),
+				"*",
+				k.Color, // inner bag
+				")")
+			if i < n-1 { // join '+'
+				ops = append(ops, "+")
+				i++
 			}
 		}
-		n += m
+
+		// closing
+		ops = append(ops, ")")
+		return ops
 	}
-	return n
+
+	isSymbol := func(s string) bool {
+		return 'a' <= s[0] && s[0] <= 'z'
+	}
+
+	// keep resolving until no more symbols left
+	ops := resolve1(theBag)
+poorMansTailCallOptimization:
+	for i := 0; i < len(ops); i++ {
+		if isSymbol(ops[i]) {
+			rs := resolve1(ops[i])
+			// replace ops[i] with rs[]
+			new := make([]string, len(ops)+len(rs)-1)
+			copy(new, ops[:i])
+			copy(new[i:], rs[:])
+			copy(new[i+len(rs):], ops[i+1:])
+			ops = new
+			goto poorMansTailCallOptimization
+		}
+	}
+
+	// infix -> rpn
+	rpn := ShuntingYard(strings.Join(ops, " "), DefaultOperatorConfiguration)
+	n, err := evalRPN(rpn)
+	if err != nil {
+		// cannot evaluate an expression we constructed ourself
+		e := fmt.Errorf("internal error evaluating %q: %w", rpn, err)
+		panic(e)
+	}
+	// return uint(n - 1) // - do not count our shiny gold bag
+	return uint(n - 1)
 }
 
 // parseDay7 parses one input line in the form "light red bags contain 1 bright

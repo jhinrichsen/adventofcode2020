@@ -2,7 +2,6 @@ package aoc2020
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
@@ -31,7 +30,7 @@ func Day18(lines []string, part1 bool) (int, error) {
 		line = strings.ReplaceAll(line, ")", " ) ")
 
 		line = ShuntingYard(line, cfg)
-		n, err := eval(line)
+		n, err := evalRPN(line)
 		if err != nil {
 			return 0, fmt.Errorf("line %d: %q results in %w",
 				i, line, err)
@@ -39,40 +38,4 @@ func Day18(lines []string, part1 bool) (int, error) {
 		sum += n
 	}
 	return sum, nil
-}
-
-// eval computes a result for an RPN expression.
-// Only '+' and '*' are supported.
-func eval(rpn string) (int, error) {
-	stack := make([]int, len(rpn)/2)
-	var sp int
-	pop := func() int {
-		sp--
-		return stack[sp]
-	}
-	push := func(n int) {
-		stack[sp] = n
-		sp++
-	}
-
-	for i, op := range strings.Fields(rpn) {
-		if op == "+" {
-			push(pop() + pop())
-		} else if op == "*" {
-			push(pop() * pop())
-		} else {
-			// number
-			n, err := strconv.Atoi(op)
-			if err != nil {
-				msg := "field #%d: want number but got %q"
-				return 0, fmt.Errorf(msg, i, op)
-			}
-			push(n)
-		}
-	}
-	// depth 0 =
-	if sp != 1 {
-		return 0, fmt.Errorf("want stack depth %d but got %d", 1, sp)
-	}
-	return pop(), nil
 }

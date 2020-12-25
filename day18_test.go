@@ -24,7 +24,7 @@ func TestDay18Examples(t *testing.T) {
 			cfg = part2Cfg
 		}
 		rpn := ShuntingYard(infix, cfg)
-		got, err := eval(rpn)
+		got, err := evalRPN(rpn)
 		if err != nil {
 			t.Fatal(err)
 		}

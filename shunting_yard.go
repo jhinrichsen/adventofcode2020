@@ -1,6 +1,10 @@
 package aoc2020
 
-import "strings"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 type OperatorConfiguration map[string]OpCfg
 
@@ -65,4 +69,40 @@ func ShuntingYard(infix string, cfg OperatorConfiguration) (rpn string) {
 		stack = stack[:len(stack)-1]
 	}
 	return
+}
+
+// evalRPN computes a result for an RPN expression.
+// Only '+' and '*' are supported for now.
+func evalRPN(rpn string) (int, error) {
+	stack := make([]int, len(rpn)/2)
+	var sp int
+	pop := func() int {
+		sp--
+		return stack[sp]
+	}
+	push := func(n int) {
+		stack[sp] = n
+		sp++
+	}
+
+	for i, op := range strings.Fields(rpn) {
+		if op == "+" {
+			push(pop() + pop())
+		} else if op == "*" {
+			push(pop() * pop())
+		} else {
+			// number
+			n, err := strconv.Atoi(op)
+			if err != nil {
+				msg := "field #%d: want number but got %q"
+				return 0, fmt.Errorf(msg, i, op)
+			}
+			push(n)
+		}
+	}
+	// depth 0 =
+	if sp != 1 {
+		return 0, fmt.Errorf("want stack depth %d but got %d", 1, sp)
+	}
+	return pop(), nil
 }

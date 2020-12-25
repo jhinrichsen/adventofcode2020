@@ -47,12 +47,26 @@ func BenchmarkDay7Part1(b *testing.B) {
 	}
 }
 
-/*
 func TestDay7ExamplePart2(t *testing.T) {
-	testDay7(t, exampleFilename(7), false, 32)
+	const (
+		part1 = false
+		want  = 32
+	)
+	testDay7(t, exampleFilename(7), part1, want)
 }
 
 func TestDay7Example2Part2(t *testing.T) {
-	testDay7(t, "testdata/day7_example2.txt", false, 126)
+	const (
+		part1 = false
+		want  = 126
+	)
+	testDay7(t, "testdata/day7_example2.txt", part1, want)
 }
-*/
+
+func TestDay72Part2(t *testing.T) {
+	const (
+		part1 = false
+		want  = 35487
+	)
+	testDay7(t, filename(7), part1, want)
+}
