@@ -417,3 +417,16 @@ BenchmarkDay24Part1-8   	    2373	    631966 ns/op	  377559 B/op	    2256 allocs
 BenchmarkDay24Part2-8   	       2	 613236738 ns/op	13700448 B/op	    9230 allocs/op
 ----
 ====
+
+== Day 25
+
+Blattschuss.
+
+Using the smaller of the two loop sizes to calculate the encryption key.
+Other than that, nothing special.
+
+====
+----
+BenchmarkDay25-8   	      12	 107268929 ns/op	       0 B/op	       0 allocs/op
+----
+====
