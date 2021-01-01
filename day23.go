@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-const Dim = 10 // number of digits in input, avoids allocation
+// Dim is the number of digits in input.
+const Dim = 10
 
 // parses n into its digits, returning number of digits
 func parse(n int, buf *[Dim]int) int {
@@ -21,6 +22,7 @@ func parse(n int, buf *[Dim]int) int {
 	return digits
 }
 
+// Day23 returns the number of labels.
 func Day23(input int, moves int) int {
 	var cups, picked [Dim]int
 

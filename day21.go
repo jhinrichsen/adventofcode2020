@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// NewDay21 parses text lines into a Day21 struct.
 func NewDay21(lines []string) (Day21, error) {
 	const separator = ":"
 	var d Day21
@@ -52,6 +53,7 @@ type food struct {
 	ingredients map[ingredient]bool
 }
 
+// Day21 represents a food list.
 type Day21 []food
 
 // Delete remove this allergen/ ingredient combination from all foods, not just
@@ -63,6 +65,7 @@ func (a *Day21) Delete(al allergen, in ingredient) {
 	}
 }
 
+// Part1 solves Day 21, part #1.
 func (a *Day21) Part1() uint {
 backtrack:
 	// use a combination of reductions until stable
@@ -138,8 +141,8 @@ func (a *Day21) reduce1() (allergen, ingredient, bool) {
 // removed.
 // returns true if reduced, false for no change.
 func (a *Day21) reduceN() (allergen, ingredient, bool) {
-	as := a.Allergens()
-	sas := SortByOccurenceDesc(as)
+	as := a.allergens()
+	sas := sortByOccurenceDesc(as)
 
 	var fs []food // foods that contain a certain allergen
 	for i := range sas {
@@ -173,7 +176,8 @@ func (a *Day21) reduceN() (allergen, ingredient, bool) {
 	return "", "", false
 }
 
-func SortByOccurenceDesc(m map[allergen]uint) []allergen {
+// sortByOccurenceDesc converts a map into a sorted list.
+func sortByOccurenceDesc(m map[allergen]uint) []allergen {
 	var as []allergen
 	for len(m) > 0 {
 		var max uint
@@ -191,8 +195,8 @@ func SortByOccurenceDesc(m map[allergen]uint) []allergen {
 	return as
 }
 
-// Allergens returns a list of allergens, and their occurence in all food.
-func (a Day21) Allergens() map[allergen]uint {
+// allergens returns a list of allergens, and their occurence in all food.
+func (a Day21) allergens() map[allergen]uint {
 	m := make(map[allergen]uint)
 	for i := range a {
 		for k := range a[i].allergens {

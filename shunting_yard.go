@@ -6,13 +6,17 @@ import (
 	"strings"
 )
 
+// OperatorConfiguration holds custom operator precedence rules.
 type OperatorConfiguration map[string]OpCfg
 
+// OpCfg configures operator metadata.
 type OpCfg struct {
 	precedence       int
 	rightAssociative bool
 }
 
+// DefaultOperatorConfiguration configures the standard math set such as *
+// before +.
 var DefaultOperatorConfiguration = OperatorConfiguration{
 	"^": {4, true},
 	"*": {3, false},

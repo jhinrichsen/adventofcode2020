@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Day19 returns the number of messages that match rule 0.
 func Day19(lines []string) (uint, error) {
 	rls, msgs, err := parseDay19(lines)
 	if err != nil {

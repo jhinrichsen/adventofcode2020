@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// NewDay20 parses text lines into a Day 20 struct.
 func NewDay20(lines []string) (Day20, error) {
 	var d Day20
 	d.grid = make(map[uint][]string)
@@ -41,6 +42,7 @@ func NewDay20(lines []string) (Day20, error) {
 	return d, nil
 }
 
+// Day20 represents a grid.
 type Day20 struct {
 	grid map[uint][]string
 }
@@ -166,7 +168,7 @@ func BorderID(s string) uint {
 	for i := 0; i < len(s); i++ {
 		n = n << 1
 		if s[i] == '#' {
-			n += 1
+			n++
 		}
 	}
 	return n

@@ -4,18 +4,20 @@ import (
 	"fmt"
 )
 
-type HexFloor = complex128 // type alias
+type hexFloor = complex128 // type alias
 
+// Day24 represents a 2D-list of directions, and a hexagonal floor.
 type Day24 struct {
-	directions [][]HexFloor
-	tiles      map[HexFloor]bool // all tiles, and a flip indicator
+	directions [][]hexFloor
+	tiles      map[hexFloor]bool // all tiles, and a flip indicator
 }
 
+// NewDay24 parses lines of text into a Day24 struct.
 func NewDay24(lines []string) (Day24, error) {
 	var d Day24
-	d.tiles = make(map[HexFloor]bool)
+	d.tiles = make(map[hexFloor]bool)
 	for i, line := range lines {
-		var ds []HexFloor
+		var ds []hexFloor
 		for j := 0; j < len(line); j++ {
 			// map hexagonal directions into complex numbers
 			// greedy directions first
@@ -46,6 +48,7 @@ func NewDay24(lines []string) (Day24, error) {
 	return d, nil
 }
 
+// Part1 solves day 24, part #1.
 func (a *Day24) Part1() {
 	for _, path := range a.directions {
 		// ref needs to be flipped?
@@ -70,7 +73,8 @@ func (a Day24) Flipped() uint {
 	return uint(len(a.tiles))
 }
 
-func (a Day24) Dimension() (HexFloor, HexFloor) { // lower left and upper right
+// Dimension returns the lower left and upper right corner stones.
+func (a Day24) Dimension() (hexFloor, hexFloor) {
 	var minX, minY, maxX, maxY float64
 
 	// cleanly initialize min and max from any random tile
@@ -95,17 +99,18 @@ func (a Day24) Dimension() (HexFloor, HexFloor) { // lower left and upper right
 	return complex(minX, minY), complex(maxX, maxY)
 }
 
+// Part2 solves day 24 part #2.
 func (a *Day24) Part2(days uint) {
-	activeNeighbours := func(tile HexFloor) byte {
+	activeNeighbours := func(tile hexFloor) byte {
 		var n byte
-		for _, c := range []HexFloor{1 + 0i, 0 + 1i, 0 - 1i, -1 + 1i, 1 - 1i, -1 + 0i} {
+		for _, c := range []hexFloor{1 + 0i, 0 + 1i, 0 - 1i, -1 + 1i, 1 - 1i, -1 + 0i} {
 			if a.tiles[tile+c] {
 				n++
 			}
 		}
 		return n
 	}
-	newState := func(tile HexFloor, active bool) bool {
+	newState := func(tile hexFloor, active bool) bool {
 		n := activeNeighbours(tile)
 		// fmt.Printf("tile %f has %d active neighbours\n", tile, n)
 		if active {
@@ -122,7 +127,7 @@ func (a *Day24) Part2(days uint) {
 		return active // no change
 	}
 	for i := uint(0); i < days; i++ {
-		offscreen := make(map[HexFloor]bool)
+		offscreen := make(map[hexFloor]bool)
 		min, max := a.Dimension()
 
 		// allow floor to expand at its borders
