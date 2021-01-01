@@ -162,6 +162,18 @@ Blattschuss, Blattschuss.
 
 I feel proud because i figured out the O(n) solution all by myself.
 
+== Day 11
+
+Blattschuss, Blattschuss.
+
+====
+----
+BenchmarkDay11Part1-16    	      50	  22479241 ns/op	 1469160 B/op	   12301 allocs/op
+BenchmarkDay11Part2
+BenchmarkDay11Part2-16    	      26	  42891330 ns/op	 1000564 B/op	    8365 allocs/op
+----
+====
+
 == Day 12
 
 Bad first guess for part #1. Upon debugging, i realized `turn` commands come
