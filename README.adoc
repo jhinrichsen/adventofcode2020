@@ -183,12 +183,14 @@ BenchmarkDay12Part1-8   	  508400	      2472 ns/op	       0 B/op	       0 allocs
 
 == Day 13
 
-Blattschuss.
+Blattschuss, Blattschuss.
 
 ====
 ----
-BenchmarkDay13Part1-8                 	 4597266	       241 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay13Part1IncludingInput-8   	  123601	      8659 ns/op	    1080 B/op	       6 allocs/op
+BenchmarkDay13Part1-8                   	  124407	      8468 ns/op	    1080 B/op	       6 allocs/op
+BenchmarkDay13Part1ExcludingReading-8   	 3922741	       291 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay13Part2-8                   	   40670	     29423 ns/op	    8298 B/op	     129 allocs/op
+BenchmarkDay13Part2ExcludingReading-8   	   81009	     15642 ns/op	    2296 B/op	     118 allocs/op
 ----
 ====
 

@@ -1,5 +1,10 @@
 package aoc2020
 
+import (
+	"fmt"
+	"math/big"
+)
+
 // look mom - no imports
 
 // Day13  returns product of minutes to wait and bus ID.
@@ -65,4 +70,32 @@ func Day13Part2BruteForce(input []int) uint {
 			return t
 		}
 	}
+}
+
+// Day13Part2CRT uses CRT instead of brute force.
+func Day13Part2CRT(input []int) (uint, error) {
+	// variable field length because we drop all x'es
+	var as []*big.Int
+	var ks []*big.Int
+
+	for i, bus := range input {
+		if bus == x {
+			continue
+		}
+
+		// convert bus line to remainder
+		rem := bus - i
+
+		as = append(as, big.NewInt(int64(rem)))
+		ks = append(ks, big.NewInt(int64(bus)))
+	}
+
+	x, err := CRT(as, ks)
+	if err != nil {
+		return 0, err
+	}
+	if !x.IsUint64() {
+		return 0, fmt.Errorf("not a uint64: %+v", x)
+	}
+	return uint(x.Int64()), nil
 }
