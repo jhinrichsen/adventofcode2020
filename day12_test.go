@@ -57,16 +57,15 @@ func TestDay12Part2(t *testing.T) {
 }
 
 func BenchmarkDay12Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(12))
-	if err != nil {
-		b.Fatal(err)
-	}
-	d, err := NewDay12(lines)
-	if err != nil {
-		b.Fatal(err)
-	}
-	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		lines, err := linesFromFilename(filename(12))
+		if err != nil {
+			b.Fatal(err)
+		}
+		d, err := NewDay12(lines)
+		if err != nil {
+			b.Fatal(err)
+		}
 		_ = d.ManhattanDistance()
 	}
 }
