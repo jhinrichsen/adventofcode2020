@@ -7,6 +7,10 @@ import (
 
 // look mom - no imports
 
+const (
+	x = 1 // neutral element for modulo operations, n % 1 = 0, n ∈ ℕ
+)
+
 // Day13  returns product of minutes to wait and bus ID.
 // lets roll our own stateful parser, just because we can...
 func Day13(buf []byte, part1 bool) uint {

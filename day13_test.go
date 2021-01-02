@@ -58,10 +58,6 @@ func BenchmarkDay13Part1ExcludingReading(b *testing.B) {
 	}
 }
 
-const (
-	x = 1 // neutral element for modulo operations, n % 1 = 0, n ∈ ℕ
-)
-
 var day13Part2Examples = []struct {
 	input []int
 	want  uint

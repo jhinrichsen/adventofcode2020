@@ -12,7 +12,6 @@ import (
 // x ≡ a₂ ( mod n₂ )
 // ⋮
 // x ≡ aₖ ( mod nₖ )
-
 //
 func CRT(a, n []*big.Int) (*big.Int, error) {
 	var one = big.NewInt(1)
