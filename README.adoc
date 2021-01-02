@@ -236,7 +236,7 @@ Will be hard to come up with a O(1), i guess.
 
 == Day 16
 
-Blattschuss.
+Blattschuss, Blattschuss.
 
 == Day 17
 
