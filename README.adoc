@@ -20,8 +20,6 @@ long as you avoid looking at `*_test.go` files.
 - Fedora 33
 - AMD Ryzen 5 3400G on a Gigabyte B450
 
-The package name is `aoc2020`.
-
 Each day lives separately in a `day{{.n}}.go` and `day{{.n}}_test.go` file.
 Unit test data, both examples and puzzle input, is in
 `testdata/day{{.n}}.txt`, and `testdata/day{{.n}}_example.txt`.
