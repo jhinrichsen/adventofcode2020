@@ -14,10 +14,11 @@ Solutions are hardcoded into unit tests, so you won't see any solutions as
 long as you avoid looking at `*_test.go` files.
 
 == Environment
-- Go 1.15.6
+
+- Go 1.15..1.24
 - vim, vim-go, gopls, fed by an HHKB
 - VisualStudio Code for complex debugging scenarios
-- Fedora 33
+- Fedora 33..42
 - AMD Ryzen 5 3400G on a Gigabyte B450
 
 Each day lives separately in a `day{{.n}}.go` and `day{{.n}}_test.go` file.
@@ -48,7 +49,7 @@ Unit test data, both examples and puzzle input, is in
 | 17  |  2
 | 18  |  2
 | 19  |  2
-| 20  | (1)
+| 20  |  2
 | 21  |  2
 | 22  |  2
 | 23  | (1)
@@ -57,12 +58,12 @@ Unit test data, both examples and puzzle input, is in
 |====
 Numbers in (brackets) indicate tries so far (part #2 not solved yet).
 
-== Day 1 
+== Day 1
 Warmup, nice and smooth.
 
 Blattschuss, Blattschuss (answer correct on first try).
 
-== Day 2 
+== Day 2
 Warmup, nice and smooth.
 
 Blattschuss, Blattschuss.
