@@ -142,3 +142,122 @@ func NewState(activeMe bool, activeNeighbours uint) bool {
 	}
 	return false
 }
+
+// ===== Part 2: 4D hypercubes =====
+
+// hcube represents a 4D cube (hypercube) at coordinates (x,y,z,w).
+type hcube struct {
+	x, y, z, w int
+}
+
+// Neighbours returns the 80 neighbours in 4D space (3^4 - 1).
+func (a hcube) Neighbours() []hcube {
+	cubes := make([]hcube, 3*3*3*3-1)
+	var idx int
+	for w := a.w - 1; w <= a.w+1; w++ {
+		for z := a.z - 1; z <= a.z+1; z++ {
+			for y := a.y - 1; y <= a.y+1; y++ {
+				for x := a.x - 1; x <= a.x+1; x++ {
+					c := hcube{x, y, z, w}
+					if c != a { // center cube is not a neighbour
+						cubes[idx] = c
+						idx++
+					}
+				}
+			}
+		}
+	}
+	return cubes
+}
+
+// Day17Hyper models Conway's game of life in 4D.
+type Day17Hyper struct {
+	Active                 map[hcube]bool
+	DimX, DimY, DimZ, DimW int // dimension of our universe per axis (half-extent)
+}
+
+// NewDay17Hyper parses a 2D cell grid into a Day17Hyper (z=0, w=0).
+func NewDay17Hyper(lines []string) (Day17Hyper, error) {
+	d := Day17Hyper{}
+	d.Active = make(map[hcube]bool)
+	d.DimX = len(lines[0])
+	d.DimY = len(lines)
+	d.DimZ = 1
+	d.DimW = 1
+	z, w := 0, 0
+	for y := 0; y < d.DimY; y++ {
+		for x := 0; x < d.DimX; x++ {
+			if lines[y][x] == CubeActive {
+				d.Active[hcube{x, y, z, w}] = true
+			}
+		}
+	}
+	return d, nil
+}
+
+// ActiveCubes returns number of active cubes in 4D universe.
+func (a *Day17Hyper) ActiveCubes() (n uint) {
+	return uint(len(a.Active))
+}
+
+// Cycle runs one atomic generation change in 4D.
+func (a *Day17Hyper) Cycle() {
+	a.Expand()
+	// offline framebuffer
+	fb := make(map[hcube]bool)
+	for w := -a.DimW; w <= a.DimW; w++ {
+		for z := -a.DimZ; z <= a.DimZ; z++ {
+			for y := -a.DimY; y <= a.DimY; y++ {
+				for x := -a.DimX; x <= a.DimX; x++ {
+					here := hcube{x, y, z, w}
+					oldMe := a.Active[here]
+					n := a.ActiveNeighbours(here)
+					newMe := NewState(oldMe, n)
+					if newMe {
+						fb[here] = true
+					}
+				}
+			}
+		}
+	}
+	a.Active = fb
+}
+
+// ActiveNeighbours returns the number of neighbours in active state (0..80).
+func (a Day17Hyper) ActiveNeighbours(c hcube) (n uint) {
+	ns := c.Neighbours()
+	for i := 0; i < len(ns); i++ {
+		c := ns[i]
+		if a.Active[c] {
+			n++
+		}
+	}
+	return
+}
+
+// Expand grows the universe by one unit on each axis.
+func (a *Day17Hyper) Expand() {
+	a.DimX++
+	a.DimY++
+	a.DimZ++
+	a.DimW++
+}
+
+// Rep returns a two-dimensional string representation for axes z,w fixed (debug).
+func (a Day17Hyper) Rep(z, w int) string {
+	var sb strings.Builder
+	for y := 0; y < a.DimY; y++ {
+		for x := 0; x < a.DimX; x++ {
+			d := hcube{x, y, z, w}
+			if a.Active[d] {
+				sb.WriteRune(CubeActive)
+			} else {
+				sb.WriteRune(CubeInactive)
+			}
+		}
+		if y < a.DimY-1 {
+			sb.WriteRune('\n')
+		}
+	}
+	return sb.String()
+}

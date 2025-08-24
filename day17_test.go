@@ -84,3 +84,37 @@ func BenchmarkDay17Part1(b *testing.B) {
 		_ = d.ActiveCubes()
 	}
 }
+
+func testDay17Hyper(t *testing.T, filename string, cycles uint, want uint) {
+	lines, err := linesFromFilename(filename)
+	if err != nil {
+		t.Fatal(err)
+	}
+	d, err := NewDay17Hyper(lines)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i := uint(0); i < cycles; i++ {
+		d.Cycle()
+	}
+	got := d.ActiveCubes()
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
+	}
+}
+
+func TestDay17Part2Example(t *testing.T) {
+	const (
+		cycles = 6
+		want   = 848
+	)
+	testDay17Hyper(t, exampleFilename(17), cycles, want)
+}
+
+func TestDay17Part2(t *testing.T) {
+	const (
+		cycles = 6
+		want   = 2472
+	)
+	testDay17Hyper(t, filename(17), cycles, want)
+}
