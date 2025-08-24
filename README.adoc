@@ -229,6 +229,8 @@ BenchmarkDay24Part2-16    	       4	 250536864 ns/op	14597864 B/op	    4705 allo
 BenchmarkDay24Part2-16    	       5	 251016088 ns/op	14513270 B/op	    4699 allocs/op
 ----
 
+Min-sum: 1260790603 ns (1260.791 ms, 1.260791 s)
+
 == Day 1
 
 Warmup, nice and smooth.
