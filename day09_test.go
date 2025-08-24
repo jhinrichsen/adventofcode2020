@@ -13,7 +13,7 @@ func testDay9(t *testing.T, filename string, part1 bool, preamble int, want int)
 	if err != nil {
 		t.Fatal(err)
 	}
-	got, err := Day9(numbers, preamble, part1)
+	got, err := Day09(numbers, preamble, part1)
 	if err != nil {
 		t.Fatal(err)
 	}

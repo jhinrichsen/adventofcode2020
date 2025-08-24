@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-// Day8 returns accumulator, and , and true if the program terminated normally,
+// Day08 returns accumulator, and , and true if the program terminated normally,
 // or false if any one line is executed second time (which indicates a loop).
-func Day8(lines []string, part1 bool) (int, bool) {
+func Day08(lines []string, part1 bool) (int, bool) {
 	var pc, acc int
 	visited := make(map[int]bool)
 	ended := func() bool {
@@ -50,7 +50,7 @@ func Day8(lines []string, part1 bool) (int, bool) {
 			continue
 		}
 
-		rc, b := Day8(lines, true)
+		rc, b := Day08(lines, true)
 		if b {
 			return rc, true
 		}

@@ -2,11 +2,11 @@ package aoc2020
 
 import "fmt"
 
-// Day9 returns the first number that is not the sum of any two numbers in
+// Day09 returns the first number that is not the sum of any two numbers in
 // preamble for part 1.
 // For part 2, it returns the sum of the smallest and largest contiguous range
 // whose sum is the number of part 1.
-func Day9(numbers []int, preamble int, part1 bool) (int, error) {
+func Day09(numbers []int, preamble int, part1 bool) (int, error) {
 	valid := func(idx int) bool {
 		start := idx - preamble
 		stop := idx

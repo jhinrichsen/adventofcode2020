@@ -9,7 +9,7 @@ func testDay8(t *testing.T, part1 bool, filename string, want int) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got, b := Day8(lines, part1)
+	got, b := Day08(lines, part1)
 	// ignore ran-to-end for part1
 	if !part1 && !b {
 		t.Fatal("did not run to end, terminated abnormally")

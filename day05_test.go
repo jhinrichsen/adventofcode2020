@@ -19,7 +19,7 @@ func testDay5(t *testing.T, filename string, part1 bool, want uint) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := Day5(lines, part1)
+	got := Day05(lines, part1)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
@@ -29,7 +29,7 @@ func TestDay5Samples(t *testing.T) {
 	for _, tt := range day5Samples {
 		t.Run(tt.in, func(t *testing.T) {
 			want := tt.out
-			got := Day5([]string{tt.in}, true)
+			got := Day05([]string{tt.in}, true)
 			if want != got {
 				t.Fatalf("want %d but got %d", want, got)
 			}
@@ -74,7 +74,7 @@ func BenchmarkDay5(b *testing.B) {
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Day5(lines, true)
+		Day05(lines, true)
 	}
 }
 
@@ -84,7 +84,7 @@ func BenchmarkDay5IncludingInput(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
-		Day5(lines, true)
+		Day05(lines, true)
 	}
 }
 

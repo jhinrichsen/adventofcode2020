@@ -7,7 +7,7 @@ func testDay2(t *testing.T, filename string, part1 bool, want uint) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got, err := Day2(lines, part1)
+	got, err := Day02(lines, part1)
 	if err != nil {
 		t.Fatal(err)
 	}

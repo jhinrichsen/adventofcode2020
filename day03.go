@@ -19,9 +19,9 @@ func slope(lines []string, f slopeFn) uint {
 	return trees
 }
 
-// Day3 returns number of trees encountered for part1, otherwise product of
+// Day03 returns number of trees encountered for part1, otherwise product of
 // slopes (1,1), (3,1), (5,1), (7,1) and (1,2).
-func Day3(lines []string, part1 bool) uint {
+func Day03(lines []string, part1 bool) uint {
 	border := uint(len(lines[0]))
 	if part1 {
 		return slope(lines, func(x, y uint) (uint, uint) {

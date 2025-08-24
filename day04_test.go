@@ -7,7 +7,7 @@ func testDay4(t *testing.T, filename string, part1 bool, want uint) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := Day4(lines, part1)
+	got := Day04(lines, part1)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
@@ -32,7 +32,7 @@ func BenchmarkDay4Part2(b *testing.B) {
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Day4(lines, false)
+		Day04(lines, false)
 	}
 }
 
@@ -42,6 +42,6 @@ func BenchmarkDay4Part2IncludingInput(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
-		Day4(lines, false)
+		Day04(lines, false)
 	}
 }

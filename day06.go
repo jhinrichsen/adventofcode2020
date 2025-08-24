@@ -1,7 +1,7 @@
 package aoc2020
 
-// Day6 returns number of distict answers by group.
-func Day6(lines []string, part1 bool) uint {
+// Day06 returns number of distict answers by group.
+func Day06(lines []string, part1 bool) uint {
 	n := uint(0)
 
 	var m map[byte]byte

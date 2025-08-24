@@ -9,7 +9,7 @@ func testDay3(t *testing.T, filename string, part1 bool, want uint) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := Day3(lines, part1)
+	got := Day03(lines, part1)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}

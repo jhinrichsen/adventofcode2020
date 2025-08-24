@@ -1,7 +1,7 @@
 package aoc2020
 
-// Day1 returns product of two numbers that add up to 2020.
-func Day1(ns map[uint]bool, part1 bool) uint {
+// Day01 returns product of two numbers that add up to 2020.
+func Day01(ns map[uint]bool, part1 bool) uint {
 	if part1 {
 		for k := range ns {
 			rest := 2020 - k

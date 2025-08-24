@@ -18,9 +18,9 @@ func Day5Part1(seats []string) uint {
 	return max
 }
 
-// Day5 returns max seat ID for part1 or missing seat for binary space
+// Day05 returns max seat ID for part1 or missing seat for binary space
 // partitioned seats.
-func Day5(seats []string, part1 bool) uint {
+func Day05(seats []string, part1 bool) uint {
 	max := uint(0)
 	var ids []uint
 	for _, seat := range seats {

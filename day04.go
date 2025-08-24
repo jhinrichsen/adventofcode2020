@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// Day4 returns number of valid passports.
-func Day4(lines []string, part1 bool) uint {
+// Day04 returns number of valid passports.
+func Day04(lines []string, part1 bool) uint {
 	n := uint(0)
 	newPass := func() map[string]string {
 		return make(map[string]string)

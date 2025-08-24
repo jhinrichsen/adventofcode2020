@@ -32,8 +32,8 @@ func (a day2) Valid(part1 bool) bool {
 	return p1 != p2
 }
 
-// Day2 return number of valid passwords.
-func Day2(lines []string, part1 bool) (uint, error) {
+// Day02 return number of valid passwords.
+func Day02(lines []string, part1 bool) (uint, error) {
 	n := uint(0)
 	for i, line := range lines {
 		d, err := parseDay2(line)
