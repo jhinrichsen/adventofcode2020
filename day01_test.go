@@ -33,7 +33,7 @@ func parseUints(lines []string) (map[uint]bool, error) {
 	return is, nil
 }
 
-func TestSampleDay1Part1(t *testing.T) {
+func TestDay01Part1Example(t *testing.T) {
 	const (
 		want  = 514579
 		part1 = true
@@ -41,7 +41,7 @@ func TestSampleDay1Part1(t *testing.T) {
 	testDay1(t, exampleFilename(1), want, part1)
 }
 
-func TestDay1Part1(t *testing.T) {
+func TestDay01Part1(t *testing.T) {
 	const (
 		want  = 485739
 		part1 = true
@@ -49,7 +49,7 @@ func TestDay1Part1(t *testing.T) {
 	testDay1(t, filename(1), want, part1)
 }
 
-func TestSampleDay1Part2(t *testing.T) {
+func TestDay01Part2Example(t *testing.T) {
 	const (
 		want  = 241861950
 		part1 = false
@@ -57,7 +57,7 @@ func TestSampleDay1Part2(t *testing.T) {
 	testDay1(t, exampleFilename(1), want, part1)
 }
 
-func TestDay1Part2(t *testing.T) {
+func TestDay01Part2(t *testing.T) {
 	const (
 		want  = 161109702
 		part1 = false

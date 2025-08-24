@@ -13,18 +13,18 @@ func testDay6(t *testing.T, filename string, part1 bool, want uint) {
 	}
 }
 
-func TestDay6Example(t *testing.T) {
+func TestDay06Example(t *testing.T) {
 	testDay6(t, exampleFilename(6), true, 11)
 }
 
-func TestDay6Part1(t *testing.T) {
+func TestDay06Part1(t *testing.T) {
 	testDay6(t, filename(6), true, 6596)
 }
 
-func TestDay6ExamplePart2(t *testing.T) {
+func TestDay06ExamplePart2(t *testing.T) {
 	testDay6(t, "testdata/day6_example_part2.txt", false, 6)
 }
 
-func TestDay6Part2(t *testing.T) {
+func TestDay06Part2(t *testing.T) {
 	testDay6(t, filename(6), false, 3219)
 }

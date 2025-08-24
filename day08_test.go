@@ -19,14 +19,14 @@ func testDay8(t *testing.T, part1 bool, filename string, want int) {
 	}
 }
 
-func TestDay8Example(t *testing.T) {
+func TestDay08Example(t *testing.T) {
 	testDay8(t, true, exampleFilename(8), 5)
 }
 
-func TestDay8Part1(t *testing.T) {
+func TestDay08Part1(t *testing.T) {
 	testDay8(t, true, filename(8), 2058)
 }
 
-func TestDay8Part2(t *testing.T) {
+func TestDay08Part2(t *testing.T) {
 	testDay8(t, false, filename(8), 1000)
 }

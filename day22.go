@@ -32,10 +32,7 @@ func Day22Part1(p1, p2 []card) (uint, error) {
 // recursive games (`game > 1` ).
 func Day22Part2(p1, p2 []card, game uint) uint {
 	recurse := func(draw card, deck []card) bool {
-		if draw <= card(len(deck)) {
-			return true
-		}
-		return false
+		return draw <= card(len(deck))
 	}
 
 	type checksum [md5.Size]byte

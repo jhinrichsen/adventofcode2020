@@ -55,8 +55,7 @@ func Day16(lines []string, part1 bool) (uint, error) {
 		for i := range fs {
 			n, err := strconv.Atoi(fs[i])
 			if err != nil {
-				msg := "error converting value #%d: %w"
-				return is, fmt.Errorf(msg, err)
+				return is, fmt.Errorf("error converting value #%d, %s: %w", i, fs[i], err)
 			}
 			is = append(is, uint(n))
 		}
@@ -180,8 +179,7 @@ func Day16(lines []string, part1 bool) (uint, error) {
 	// make sure any position has exactly one field
 	for i := range positions {
 		if len(positions[i]) != 1 {
-			msg := "position %d has no unique key: %+v"
-			return 0, fmt.Errorf(msg, positions[i])
+			return 0, fmt.Errorf("position %d has no unique key: %+v", i, positions[i])
 		}
 	}
 

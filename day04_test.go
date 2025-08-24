@@ -13,19 +13,19 @@ func testDay4(t *testing.T, filename string, part1 bool, want uint) {
 	}
 }
 
-func TestDay4Example(t *testing.T) {
+func TestDay04Example(t *testing.T) {
 	testDay4(t, exampleFilename(4), true, 2)
 }
 
-func TestDay4Part1(t *testing.T) {
+func TestDay04Part1(t *testing.T) {
 	testDay4(t, filename(4), true, 235)
 }
 
-func TestDay4Part2(t *testing.T) {
+func TestDay04Part2(t *testing.T) {
 	testDay4(t, filename(4), false, 194)
 }
 
-func BenchmarkDay4Part2(b *testing.B) {
+func BenchmarkDay04Part2(b *testing.B) {
 	lines, err := linesFromFilename(filename(4))
 	if err != nil {
 		b.Fatal(err)
@@ -36,7 +36,7 @@ func BenchmarkDay4Part2(b *testing.B) {
 	}
 }
 
-func BenchmarkDay4Part2IncludingInput(b *testing.B) {
+func BenchmarkDay04Part2IncludingInput(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		lines, err := linesFromFilename(filename(4))
 		if err != nil {

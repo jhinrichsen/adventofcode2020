@@ -25,7 +25,7 @@ func testDay5(t *testing.T, filename string, part1 bool, want uint) {
 	}
 }
 
-func TestDay5Samples(t *testing.T) {
+func TestDay05Samples(t *testing.T) {
 	for _, tt := range day5Samples {
 		t.Run(tt.in, func(t *testing.T) {
 			want := tt.out
@@ -38,15 +38,15 @@ func TestDay5Samples(t *testing.T) {
 
 }
 
-func TestDay5Example(t *testing.T) {
+func TestDay05Example(t *testing.T) {
 	testDay5(t, exampleFilename(5), true, 820)
 }
 
-func TestDay5(t *testing.T) {
+func TestDay05(t *testing.T) {
 	testDay5(t, filename(5), true, 904)
 }
 
-func BenchmarkDay5Part1(b *testing.B) {
+func BenchmarkDay05Part1(b *testing.B) {
 	lines, err := linesFromFilename(filename(5))
 	if err != nil {
 		b.Fatal(err)
@@ -57,7 +57,7 @@ func BenchmarkDay5Part1(b *testing.B) {
 	}
 }
 
-func BenchmarkDay5Part1IncludingInput(b *testing.B) {
+func BenchmarkDay05Part1IncludingInput(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		lines, err := linesFromFilename(filename(5))
 		if err != nil {
@@ -67,7 +67,7 @@ func BenchmarkDay5Part1IncludingInput(b *testing.B) {
 	}
 }
 
-func BenchmarkDay5(b *testing.B) {
+func BenchmarkDay05(b *testing.B) {
 	lines, err := linesFromFilename(filename(5))
 	if err != nil {
 		b.Fatal(err)
@@ -78,7 +78,7 @@ func BenchmarkDay5(b *testing.B) {
 	}
 }
 
-func BenchmarkDay5IncludingInput(b *testing.B) {
+func BenchmarkDay05IncludingInput(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		lines, err := linesFromFilename(filename(5))
 		if err != nil {
@@ -88,6 +88,6 @@ func BenchmarkDay5IncludingInput(b *testing.B) {
 	}
 }
 
-func TestDay5Part2(t *testing.T) {
+func TestDay05Part2(t *testing.T) {
 	testDay5(t, filename(5), false, 669)
 }
