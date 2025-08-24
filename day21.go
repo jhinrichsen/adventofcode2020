@@ -144,13 +144,18 @@ func (a *Day21) reduceN() (allergen, ingredient, bool) {
 	as := a.allergens()
 	sas := sortByOccurenceDesc(as)
 
-	var fs []food // foods that contain a certain allergen
 	for i := range sas {
+		// foods that contain the current allergen
+		var fs []food
 		// find all foods that contain allergen
 		for j := range *a {
 			if _, ok := (*a)[j].allergens[sas[i]]; ok {
 				fs = append(fs, (*a)[j])
 			}
+		}
+		if len(fs) == 0 {
+			// no foods carry this allergen anymore
+			continue
 		}
 		// see if we have exactly one ingredient in all foods, in this
 		// case it is the right ingredient/allergen match
@@ -178,21 +183,19 @@ func (a *Day21) reduceN() (allergen, ingredient, bool) {
 
 // sortByOccurenceDesc converts a map into a sorted list.
 func sortByOccurenceDesc(m map[allergen]uint) []allergen {
-	var as []allergen
-	for len(m) > 0 {
-		var max uint
-		var maxA allergen
-		for k, v := range m {
-			if v > max {
-				max = v
-				maxA = k
-			}
-		}
-		// move from map to array
-		as = append(as, maxA)
-		delete(m, maxA)
-	}
-	return as
+    // Collect keys and sort deterministically by count desc, then name asc.
+    as := make([]allergen, 0, len(m))
+    for k := range m {
+        as = append(as, k)
+    }
+    sort.Slice(as, func(i, j int) bool {
+        ci, cj := m[as[i]], m[as[j]]
+        if ci != cj {
+            return ci > cj
+        }
+        return string(as[i]) < string(as[j])
+    })
+    return as
 }
 
 // allergens returns a list of allergens, and their occurence in all food.
