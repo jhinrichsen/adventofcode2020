@@ -8,24 +8,53 @@ import (
 )
 
 // Day19 returns the number of messages that match rule 0.
-func Day19(lines []string) (uint, error) {
+// If part1 is false, apply Part 2 semantics: rules 8 and 11 become recursive.
+func Day19(lines []string, part1 bool) (uint, error) {
 	rls, msgs, err := parseDay19(lines)
 	if err != nil {
 		return 0, err
 	}
 
-	rule, err := resolve(rls, "0")
+	buildRegex := func() (string, error) {
+		if part1 {
+			rule, err := resolve(rls, "0")
+			if err != nil {
+				return "", err
+			}
+			return strings.Join(rule, ""), nil
+		}
+		// Part 2: compute regex for rules 42 and 31, then enforce m>n>=1 where
+		// message matches ^(?:42){m}(?:31){n}$.
+		r42toks, err := resolve(rls, "42")
+		if err != nil {
+			return "", err
+		}
+		r31toks, err := resolve(rls, "31")
+		if err != nil {
+			return "", err
+		}
+		r42 := strings.Join(r42toks, "")
+		r31 := strings.Join(r31toks, "")
+		// Build bounded alternation over n = 1..K: (?: (?:42){n+1,}(?:31){n} )
+		const K = 10
+		alts := make([]string, 0, K)
+		for n := 1; n <= K; n++ {
+			// at least n+1 of 42, then exactly n of 31
+			alt := "(?:" + "(?:" + r42 + "){" + strconv.Itoa(n+1) + ",}" + "(?:" + r31 + "){" + strconv.Itoa(n) + "}" + ")"
+			alts = append(alts, alt)
+		}
+		return "(?:" + strings.Join(alts, "|") + ")", nil
+	}
+
+	s, err := buildRegex()
 	if err != nil {
 		return 0, err
 	}
-	s := strings.Join(rule, "")
-
 	// build regular expression
 	s = "^" + s + "$"
 	r, err := regexp.Compile(s)
 	if err != nil {
-		return 0, fmt.Errorf("error creating regexp for %q: %w",
-			s, err)
+		return 0, fmt.Errorf("error creating regexp for %q: %w", s, err)
 	}
 
 	// count matches
