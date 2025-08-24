@@ -50,7 +50,7 @@ func TestDay20Example(t *testing.T) {
 	testDay20Part1(t, exampleFilename(20), 20899048083289)
 }
 
-func TestDay20(t *testing.T) {
+func TestDay20Part1(t *testing.T) {
 	testDay20Part1(t, filename(20), 45079100979683)
 }
 

@@ -58,7 +58,7 @@ func TestDay17Example(t *testing.T) {
 	testDay17(t, exampleFilename(17), cycles, want)
 }
 
-func TestDay17(t *testing.T) {
+func TestDay17Part1(t *testing.T) {
 	const (
 		cycles = 6
 		want   = 353

@@ -42,7 +42,7 @@ func TestDay05Example(t *testing.T) {
 	testDay5(t, exampleFilename(5), true, 820)
 }
 
-func TestDay05(t *testing.T) {
+func TestDay05Part1(t *testing.T) {
 	testDay5(t, filename(5), true, 904)
 }
 

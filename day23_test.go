@@ -29,7 +29,7 @@ func TestDay23Example100(t *testing.T) {
 	testDay23(t, input, moves, want)
 }
 
-func TestDay23(t *testing.T) {
+func TestDay23Part1(t *testing.T) {
 	const (
 		input = 962713854
 		moves = 100

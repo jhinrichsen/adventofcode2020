@@ -20,7 +20,7 @@ func TestDay25Example(t *testing.T) {
 	testDay25(t, n1, n2, want)
 }
 
-func TestDay25(t *testing.T) {
+func TestDay25Part1(t *testing.T) {
 	const (
 		n1   = 11404017
 		n2   = 13768789

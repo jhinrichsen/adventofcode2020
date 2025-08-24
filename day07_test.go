@@ -28,7 +28,7 @@ func TestDay07Part1Example(t *testing.T) {
 	testDay7(t, exampleFilename(7), true, 4)
 }
 
-func TestDay07(t *testing.T) {
+func TestDay07Part1(t *testing.T) {
 	testDay7(t, filename(7), true, 252)
 }
 

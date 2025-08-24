@@ -35,7 +35,7 @@ func TestDay22Part1Example(t *testing.T) {
 	testDay22(t, exampleFilename(22), part1, want)
 }
 
-func TestDay22(t *testing.T) {
+func TestDay22Part1(t *testing.T) {
 	const (
 		want  = 29764
 		part1 = true
