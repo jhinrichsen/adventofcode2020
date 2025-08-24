@@ -62,16 +62,16 @@ func Day14(lines []string, part1 bool) (int, error) {
 						buf[j] = mask[j]
 					}
 				}
-				// phase two: permute floating bits in mask
-				perms := make(map[string]bool)
-				perms[string(buf)] = true
+				// phase two: permute floating bits
+				perms := make(map[string]struct{})
+				perms[string(buf)] = struct{}{}
 				for {
 					more := false
 					for k := range perms {
 						if strings.ContainsRune(k, 'X') {
 							more = true
-							perms[strings.Replace(k, "X", "0", 1)] = true
-							perms[strings.Replace(k, "X", "1", 1)] = true
+							perms[strings.Replace(k, "X", "0", 1)] = struct{}{}
+							perms[strings.Replace(k, "X", "1", 1)] = struct{}{}
 							delete(perms, k)
 						}
 					}

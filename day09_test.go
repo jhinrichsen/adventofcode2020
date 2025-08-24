@@ -57,3 +57,29 @@ func TestDay09Part2(t *testing.T) {
 	)
 	testDay9(t, filename(9), part1, preamble, want)
 }
+
+func BenchmarkDay09Part1(b *testing.B) {
+    lines := linesFromFilenameTB(b, filename(9))
+    numbers, err := linesAsNumbers(lines)
+    if err != nil {
+        b.Fatal(err)
+    }
+    const preamble = 25
+    b.ResetTimer()
+    for b.Loop() {
+        _, _ = Day09(numbers, preamble, true)
+    }
+}
+
+func BenchmarkDay09Part2(b *testing.B) {
+    lines := linesFromFilenameTB(b, filename(9))
+    numbers, err := linesAsNumbers(lines)
+    if err != nil {
+        b.Fatal(err)
+    }
+    const preamble = 25
+    b.ResetTimer()
+    for b.Loop() {
+        _, _ = Day09(numbers, preamble, false)
+    }
+}

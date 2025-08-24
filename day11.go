@@ -3,7 +3,6 @@ package aoc2020
 const (
 	empty    = 'L'
 	occupied = '#'
-	floor    = '.'
 )
 
 // Day11 holds a grid.
@@ -54,9 +53,10 @@ func (a *Day11) Adjacents(x, y int) (count byte) {
 			x += dx
 			y += dy
 			for 0 <= y && y < dimy && 0 <= x && x < dimx {
-				if a.Grid[y][x] == occupied {
+				switch a.Grid[y][x] {
+				case occupied:
 					return 1
-				} else if a.Grid[y][x] == empty { // empty seats break visibility
+				case empty: // empty seats break visibility
 					return 0
 				}
 				x += dx

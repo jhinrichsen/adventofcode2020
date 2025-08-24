@@ -7,13 +7,58 @@ import (
 	"strings"
 )
 
+// rules maps a numerical index to a sequence of token.
+type rules map[string][]string
+
+// Puzzle19 holds parsed rules and input messages.
+type Puzzle19 struct {
+	rls  rules
+	msgs []string
+}
+
+// NewDay19 parses the input lines into a Puzzle19 structure.
+func NewDay19(lines []string) (Puzzle19, error) {
+	rls := make(map[string][]string)
+	var msgs []string
+	isRule := func(s string) bool { // 0: 4 1 5
+		return strings.Contains(s, ":")
+	}
+	isCharRule := func(fs []string) bool { // "4"
+		return len(fs) == 1 && fs[0][0] == '"' && fs[0][2] == '"'
+	}
+	for i, line := range lines {
+		if isRule(line) {
+			fs := strings.Split(line, ":")
+			if len(fs) != 2 {
+				msg := "line %d: want %q but got %q"
+				return Puzzle19{}, fmt.Errorf(msg, i, "key: value", line)
+			}
+			key := fs[0]
+			// tokenize rule values
+			fs = strings.Fields(fs[1])
+
+			// optionally unquote character rules from surrounding quotes
+			if isCharRule(fs) {
+				s, err := strconv.Unquote(fs[0])
+				if err != nil {
+					msg := "line %d: error unquoting %q: %w"
+					return Puzzle19{}, fmt.Errorf(msg, i, fs[0], err)
+				}
+				fs[0] = s
+			}
+			rls[key] = fs
+		} else if line > "" { // messages
+			msgs = append(msgs, line)
+		}
+		// ignore blank lines
+	}
+	return Puzzle19{rls: rls, msgs: msgs}, nil
+}
+
 // Day19 returns the number of messages that match rule 0.
 // If part1 is false, apply Part 2 semantics: rules 8 and 11 become recursive.
-func Day19(lines []string, part1 bool) (uint, error) {
-	rls, msgs, err := parseDay19(lines)
-	if err != nil {
-		return 0, err
-	}
+func Day19(p Puzzle19, part1 bool) (uint, error) {
+	rls, msgs := p.rls, p.msgs
 
 	buildRegex := func() (string, error) {
 		if part1 {
@@ -65,50 +110,6 @@ func Day19(lines []string, part1 bool) (uint, error) {
 		}
 	}
 	return n, nil
-}
-
-// rules maps a numerical index to a sequence of token.
-type rules map[string][]string
-
-func parseDay19(lines []string) (rules, []string, error) {
-	rls := make(map[string][]string)
-	var msgs []string
-	isRule := func(s string) bool { // 0: 4 1 5
-		return strings.Contains(s, ":")
-	}
-	isCharRule := func(fs []string) bool { // "4"
-		return len(fs) == 1 && fs[0][0] == '"' && fs[0][2] == '"'
-	}
-	for i, line := range lines {
-		if isRule(line) {
-			fs := strings.Split(line, ":")
-			if len(fs) != 2 {
-				msg := "line %d: want %q but got %q"
-				return nil, nil, fmt.Errorf(msg,
-					i, "key: value", line)
-			}
-			key := fs[0]
-			// tokenize rule values
-			fs = strings.Fields(fs[1])
-
-			// optionally unquote character rules from surrounding
-			// quotes
-			if isCharRule(fs) {
-				s, err := strconv.Unquote(fs[0])
-				if err != nil {
-					msg := "line %d: error unquoting %q: %w"
-					return nil, nil,
-						fmt.Errorf(msg, i, fs[0], err)
-				}
-				fs[0] = s
-			}
-			rls[key] = fs
-		} else if line > "" {
-			msgs = append(msgs, line)
-		}
-		// ignore lines other than rules or messages
-	}
-	return rls, msgs, nil
 }
 
 func resolve(rls rules, root string) ([]string, error) {

@@ -9,13 +9,13 @@ type hexFloor = complex128 // type alias
 // Day24 represents a 2D-list of directions, and a hexagonal floor.
 type Day24 struct {
 	directions [][]hexFloor
-	tiles      map[hexFloor]bool // all tiles, and a flip indicator
+	tiles      map[hexFloor]struct{} // active tiles set
 }
 
 // NewDay24 parses lines of text into a Day24 struct.
 func NewDay24(lines []string) (Day24, error) {
 	var d Day24
-	d.tiles = make(map[hexFloor]bool)
+	d.tiles = make(map[hexFloor]struct{})
 	for i, line := range lines {
 		var ds []hexFloor
 		for j := 0; j < len(line); j++ {
@@ -57,12 +57,13 @@ func (a *Day24) Part1() {
 			ref += path[j]
 		}
 		// only flip last tile, not complete path!
-		// only store active tiles
-		newState := !a.tiles[ref]
-		if newState {
-			a.tiles[ref] = true
-		} else {
+		// active tiles are stored as a set
+		if _, ok := a.tiles[ref]; ok {
+			// was active -> flip to inactive
 			delete(a.tiles, ref)
+		} else {
+			// was inactive -> flip to active
+			a.tiles[ref] = struct{}{}
 		}
 	}
 }
@@ -104,7 +105,7 @@ func (a *Day24) Part2(days uint) {
 	activeNeighbours := func(tile hexFloor) byte {
 		var n byte
 		for _, c := range []hexFloor{1 + 0i, 0 + 1i, 0 - 1i, -1 + 1i, 1 - 1i, -1 + 0i} {
-			if a.tiles[tile+c] {
+			if _, ok := a.tiles[tile+c]; ok {
 				n++
 			}
 		}
@@ -127,7 +128,7 @@ func (a *Day24) Part2(days uint) {
 		return active // no change
 	}
 	for i := uint(0); i < days; i++ {
-		offscreen := make(map[hexFloor]bool)
+		offscreen := make(map[hexFloor]struct{})
 		min, max := a.Dimension()
 
 		// allow floor to expand at its borders
@@ -137,12 +138,11 @@ func (a *Day24) Part2(days uint) {
 		for y := imag(min); y <= imag(max); y++ {
 			for x := real(min); x <= real(max); x++ {
 				tile := complex(x, y)
-				active := newState(tile, a.tiles[tile])
+				_, wasActive := a.tiles[tile]
+				active := newState(tile, wasActive)
 				// only store active tiles
 				if active { // change
-					offscreen[tile] = true
-				} else {
-					delete(offscreen, tile)
+					offscreen[tile] = struct{}{}
 				}
 			}
 		}

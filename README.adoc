@@ -65,6 +65,72 @@ Warmup, nice and smooth.
 
 Blattschuss, Blattschuss (answer correct on first try).
 
+
+Baseline
+
+----
+$ go test -run=^$ -bench=Day01 -benchmem -count=10
+goos: linux
+goarch: amd64
+pkg: gitlab.com/jhinrichsen/adventofcode2020
+cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics     
+BenchmarkDay01Part1-16                    126535              9146 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    124532              9374 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    128012              9236 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    127933              9223 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    126952              9145 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    122469              9280 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    123217              9045 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    121120              9241 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    125018              9242 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part1-16                    124299              9309 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      5820            203553 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      6472            206767 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      5389            213131 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      5908            213779 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      5270            202413 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      5754            197027 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      6098            199462 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      6312            200622 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      5878            198426 ns/op            9544 B/op         13 allocs/op
+BenchmarkDay01Part2-16                      5851            200129 ns/op            9544 B/op         13 allocs/op
+----
+
+Using a custom parser, and allocating a length optimized map:
+
+----
+goos: linux
+goarch: amd64
+pkg: gitlab.com/jhinrichsen/adventofcode2020
+cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics
+                        │     b0      │                 b1                  │
+                        │   sec/op    │   sec/op     vs base                │
+Day01Part1-16             9.239µ ± 1%   5.885µ ± 1%  -36.30% (p=0.000 n=10)
+Day01Part2-16             201.5µ ± 6%   114.1µ ± 2%  -43.39% (p=0.000 n=10)
+Day01Part1Concurrent-16                 26.00µ ± 1%
+Day01Part2Concurrent-16                 143.5µ ± 1%
+geomean                   43.15µ        39.78µ       -39.95%
+
+                        │      b0      │                  b1                   │
+                        │     B/op     │     B/op       vs base                │
+Day01Part1-16             9.320Ki ± 0%   18.039Ki ± 0%  +93.55% (p=0.000 n=10)
+Day01Part2-16             9.320Ki ± 0%   18.039Ki ± 0%  +93.55% (p=0.000 n=10)
+Day01Part1Concurrent-16                   18.20Ki ± 0%
+Day01Part2Concurrent-16                   18.20Ki ± 0%
+geomean                   9.320Ki         18.12Ki       +93.55%
+
+                        │     b0      │                 b1                 │
+                        │  allocs/op  │ allocs/op   vs base                │
+Day01Part1-16             13.000 ± 0%   3.000 ± 0%  -76.92% (p=0.000 n=10)
+Day01Part2-16             13.000 ± 0%   3.000 ± 0%  -76.92% (p=0.000 n=10)
+Day01Part1Concurrent-16                 5.000 ± 0%
+Day01Part2Concurrent-16                 5.000 ± 0%
+geomean                    13.00        3.873       -76.92%
+---
+
+The size of the allocation doubles using a conservative map size, but the number of allocations drop 4x.
+Concurrent uses an async chan between parser and solver, but as usual, the channel introduces more overhead than it shaves off the runtime.
+
 == Day 2
 
 Warmup, nice and smooth.

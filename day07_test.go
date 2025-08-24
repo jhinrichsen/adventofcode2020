@@ -9,7 +9,7 @@ func testDay7(t *testing.T, filename string, part1 bool, want uint) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	bags, err := parseDay7(lines)
+	bags, err := NewDay07(lines)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -33,17 +33,20 @@ func TestDay07(t *testing.T) {
 }
 
 func BenchmarkDay07Part1(b *testing.B) {
-	lines, err := linesFromFilename(filename(7))
-	if err != nil {
-		b.Fatal(err)
-	}
-	bags, err := parseDay7(lines)
-	if err != nil {
-		b.Fatal(err)
-	}
+	lines := linesFromFilenameTB(b, filename(7))
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		Day7Part1(bags)
+	for b.Loop() {
+		bags, _ := NewDay07(lines)
+		_ = Day7Part1(bags)
+	}
+}
+
+func BenchmarkDay07Part2(b *testing.B) {
+	lines := linesFromFilenameTB(b, filename(7))
+	b.ResetTimer()
+	for b.Loop() {
+		bags, _ := NewDay07(lines)
+		_ = Day7Part2(bags)
 	}
 }
 

@@ -15,13 +15,51 @@ type Bag struct {
 }
 
 // Bags of a certain color contain n other bags.
-type Bags map[color]map[Bag]bool
+type Bags map[color]map[Bag]struct{}
+
+// NewDay07 parses one input line in the form "light red bags contain 1 bright
+// white bag, 2 muted yellow bags.".
+// Bags that contain no other bags are dismissed.
+func NewDay07(lines []string) (Bags, error) {
+	allBags := make(Bags)
+	for i, line := range lines {
+		fs := strings.Fields(line)
+		if fs[2] != "bags" {
+			return allBags, fmt.Errorf("line %d: want field 3 to be %q but got %q", i, "bags", fs[2])
+		}
+		keyColor := fs[0] + " " + fs[1]
+
+		// special case
+		if strings.Contains(line, "no other bags") {
+			continue
+		}
+
+		s := strings.Join(fs[4:], " ")
+		ps := strings.Split(s, ",")
+		bags := make(map[Bag]struct{})
+		for j := range ps {
+			fs := strings.Fields(ps[j])
+			if len(fs) != 4 {
+				return allBags, fmt.Errorf("line %d, part %d: want %d fields but got %d: %+v",
+					i, j, 4, len(fs), fs)
+			}
+			n, err := strconv.Atoi(fs[0])
+			if err != nil {
+				return allBags, fmt.Errorf("line %d: cannot convert number of %d. bag: %q", i, j, ps[0])
+			}
+			color := fs[1] + " " + fs[2]
+			bags[Bag{uint(n), color}] = struct{}{}
+		}
+		allBags[keyColor] = bags
+	}
+	return allBags, nil
+}
 
 // Day7Part1 returns number of bag colors that can eventually contain at least one
 // shiny gold bag.
 func Day7Part1(bags Bags) uint {
-	allBags := make(map[color]bool)
-	allBags["shiny gold"] = true
+	allBags := make(map[color]struct{})
+	allBags["shiny gold"] = struct{}{}
 	changed := true
 	for changed {
 		changed = false
@@ -31,7 +69,7 @@ func Day7Part1(bags Bags) uint {
 					if inner.Color == c {
 						// already recorded?
 						if _, ok := allBags[outer]; !ok {
-							allBags[outer] = true
+							allBags[outer] = struct{}{}
 							changed = true
 						}
 					}
@@ -108,42 +146,4 @@ poorMansTailCallOptimization:
 	}
 	// return uint(n - 1) // - do not count our shiny gold bag
 	return uint(n - 1)
-}
-
-// parseDay7 parses one input line in the form "light red bags contain 1 bright
-// white bag, 2 muted yellow bags.".
-// Bags that contain no other bags are dismissed.
-func parseDay7(lines []string) (Bags, error) {
-	allBags := make(Bags)
-	for i, line := range lines {
-		fs := strings.Fields(line)
-		if fs[2] != "bags" {
-			return allBags, fmt.Errorf("line %d: want field 3 to be %q but got %q", i, "bags", fs[2])
-		}
-		key := Bag{1, fs[0] + " " + fs[1]}
-
-		// special case
-		if strings.Contains(line, "no other bags") {
-			continue
-		}
-
-		s := strings.Join(fs[4:], " ")
-		ps := strings.Split(s, ",")
-		bags := make(map[Bag]bool)
-		for j := range ps {
-			fs := strings.Fields(ps[j])
-			if len(fs) != 4 {
-				return allBags, fmt.Errorf("line %d, part %d: want %d fields but got %d: %+v",
-					i, j, 4, len(fs), fs)
-			}
-			n, err := strconv.Atoi(fs[0])
-			if err != nil {
-				return allBags, fmt.Errorf("line %d: cannot convert number of %d. bag: %q", i, j, ps[0])
-			}
-			color := fs[1] + " " + fs[2]
-			bags[Bag{uint(n), color}] = true
-		}
-		allBags[key.Color] = bags
-	}
-	return allBags, nil
 }

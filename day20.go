@@ -52,10 +52,10 @@ type Day20 struct {
 func (a Day20) CornerProduct() (uint, error) {
 	bis := a.borders()
 
-	asSet := func(ns []uint) map[uint]bool {
-		m := make(map[uint]bool, len(ns))
+	asSet := func(ns []uint) map[uint]struct{} {
+		m := make(map[uint]struct{}, len(ns))
 		for i := range ns {
-			m[ns[i]] = true
+			m[ns[i]] = struct{}{}
 		}
 		return m
 	}
@@ -73,9 +73,9 @@ func (a Day20) CornerProduct() (uint, error) {
 		return i - 1
 	}
 
-	var centers = make(map[uint]bool)
-	var middles = make(map[uint]bool)
-	var corners = make(map[uint]bool)
+	var centers = make(map[uint]struct{})
+	var middles = make(map[uint]struct{})
+	var corners = make(map[uint]struct{})
 
 	// search for unique borders
 	for i := range bis {
@@ -96,11 +96,11 @@ func (a Day20) CornerProduct() (uint, error) {
 		uniqueBorders := len(my) >> 1 // ignore flipped duplicates
 		switch uniqueBorders {
 		case 0:
-			centers[bis[i].tileID] = true
+			centers[bis[i].tileID] = struct{}{}
 		case 1:
-			middles[bis[i].tileID] = true
+			middles[bis[i].tileID] = struct{}{}
 		case 2:
-			corners[bis[i].tileID] = true
+			corners[bis[i].tileID] = struct{}{}
 		}
 	}
 
@@ -253,7 +253,7 @@ func (a Day20) assemble() ([][]tileGrid, error) {
 	for i := range placed {
 		placed[i] = make([]tileGrid, size)
 	}
-	used := make(map[uint]bool)
+	used := make(map[uint]struct{})
 
 	var dfs func(pos int) bool
 	dfs = func(pos int) bool {
@@ -263,7 +263,7 @@ func (a Day20) assemble() ([][]tileGrid, error) {
 		r := pos / size
 		c := pos % size
 		for _, id := range ids {
-			if used[id] {
+			if _, ok := used[id]; ok {
 				continue
 			}
 			for _, g := range all[id].grids {
@@ -282,11 +282,11 @@ func (a Day20) assemble() ([][]tileGrid, error) {
 					}
 				}
 				placed[r][c] = tileGrid{id: id, data: g}
-				used[id] = true
+				used[id] = struct{}{}
 				if dfs(pos + 1) {
 					return true
 				}
-				used[id] = false
+				delete(used, id)
 			}
 		}
 		return false

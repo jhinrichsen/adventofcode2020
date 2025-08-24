@@ -9,7 +9,7 @@ import (
 // Day16 returns ticket scanning error rate for part1, and product of all fields
 // that start with "departure" for part #2.
 func Day16(lines []string, part1 bool) (uint, error) {
-	rules := make(map[string]map[uint]bool)
+	rules := make(map[string]map[uint]struct{})
 	minMax := func(s string) (uint, uint, error) {
 		fs := strings.Split(s, "-")
 		min, err := strconv.Atoi(fs[0])
@@ -24,9 +24,9 @@ func Day16(lines []string, part1 bool) (uint, error) {
 		}
 		return uint(min), uint(max), nil
 	}
-	setRange := func(m map[uint]bool, min, max uint) {
+	setRange := func(m map[uint]struct{}, min, max uint) {
 		for i := uint(min); i <= uint(max); i++ {
-			m[i] = true
+			m[i] = struct{}{}
 		}
 	}
 	validField := func(value uint) bool {
@@ -95,7 +95,7 @@ func Day16(lines []string, part1 bool) (uint, error) {
 				msg := "error adding second range %q: %w"
 				return 0, fmt.Errorf(msg, fs[2], err)
 			}
-			m2 := make(map[uint]bool)
+			m2 := make(map[uint]struct{})
 			setRange(m2, min1, max1)
 			setRange(m2, min2, max2)
 			rules[key] = m2
@@ -127,11 +127,11 @@ func Day16(lines []string, part1 bool) (uint, error) {
 	}
 
 	// create n copies of rule names, one for each column
-	var positions []map[string]bool
+	var positions []map[string]struct{}
 	for range rules {
-		m2 := make(map[string]bool, len(rules))
+		m2 := make(map[string]struct{}, len(rules))
 		for kk := range rules {
-			m2[kk] = true
+			m2[kk] = struct{}{}
 		}
 		positions = append(positions, m2)
 	}
@@ -141,7 +141,7 @@ func Day16(lines []string, part1 bool) (uint, error) {
 		for j, value := range ticket {
 			// check if possible field, otherwise remove
 			for k, v := range rules {
-				if !v[value] {
+				if _, ok := v[value]; !ok {
 					delete(positions[j], k)
 				}
 			}

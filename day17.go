@@ -38,14 +38,14 @@ func (a cube) Neighbours() []cube {
 
 // Day17 models Conway's game of life in 3D.
 type Day17 struct {
-	Active           map[cube]bool
+	Active           map[cube]struct{}
 	DimX, DimY, DimZ int // dimension of our universe
 }
 
 // NewDay17 parses a 2D cell grid into a Day17 (z=0).
 func NewDay17(lines []string) (Day17, error) {
 	d := Day17{}
-	d.Active = make(map[cube]bool)
+	d.Active = make(map[cube]struct{})
 	d.DimX = len(lines[0])
 	d.DimY = len(lines)
 	d.DimZ = 1
@@ -53,7 +53,7 @@ func NewDay17(lines []string) (Day17, error) {
 	for y := 0; y < d.DimY; y++ {
 		for x := 0; x < d.DimX; x++ {
 			if lines[y][x] == CubeActive {
-				d.Active[cube{x, y, z}] = true
+				d.Active[cube{x, y, z}] = struct{}{}
 			}
 		}
 	}
@@ -69,18 +69,18 @@ func (a *Day17) ActiveCubes() (n uint) {
 func (a *Day17) Cycle() {
 	a.Expand()
 	// all updates into a an offline framebuffer
-	fb := make(map[cube]bool)
+	fb := make(map[cube]struct{})
 	for z := -a.DimZ; z <= a.DimZ; z++ {
 		for y := -a.DimY; y <= a.DimY; y++ {
 			for x := -a.DimX; x <= a.DimX; x++ {
 				here := cube{x, y, z}
-				oldMe := a.Active[here]
+				_, oldMe := a.Active[here]
 				n := a.ActiveNeighbours(here)
 				newMe := NewState(oldMe, n)
 
 				// keep only active cubes
 				if newMe {
-					fb[here] = true
+					fb[here] = struct{}{}
 				}
 			}
 		}
@@ -95,7 +95,7 @@ func (a Day17) ActiveNeighbours(c cube) (n uint) {
 	ns := c.Neighbours()
 	for i := 0; i < len(ns); i++ {
 		c := ns[i]
-		if a.Active[c] {
+		if _, ok := a.Active[c]; ok {
 			n++
 		}
 	}
@@ -115,7 +115,7 @@ func (a Day17) Rep(z int) string {
 	for y := 0; y < a.DimY; y++ {
 		for x := 0; x < a.DimX; x++ {
 			d := cube{x, y, z}
-			if a.Active[d] {
+			if _, ok := a.Active[d]; ok {
 				sb.WriteRune(CubeActive)
 			} else {
 				sb.WriteRune(CubeInactive)
@@ -172,14 +172,14 @@ func (a hcube) Neighbours() []hcube {
 
 // Day17Hyper models Conway's game of life in 4D.
 type Day17Hyper struct {
-	Active                 map[hcube]bool
+	Active                 map[hcube]struct{}
 	DimX, DimY, DimZ, DimW int // dimension of our universe per axis (half-extent)
 }
 
 // NewDay17Hyper parses a 2D cell grid into a Day17Hyper (z=0, w=0).
 func NewDay17Hyper(lines []string) (Day17Hyper, error) {
 	d := Day17Hyper{}
-	d.Active = make(map[hcube]bool)
+	d.Active = make(map[hcube]struct{})
 	d.DimX = len(lines[0])
 	d.DimY = len(lines)
 	d.DimZ = 1
@@ -188,7 +188,7 @@ func NewDay17Hyper(lines []string) (Day17Hyper, error) {
 	for y := 0; y < d.DimY; y++ {
 		for x := 0; x < d.DimX; x++ {
 			if lines[y][x] == CubeActive {
-				d.Active[hcube{x, y, z, w}] = true
+				d.Active[hcube{x, y, z, w}] = struct{}{}
 			}
 		}
 	}
@@ -204,17 +204,17 @@ func (a *Day17Hyper) ActiveCubes() (n uint) {
 func (a *Day17Hyper) Cycle() {
 	a.Expand()
 	// offline framebuffer
-	fb := make(map[hcube]bool)
+	fb := make(map[hcube]struct{})
 	for w := -a.DimW; w <= a.DimW; w++ {
 		for z := -a.DimZ; z <= a.DimZ; z++ {
 			for y := -a.DimY; y <= a.DimY; y++ {
 				for x := -a.DimX; x <= a.DimX; x++ {
 					here := hcube{x, y, z, w}
-					oldMe := a.Active[here]
+					_, oldMe := a.Active[here]
 					n := a.ActiveNeighbours(here)
 					newMe := NewState(oldMe, n)
 					if newMe {
-						fb[here] = true
+						fb[here] = struct{}{}
 					}
 				}
 			}
@@ -228,7 +228,7 @@ func (a Day17Hyper) ActiveNeighbours(c hcube) (n uint) {
 	ns := c.Neighbours()
 	for i := 0; i < len(ns); i++ {
 		c := ns[i]
-		if a.Active[c] {
+		if _, ok := a.Active[c]; ok {
 			n++
 		}
 	}
@@ -249,7 +249,7 @@ func (a Day17Hyper) Rep(z, w int) string {
 	for y := 0; y < a.DimY; y++ {
 		for x := 0; x < a.DimX; x++ {
 			d := hcube{x, y, z, w}
-			if a.Active[d] {
+			if _, ok := a.Active[d]; ok {
 				sb.WriteRune(CubeActive)
 			} else {
 				sb.WriteRune(CubeInactive)

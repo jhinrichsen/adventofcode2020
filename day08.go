@@ -9,12 +9,12 @@ import (
 // or false if any one line is executed second time (which indicates a loop).
 func Day08(lines []string, part1 bool) (int, bool) {
 	var pc, acc int
-	visited := make(map[int]bool)
+	visited := make(map[int]struct{})
 	ended := func() bool {
 		return pc == len(lines)
 	}
 	for !ended() {
-		if visited[pc] {
+		if _, ok := visited[pc]; ok {
 			break
 		}
 
@@ -27,7 +27,7 @@ func Day08(lines []string, part1 bool) (int, bool) {
 			continue
 		}
 
-		visited[pc] = true
+		visited[pc] = struct{}{}
 		pc++
 	}
 

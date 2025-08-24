@@ -26,3 +26,19 @@ func TestDay03Part1(t *testing.T) {
 func TestDay03Part2(t *testing.T) {
 	testDay3(t, filename(3), false, 5774564250)
 }
+
+func BenchmarkDay03Part1(b *testing.B) {
+    lines := linesFromFilenameTB(b, filename(3))
+    b.ResetTimer()
+    for b.Loop() {
+        _ = Day03(lines, true)
+    }
+}
+
+func BenchmarkDay03Part2(b *testing.B) {
+    lines := linesFromFilenameTB(b, filename(3))
+    b.ResetTimer()
+    for b.Loop() {
+        _ = Day03(lines, false)
+    }
+}

@@ -3,7 +3,7 @@ all: lint test
 
 .PHONY: bench
 bench:
-	go test -run=^$ -bench=. -benchmem -count=10
+	go test -run='^$' -bench='Day..Part.$' -benchmem -count=10
 
 .PHONY: lint
 lint:

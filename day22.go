@@ -39,16 +39,20 @@ func Day22Part2(p1, p2 []card, game uint) uint {
 	rep := func(deck []card) checksum {
 		return md5.Sum(deck)
 	}
-	seen1, seen2 := make(map[checksum]bool), make(map[checksum]bool)
+	seen1, seen2 := make(map[checksum]struct{}), make(map[checksum]struct{})
 
 	var winner uint // 1 -> player 1, 2 -> player 2
 	for len(p1) > 0 && len(p2) > 0 {
 		// avoid infinite recursion
-		if seen1[rep(p1)] || seen2[rep(p2)] {
+		if _, ok := seen1[rep(p1)]; ok {
 			winner = 1
 			break
 		}
-		seen1[rep(p1)], seen2[rep(p2)] = true, true
+		if _, ok := seen2[rep(p2)]; ok {
+			winner = 1
+			break
+		}
+		seen1[rep(p1)], seen2[rep(p2)] = struct{}{}, struct{}{}
 
 		c1, c2 := pop(&p1), pop(&p2)
 

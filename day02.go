@@ -6,73 +6,72 @@ import (
 	"strings"
 )
 
-type day2 struct {
+// Puzzle02 holds all password policy entries for Day 02.
+type Puzzle02 []struct {
 	min      uint
 	max      uint
 	char     byte
 	password string
 }
 
-func (a day2) Valid(part1 bool) bool {
-	if part1 {
-		n := uint(0)
-		for i := range a.password {
-			if a.char == a.password[i] {
+// NewDay02 parses input lines into a Puzzle02 structure.
+func NewDay02(lines []string) (Puzzle02, error) {
+	var p Puzzle02
+	for _, line := range lines {
+		ps := strings.Fields(line)
+		if len(ps) != 3 {
+			return nil, fmt.Errorf("want %d fields but got %d: %q", 3, len(ps), line)
+		}
+		p1s := strings.Split(ps[0], "-")
+		if len(p1s) != 2 {
+			return nil, fmt.Errorf("want %d fields in first field but got %d: %q", 2, len(p1s), ps[0])
+		}
+		min, err := strconv.Atoi(p1s[0])
+		if err != nil {
+			return nil, fmt.Errorf("cannot convert min value to number: %q", p1s[0])
+		}
+		max, err := strconv.Atoi(p1s[1])
+		if err != nil {
+			return nil, fmt.Errorf("cannot convert max value to number: %q", p1s[1])
+		}
+		p = append(p, struct {
+			min      uint
+			max      uint
+			char     byte
+			password string
+		}{
+			min:      uint(min),
+			max:      uint(max),
+			char:     byte(ps[1][0]),
+			password: ps[2],
+		})
+	}
+	return p, nil
+}
+
+// Day02 returns number of valid passwords for Part 1 or Part 2.
+func Day02(p Puzzle02, part1 bool) uint {
+	var n uint
+	for _, d := range p {
+		if part1 {
+			c := uint(0)
+			for i := range d.password {
+				if d.char == d.password[i] {
+					c++
+				}
+			}
+			if d.min <= c && c <= d.max {
+				n++
+			}
+		} else {
+			// Toboggan Corporate Policies have no concept of "index zero"
+			idx := func(i uint) uint { return i - 1 }
+			p1 := d.password[idx(d.min)] == d.char
+			p2 := d.password[idx(d.max)] == d.char
+			if p1 != p2 {
 				n++
 			}
 		}
-		return a.min <= n && n <= a.max
 	}
-	// Toboggan Corporate Policies have no concept of "index zero"
-	idx := func(i uint) uint {
-		return i - 1
-	}
-	p1 := a.password[idx(a.min)] == a.char
-	p2 := a.password[idx(a.max)] == a.char
-	return p1 != p2
-}
-
-// Day02 return number of valid passwords.
-func Day02(lines []string, part1 bool) (uint, error) {
-	n := uint(0)
-	for i, line := range lines {
-		d, err := parseDay2(line)
-		if err != nil {
-			msg := "error parsing line %d: %q"
-			return 0, fmt.Errorf(msg, i, line)
-		}
-		if d.Valid(part1) {
-			n++
-		}
-	}
-	return n, nil
-}
-
-// parseDay2 parses a line in format '1-3 a: abcde'.
-func parseDay2(s string) (day2, error) {
-	var d day2
-	ps := strings.Fields(s)
-	if len(ps) != 3 {
-		msg := "want %d fields but got %d: %q"
-		return d, fmt.Errorf(msg, 3, len(ps), s)
-	}
-	p1s := strings.Split(ps[0], "-")
-	if len(p1s) != 2 {
-		msg := "want %d fields in first field but got %d: %q"
-		return d, fmt.Errorf(msg, 2, len(p1s), ps[0])
-	}
-	min, err := strconv.Atoi(p1s[0])
-	if err != nil {
-		msg := "cannot convert min value to number: %q"
-		return d, fmt.Errorf(msg, p1s[0])
-	}
-	max, err := strconv.Atoi(p1s[1])
-	if err != nil {
-		msg := "cannot convert max value to number: %q"
-		return d, fmt.Errorf(msg, p1s[1])
-	}
-	d.min, d.max = uint(min), uint(max)
-	d.char = byte(ps[1][0])
-	d.password = ps[2]
-	return d, nil
+	return n
 }

@@ -28,3 +28,19 @@ func TestDay06Part2Example(t *testing.T) {
 func TestDay06Part2(t *testing.T) {
 	testDay6(t, filename(6), false, 3219)
 }
+
+func BenchmarkDay06Part1(b *testing.B) {
+    lines := linesFromFilenameTB(b, filename(6))
+    b.ResetTimer()
+    for b.Loop() {
+        _ = Day06(lines, true)
+    }
+}
+
+func BenchmarkDay06Part2(b *testing.B) {
+    lines := linesFromFilenameTB(b, filename(6))
+    b.ResetTimer()
+    for b.Loop() {
+        _ = Day06(lines, false)
+    }
+}

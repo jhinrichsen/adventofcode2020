@@ -13,9 +13,10 @@ func Day10Part1(numbers []int) uint {
 	threes++ // built-in adapter is always 3 higher than highest adapter
 	for i := 0; i < len(numbers)-1; i++ {
 		delta := numbers[i+1] - numbers[i]
-		if delta == 1 {
+		switch delta {
+		case 1:
 			ones++
-		} else if delta == 3 {
+		case 3:
 			threes++
 		}
 	}
@@ -53,9 +54,10 @@ func Day10Part2(numbers []int) uint {
 	nextGap := func(idx int) int {
 		for i := idx; i < len(numbers)-1; i++ {
 			delta := numbers[i+1] - numbers[i]
-			if delta == 3 {
+			switch {
+			case delta == 3:
 				return i + 1
-			} else if delta > 3 {
+			case delta > 3:
 				return i // backtrack to last index where delta < 3
 			}
 		}

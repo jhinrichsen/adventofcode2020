@@ -90,11 +90,12 @@ func evalRPN(rpn string) (int, error) {
 	}
 
 	for i, op := range strings.Fields(rpn) {
-		if op == "+" {
+		switch op {
+		case "+":
 			push(pop() + pop())
-		} else if op == "*" {
+		case "*":
 			push(pop() * pop())
-		} else {
+		default:
 			// number
 			n, err := strconv.Atoi(op)
 			if err != nil {

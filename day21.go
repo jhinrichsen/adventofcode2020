@@ -20,8 +20,8 @@ func NewDay21(lines []string) (Day21, error) {
 	for i, line := range lines {
 		var f food
 		f.ID = i
-		f.allergens = make(map[allergen]bool)
-		f.ingredients = make(map[ingredient]bool)
+		f.allergens = make(map[allergen]struct{})
+		f.ingredients = make(map[ingredient]struct{})
 
 		line = prepare(line)
 
@@ -31,9 +31,9 @@ func NewDay21(lines []string) (Day21, error) {
 			if fs[j] == separator {
 				parseIngredients = false
 			} else if parseIngredients {
-				f.ingredients[ingredient(fs[j])] = true
+				f.ingredients[ingredient(fs[j])] = struct{}{}
 			} else {
-				f.allergens[allergen(fs[j])] = true
+				f.allergens[allergen(fs[j])] = struct{}{}
 			}
 		}
 		d = append(d, f)
@@ -49,8 +49,8 @@ type ingredient string
 
 type food struct {
 	ID          int
-	allergens   map[allergen]bool
-	ingredients map[ingredient]bool
+	allergens   map[allergen]struct{}
+	ingredients map[ingredient]struct{}
 }
 
 // Day21 represents a food list.
@@ -209,17 +209,17 @@ func (a Day21) allergens() map[allergen]uint {
 	return m
 }
 
-func intersect(m1, m2 map[ingredient]bool) map[ingredient]bool {
-	m := make(map[ingredient]bool)
+func intersect(m1, m2 map[ingredient]struct{}) map[ingredient]struct{} {
+	m := make(map[ingredient]struct{})
 	for k := range m1 {
-		if m2[k] {
-			m[k] = true
+		if _, ok := m2[k]; ok {
+			m[k] = struct{}{}
 		}
 	}
 	return m
 }
 
-func anyAllergen(m map[allergen]bool) allergen {
+func anyAllergen(m map[allergen]struct{}) allergen {
 	var mu allergen
 	for k := range m {
 		mu = k
@@ -228,7 +228,7 @@ func anyAllergen(m map[allergen]bool) allergen {
 	return mu
 }
 
-func anyIngredient(m map[ingredient]bool) ingredient {
+func anyIngredient(m map[ingredient]struct{}) ingredient {
 	var mu ingredient
 	for k := range m {
 		mu = k

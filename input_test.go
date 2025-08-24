@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"testing"
 )
 
 func linesFromFilename(filename string) ([]string, error) {
@@ -50,4 +51,36 @@ func linesAsNumbers(lines []string) ([]int, error) {
 		is = append(is, n)
 	}
 	return is, nil
+}
+
+func linesFromFilenameTB(tb testing.TB, filename string) []string {
+	tb.Helper()
+	f, err := os.Open(filename)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	return linesFromReaderTB(tb, f)
+}
+
+func linesFromReaderTB(tb testing.TB, r io.Reader) []string {
+	tb.Helper()
+	var lines []string
+	sc := bufio.NewScanner(r)
+	for sc.Scan() {
+		line := sc.Text()
+		lines = append(lines, line)
+	}
+	if err := sc.Err(); err != nil {
+		tb.Fatal(err)
+	}
+	return lines
+}
+
+func contentFromFilename(tb testing.TB, filename string) []byte {
+	tb.Helper()
+	buf, err := os.ReadFile(filename)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	return buf
 }
