@@ -59,6 +59,176 @@ Unit test data, both examples and puzzle input, is in
 
 Numbers in (brackets) indicate tries so far (part #2 not solved yet).
 
+== Benchmark overview
+
+----
+$ go test -v -run=^$ -bench=Day..Part.$ -benchmem -count=3
+goos: linux
+goarch: amd64
+pkg: gitlab.com/jhinrichsen/adventofcode2020
+cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics
+BenchmarkDay01Part1
+BenchmarkDay01Part1-16    	  172483	      5976 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay01Part1-16    	  196760	      5765 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay01Part1-16    	  181424	      5784 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay01Part2
+BenchmarkDay01Part2-16    	   10809	    110266 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay01Part2-16    	   10705	    111212 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay01Part2-16    	   10850	    112331 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay02Part1
+BenchmarkDay02Part1-16    	  104085	     11726 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay02Part1-16    	   89464	     13094 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay02Part1-16    	  103707	     11799 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay02Part2
+BenchmarkDay02Part2-16    	  791379	      1512 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay02Part2-16    	  787318	      1521 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay02Part2-16    	  789244	      1523 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part1
+BenchmarkDay03Part1-16    	 1570059	       762.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part1-16    	 1573036	       756.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part1-16    	 1562163	       760.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part2
+BenchmarkDay03Part2-16    	  286486	      3813 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part2-16    	  263619	      3804 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part2-16    	  278029	      3788 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay04Part2
+BenchmarkDay04Part2-16    	    5943	    197930 ns/op	  199104 B/op	    3504 allocs/op
+BenchmarkDay04Part2-16    	    5157	    196496 ns/op	  199104 B/op	    3504 allocs/op
+BenchmarkDay04Part2-16    	    5000	    202895 ns/op	  199104 B/op	    3504 allocs/op
+BenchmarkDay05Part1
+BenchmarkDay05Part1-16    	  200317	      5665 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay05Part1-16    	  196376	      5691 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay05Part1-16    	  199660	      5667 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay06Part1
+BenchmarkDay06Part1-16    	    2588	    405962 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay06Part1-16    	    2649	    412298 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay06Part1-16    	    2559	    405542 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay06Part2
+BenchmarkDay06Part2-16    	    2371	    460532 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay06Part2-16    	    2396	    460519 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay06Part2-16    	    2378	    463086 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay07Part1
+BenchmarkDay07Part1-16    	      26	  38812844 ns/op	  588364 B/op	    6436 allocs/op
+BenchmarkDay07Part1-16    	      31	  38079012 ns/op	  588361 B/op	    6436 allocs/op
+BenchmarkDay07Part1-16    	      31	  37355109 ns/op	  588360 B/op	    6436 allocs/op
+BenchmarkDay07Part2
+BenchmarkDay07Part2-16    	    1754	    576553 ns/op	  677664 B/op	    6695 allocs/op
+BenchmarkDay07Part2-16    	    1939	    566133 ns/op	  677494 B/op	    6695 allocs/op
+BenchmarkDay07Part2-16    	    1965	    565647 ns/op	  677578 B/op	    6695 allocs/op
+BenchmarkDay08Part1
+BenchmarkDay08Part1-16    	   75553	     15375 ns/op	   16104 B/op	     222 allocs/op
+BenchmarkDay08Part1-16    	   79048	     14939 ns/op	   16104 B/op	     222 allocs/op
+BenchmarkDay08Part1-16    	   82729	     15106 ns/op	   16104 B/op	     222 allocs/op
+BenchmarkDay08Part2
+BenchmarkDay08Part2-16    	   90249	     12886 ns/op	   12846 B/op	     212 allocs/op
+BenchmarkDay08Part2-16    	   86822	     12938 ns/op	   12847 B/op	     212 allocs/op
+BenchmarkDay08Part2-16    	   88608	     13023 ns/op	   12847 B/op	     212 allocs/op
+BenchmarkDay09Part1
+BenchmarkDay09Part1-16    	   45750	     25612 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay09Part1-16    	   44719	     25911 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay09Part1-16    	   46098	     25794 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay09Part2
+BenchmarkDay09Part2-16    	    7819	    153314 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay09Part2-16    	    6831	    155675 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay09Part2-16    	    6322	    160997 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay11Part1
+BenchmarkDay11Part1-16    	     127	   9306271 ns/op	 1469669 B/op	   12301 allocs/op
+BenchmarkDay11Part1-16    	     127	   9334534 ns/op	 1469678 B/op	   12301 allocs/op
+BenchmarkDay11Part1-16    	     127	   9384912 ns/op	 1469689 B/op	   12301 allocs/op
+BenchmarkDay11Part2
+BenchmarkDay11Part2-16    	      62	  18676453 ns/op	 1000976 B/op	    8365 allocs/op
+BenchmarkDay11Part2-16    	      63	  18283913 ns/op	 1000974 B/op	    8364 allocs/op
+BenchmarkDay11Part2-16    	      64	  18591611 ns/op	 1000966 B/op	    8364 allocs/op
+BenchmarkDay12Part1
+BenchmarkDay12Part1-16    	   32164	     37565 ns/op	   71708 B/op	     801 allocs/op
+BenchmarkDay12Part1-16    	   31922	     37793 ns/op	   71708 B/op	     801 allocs/op
+BenchmarkDay12Part1-16    	   32025	     37168 ns/op	   71708 B/op	     801 allocs/op
+BenchmarkDay13Part1
+BenchmarkDay13Part1-16    	  159847	      6956 ns/op	     872 B/op	       6 allocs/op
+BenchmarkDay13Part1-16    	  159123	      6885 ns/op	     872 B/op	       6 allocs/op
+BenchmarkDay13Part1-16    	  160884	      6892 ns/op	     872 B/op	       6 allocs/op
+BenchmarkDay13Part2
+BenchmarkDay13Part2-16    	  112774	     10555 ns/op	    8277 B/op	     128 allocs/op
+BenchmarkDay13Part2-16    	  105788	     10660 ns/op	    8277 B/op	     128 allocs/op
+BenchmarkDay13Part2-16    	  109064	     11052 ns/op	    8277 B/op	     128 allocs/op
+BenchmarkDay14Part1
+BenchmarkDay14Part1-16    	   18199	     65470 ns/op	   34152 B/op	     491 allocs/op
+BenchmarkDay14Part1-16    	   18073	     65521 ns/op	   34152 B/op	     491 allocs/op
+BenchmarkDay14Part1-16    	   18505	     65242 ns/op	   34152 B/op	     491 allocs/op
+BenchmarkDay14Part2
+BenchmarkDay14Part2-16    	      36	  28954934 ns/op	20283795 B/op	  161169 allocs/op
+BenchmarkDay14Part2-16    	      36	  29428575 ns/op	20283912 B/op	  161169 allocs/op
+BenchmarkDay14Part2-16    	      36	  29375699 ns/op	20283805 B/op	  161169 allocs/op
+BenchmarkDay15Part1
+BenchmarkDay15Part1-16    	  161170	      7381 ns/op	   32736 B/op	      10 allocs/op
+BenchmarkDay15Part1-16    	  149288	      7521 ns/op	   32736 B/op	      10 allocs/op
+BenchmarkDay15Part1-16    	  147766	      7618 ns/op	   32736 B/op	      10 allocs/op
+BenchmarkDay15Part2
+BenchmarkDay15Part2-16    	       2	 658134373 ns/op	508436496 B/op	      24 allocs/op
+BenchmarkDay15Part2-16    	       3	 478382391 ns/op	508436512 B/op	      24 allocs/op
+BenchmarkDay15Part2-16    	       2	 516815566 ns/op	508436496 B/op	      24 allocs/op
+BenchmarkDay16Part1
+BenchmarkDay16Part1-16    	     838	   1337737 ns/op	 1671409 B/op	    2513 allocs/op
+BenchmarkDay16Part1-16    	     826	   1330326 ns/op	 1671417 B/op	    2513 allocs/op
+BenchmarkDay16Part1-16    	     798	   1325075 ns/op	 1671454 B/op	    2513 allocs/op
+BenchmarkDay16Part2
+BenchmarkDay16Part2-16    	     466	   2495054 ns/op	 1691639 B/op	    2599 allocs/op
+BenchmarkDay16Part2-16    	     469	   2502488 ns/op	 1691645 B/op	    2599 allocs/op
+BenchmarkDay16Part2-16    	     466	   2475114 ns/op	 1691654 B/op	    2599 allocs/op
+BenchmarkDay17Part1
+BenchmarkDay17Part1-16    	    1160	   1001788 ns/op	  891864 B/op	     147 allocs/op
+BenchmarkDay17Part1-16    	    1014	    995146 ns/op	  891866 B/op	     147 allocs/op
+BenchmarkDay17Part1-16    	    1116	   1033059 ns/op	  891865 B/op	     147 allocs/op
+BenchmarkDay18Part1
+BenchmarkDay18Part1-16    	    1234	    920160 ns/op	  938516 B/op	   15643 allocs/op
+BenchmarkDay18Part1-16    	    1185	    911100 ns/op	  938515 B/op	   15643 allocs/op
+BenchmarkDay18Part1-16    	    1221	    928321 ns/op	  938515 B/op	   15643 allocs/op
+BenchmarkDay18Part2
+BenchmarkDay18Part2-16    	    1232	    929168 ns/op	  943420 B/op	   15720 allocs/op
+BenchmarkDay18Part2-16    	    1231	    928277 ns/op	  943421 B/op	   15720 allocs/op
+BenchmarkDay18Part2-16    	    1230	    939291 ns/op	  943421 B/op	   15720 allocs/op
+BenchmarkDay19Part1
+BenchmarkDay19Part1-16    	     156	   7574818 ns/op	25669714 B/op	    4623 allocs/op
+BenchmarkDay19Part1-16    	     158	   7677733 ns/op	25672976 B/op	    4624 allocs/op
+BenchmarkDay19Part1-16    	     153	   7668928 ns/op	25669649 B/op	    4623 allocs/op
+BenchmarkDay19Part2
+BenchmarkDay19Part2-16    	      54	  22115979 ns/op	36348420 B/op	   20128 allocs/op
+BenchmarkDay19Part2-16    	      54	  21773122 ns/op	36526217 B/op	   20134 allocs/op
+BenchmarkDay19Part2-16    	      52	  22358157 ns/op	36341727 B/op	   20127 allocs/op
+BenchmarkDay20Part1
+BenchmarkDay20Part1-16    	    1290	    845811 ns/op	  294663 B/op	    4664 allocs/op
+BenchmarkDay20Part1-16    	    1230	    869760 ns/op	  294669 B/op	    4664 allocs/op
+BenchmarkDay20Part1-16    	    1346	    845134 ns/op	  294664 B/op	    4664 allocs/op
+BenchmarkDay20Part2
+BenchmarkDay20Part2-16    	      28	 169575868 ns/op	84909882 B/op	 7023237 allocs/op
+BenchmarkDay20Part2-16    	      12	 149402288 ns/op	74614843 B/op	 6165243 allocs/op
+BenchmarkDay20Part2-16    	      21	 171785220 ns/op	86375564 B/op	 7145384 allocs/op
+BenchmarkDay21Part1
+BenchmarkDay21Part1-16    	    3316	    310206 ns/op	  405298 B/op	     977 allocs/op
+BenchmarkDay21Part1-16    	    3226	    319511 ns/op	  405300 B/op	     977 allocs/op
+BenchmarkDay21Part1-16    	    3207	    314836 ns/op	  405296 B/op	     977 allocs/op
+BenchmarkDay22Part1
+BenchmarkDay22Part1-16    	   80058	     14660 ns/op	   11063 B/op	     156 allocs/op
+BenchmarkDay22Part1-16    	   80906	     14853 ns/op	   11063 B/op	     156 allocs/op
+BenchmarkDay22Part1-16    	   79699	     14544 ns/op	   11063 B/op	     156 allocs/op
+BenchmarkDay22Part2
+BenchmarkDay22Part2-16    	      15	  69989894 ns/op	16800940 B/op	   71791 allocs/op
+BenchmarkDay22Part2-16    	      15	  69622764 ns/op	16801094 B/op	   71791 allocs/op
+BenchmarkDay22Part2-16    	      15	  68713922 ns/op	16800932 B/op	   71791 allocs/op
+BenchmarkDay23Part2
+BenchmarkDay23Part2-16    	       6	 180616582 ns/op	 8003664 B/op	       2 allocs/op
+BenchmarkDay23Part2-16    	       6	 181704759 ns/op	 8003664 B/op	       2 allocs/op
+BenchmarkDay23Part2-16    	       6	 183443320 ns/op	 8003664 B/op	       2 allocs/op
+BenchmarkDay24Part1
+BenchmarkDay24Part1-16    	    6478	    186085 ns/op	  374603 B/op	    2237 allocs/op
+BenchmarkDay24Part1-16    	    5216	    193047 ns/op	  374604 B/op	    2237 allocs/op
+BenchmarkDay24Part1-16    	    5574	    187002 ns/op	  374602 B/op	    2237 allocs/op
+BenchmarkDay24Part2
+BenchmarkDay24Part2-16    	       4	 250334907 ns/op	14529576 B/op	    4699 allocs/op
+BenchmarkDay24Part2-16    	       4	 250536864 ns/op	14597864 B/op	    4705 allocs/op
+BenchmarkDay24Part2-16    	       5	 251016088 ns/op	14513270 B/op	    4699 allocs/op
+----
+
 == Day 1
 
 Warmup, nice and smooth.
@@ -73,7 +243,7 @@ $ go test -run=^$ -bench=Day01 -benchmem -count=10
 goos: linux
 goarch: amd64
 pkg: gitlab.com/jhinrichsen/adventofcode2020
-cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics     
+cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics
 BenchmarkDay01Part1-16                    126535              9146 ns/op            9544 B/op         13 allocs/op
 BenchmarkDay01Part1-16                    124532              9374 ns/op            9544 B/op         13 allocs/op
 BenchmarkDay01Part1-16                    128012              9236 ns/op            9544 B/op         13 allocs/op
