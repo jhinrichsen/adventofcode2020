@@ -27,11 +27,15 @@ func linesFromReader(r io.Reader) ([]string, error) {
 }
 
 func exampleFilename(day int) string {
-	return fmt.Sprintf("testdata/day%d_example.txt", day)
+	return fmt.Sprintf("testdata/day%02d_example.txt", day)
+}
+
+func example2Filename(day int) string {
+	return fmt.Sprintf("testdata/day%02d_example2.txt", day)
 }
 
 func filename(day int) string {
-	return fmt.Sprintf("testdata/day%d.txt", day)
+	return fmt.Sprintf("testdata/day%02d.txt", day)
 }
 
 // linesAsNumber converts strings into integer.

@@ -34,7 +34,7 @@ func testDay21Part2(t *testing.T, filename string, want string) {
 	}
 }
 
-func TestDay21ExamplePart1(t *testing.T) {
+func TestDay21Part1Example(t *testing.T) {
 	const (
 		want = 5
 	)
@@ -62,7 +62,7 @@ func BenchmarkDay21Part1(b *testing.B) {
 	}
 }
 
-func TestDay21ExamplePart2(t *testing.T) {
+func TestDay21Part2Example(t *testing.T) {
 	const (
 		want = "mxmxvkd,sqjhc,fvjkl"
 	)

@@ -38,7 +38,7 @@ func TestDay10Example2Part1(t *testing.T) {
 		part1 = true
 		want  = 22 * 10
 	)
-	testDay10(t, "testdata/day10_example2.txt", part1, want)
+	testDay10(t, example2Filename(10), part1, want)
 }
 
 func TestDay10Part1(t *testing.T) {
@@ -62,7 +62,7 @@ func TestDay10Example2Part2(t *testing.T) {
 		part1 = false
 		want  = 19208
 	)
-	testDay10(t, "testdata/day10_example2.txt", part1, want)
+	testDay10(t, example2Filename(10), part1, want)
 }
 
 func TestDay10Part2(t *testing.T) {

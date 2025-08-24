@@ -24,7 +24,7 @@ func testDay12(t *testing.T, filename string, part1 bool, want uint) {
 	}
 }
 
-func TestDay12ExamplePart1(t *testing.T) {
+func TestDay12Part1Example(t *testing.T) {
 	const (
 		part1 = true
 		want  = 25
@@ -40,7 +40,7 @@ func TestDay12Part1(t *testing.T) {
 	testDay12(t, filename(12), part1, want)
 }
 
-func TestDay12ExamplePart2(t *testing.T) {
+func TestDay12Part2Example(t *testing.T) {
 	const (
 		part1 = false
 		want  = 286

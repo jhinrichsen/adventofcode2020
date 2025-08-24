@@ -16,7 +16,7 @@ func testDay14(t *testing.T, filename string, part1 bool, want int) {
 	}
 }
 
-func TestDay14ExamplePart1(t *testing.T) {
+func TestDay14Part1Example(t *testing.T) {
 	const (
 		part1 = true
 		want  = 165
@@ -32,12 +32,12 @@ func TestDay14Part1(t *testing.T) {
 	testDay14(t, filename(14), part1, want)
 }
 
-func TestDay14ExamplePart2(t *testing.T) {
+func TestDay14Part2Example(t *testing.T) {
 	const (
 		part1 = false
 		want  = 208
 	)
-	testDay14(t, "testdata/day14_example2.txt", part1, want)
+	testDay14(t, example2Filename(14), part1, want)
 }
 
 func TestDay14Part2(t *testing.T) {

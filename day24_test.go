@@ -24,7 +24,7 @@ func testDay24(t *testing.T, filename string, days, want uint) {
 	}
 }
 
-func TestDay24ExamplePart1(t *testing.T) {
+func TestDay24Part1Example(t *testing.T) {
 	const (
 		days = 0
 		want = 10
@@ -40,7 +40,7 @@ func TestDay24Part1(t *testing.T) {
 	testDay24(t, filename(24), days, want)
 }
 
-func TestDay24ExamplePart2(t *testing.T) {
+func TestDay24Part2Example(t *testing.T) {
 	const (
 		days = 100
 		want = 2208

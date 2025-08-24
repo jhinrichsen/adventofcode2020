@@ -34,7 +34,7 @@ func gen(i uint, part1 bool) ([]string, error) {
 	return linesFromFilename(genFilename(i, part1))
 }
 
-func TestDay11ExamplePart1(t *testing.T) {
+func TestDay11Part1Example(t *testing.T) {
 	const (
 		part1 = true
 		want  = 37
@@ -42,7 +42,7 @@ func TestDay11ExamplePart1(t *testing.T) {
 	testDay11(t, genFilename(1, part1), part1, want)
 }
 
-func TestDay11ExamplePart2(t *testing.T) {
+func TestDay11Part2Example(t *testing.T) {
 	const (
 		part1 = false
 		want  = 26

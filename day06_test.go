@@ -21,7 +21,7 @@ func TestDay06Part1(t *testing.T) {
 	testDay6(t, filename(6), true, 6596)
 }
 
-func TestDay06ExamplePart2(t *testing.T) {
+func TestDay06Part2Example(t *testing.T) {
 	testDay6(t, "testdata/day6_example_part2.txt", false, 6)
 }
 

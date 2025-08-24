@@ -24,7 +24,7 @@ func testDay7(t *testing.T, filename string, part1 bool, want uint) {
 	}
 }
 
-func TestDay07ExamplePart1(t *testing.T) {
+func TestDay07Part1Example(t *testing.T) {
 	testDay7(t, exampleFilename(7), true, 4)
 }
 
@@ -47,7 +47,7 @@ func BenchmarkDay07Part1(b *testing.B) {
 	}
 }
 
-func TestDay07ExamplePart2(t *testing.T) {
+func TestDay07Part2Example1(t *testing.T) {
 	const (
 		part1 = false
 		want  = 32
@@ -55,15 +55,15 @@ func TestDay07ExamplePart2(t *testing.T) {
 	testDay7(t, exampleFilename(7), part1, want)
 }
 
-func TestDay07Example2Part2(t *testing.T) {
+func TestDay07Part2Example2(t *testing.T) {
 	const (
 		part1 = false
 		want  = 126
 	)
-	testDay7(t, "testdata/day7_example2.txt", part1, want)
+	testDay7(t, example2Filename(7), part1, want)
 }
 
-func TestDay72Part2(t *testing.T) {
+func TestDay07Part2(t *testing.T) {
 	const (
 		part1 = false
 		want  = 35487

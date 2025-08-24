@@ -22,7 +22,7 @@ func testDay9(t *testing.T, filename string, part1 bool, preamble int, want int)
 	}
 }
 
-func TestDay09ExamplePart1(t *testing.T) {
+func TestDay09Part1Example(t *testing.T) {
 	const (
 		part1    = true
 		preamble = 5
@@ -40,7 +40,7 @@ func TestDay09Part1(t *testing.T) {
 	testDay9(t, filename(9), part1, preamble, want)
 }
 
-func TestDay09ExamplePart2(t *testing.T) {
+func TestDay09Part2Example(t *testing.T) {
 	const (
 		part1    = false
 		preamble = 5
