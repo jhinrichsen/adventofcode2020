@@ -1,0 +1,43 @@
+CGO_ENABLED=0 go test -bench=. -run="" -benchmem
+goos: linux
+goarch: amd64
+pkg: gitlab.com/jhinrichsen/adventofcode2020
+cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics     
+BenchmarkDay10Part2IncludingInput-16      	  111224	     10691 ns/op	   10614 B/op	     107 allocs/op
+BenchmarkDay11Part1-16                    	     100	  10266446 ns/op	 1469178 B/op	   12301 allocs/op
+BenchmarkDay11Part2-16                    	      61	  18962289 ns/op	 1000526 B/op	    8365 allocs/op
+BenchmarkDay12Part1-16                    	   33151	     36332 ns/op	   66450 B/op	     801 allocs/op
+BenchmarkDay13Part1-16                    	  220335	      5276 ns/op	     872 B/op	       6 allocs/op
+BenchmarkDay13Part1ExcludingReading-16    	12265500	        96.78 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay13Part2-16                    	  127057	      9622 ns/op	    8277 B/op	     128 allocs/op
+BenchmarkDay13Part2ExcludingReading-16    	  384446	      2937 ns/op	    2288 B/op	     117 allocs/op
+BenchmarkDay15Part2/[0_3_6]-16            	       1	4254667658 ns/op	1660303880 B/op	13612666 allocs/op
+BenchmarkDay15Part2/[1_3_2]-16            	       1	4101475283 ns/op	1659542960 B/op	13611186 allocs/op
+BenchmarkDay15Part2/[2_1_3]-16            	       1	4165909982 ns/op	1660348520 B/op	13611398 allocs/op
+BenchmarkDay15Part2/[1_2_3]-16            	       1	4116897854 ns/op	1659499528 B/op	13612491 allocs/op
+BenchmarkDay15Part2/[2_3_1]-16            	       1	4090319864 ns/op	1658282168 B/op	13609777 allocs/op
+BenchmarkDay15Part2/[3_2_1]-16            	       1	4114403634 ns/op	1660021488 B/op	13610049 allocs/op
+BenchmarkDay15Part2/[3_1_2]-16            	       1	4186321652 ns/op	1660974552 B/op	13612881 allocs/op
+BenchmarkDay16Part1-16                    	     844	   1302352 ns/op	 1296632 B/op	    3218 allocs/op
+BenchmarkDay16Part2-16                    	     385	   3101897 ns/op	 1311276 B/op	    3265 allocs/op
+BenchmarkDay17Part1-16                    	      46	  25566926 ns/op	24851690 B/op	   38749 allocs/op
+BenchmarkDay20Part1-16                    	    1293	    887439 ns/op	  274890 B/op	    4670 allocs/op
+BenchmarkDay21Part1-16                    	    3681	    322440 ns/op	  345437 B/op	     839 allocs/op
+BenchmarkDay22Part1-16                    	   93530	     12598 ns/op	   10934 B/op	     156 allocs/op
+BenchmarkDay22Part2-16                    	      15	  76572418 ns/op	22856581 B/op	   77981 allocs/op
+BenchmarkDay23Example10-16                	 5835220	       203.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23Example100-16               	  713018	      1759 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23-16                         	  629432	      1812 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23_10_000_000-16              	       6	 181015423 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay24Part1-16                    	    5822	    202766 ns/op	  376639 B/op	    2251 allocs/op
+BenchmarkDay24Part2-16                    	       4	 257287622 ns/op	14757942 B/op	    7580 allocs/op
+BenchmarkDay25-16                         	      15	  72679736 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay4Part2-16                     	    5259	    223305 ns/op	  199104 B/op	    3504 allocs/op
+BenchmarkDay4Part2IncludingInput-16       	    4095	    287095 ns/op	  277668 B/op	    4327 allocs/op
+BenchmarkDay5Part1-16                     	  217774	      5571 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay5Part1IncludingInput-16       	   30394	     38639 ns/op	   47734 B/op	     861 allocs/op
+BenchmarkDay5-16                          	  127941	      9749 ns/op	   14968 B/op	      11 allocs/op
+BenchmarkDay5IncludingInput-16            	   27650	     43739 ns/op	   62712 B/op	     872 allocs/op
+BenchmarkDay7Part1-16                     	      33	  35204996 ns/op	   22032 B/op	      12 allocs/op
+PASS
+ok  	gitlab.com/jhinrichsen/adventofcode2020	113.328s
