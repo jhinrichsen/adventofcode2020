@@ -52,23 +52,27 @@ Unit test data, both examples and puzzle input, is in
 | 20  |  2
 | 21  |  2
 | 22  |  2
-| 23  | (1)
+| 23  |  2
 | 24  |  2
-| 25  | (1) Need all of the above puzzles resolved to open part #2
+| 25  |  1
 |====
+
 Numbers in (brackets) indicate tries so far (part #2 not solved yet).
 
 == Day 1
+
 Warmup, nice and smooth.
 
 Blattschuss, Blattschuss (answer correct on first try).
 
 == Day 2
+
 Warmup, nice and smooth.
 
 Blattschuss, Blattschuss.
 
 == Day 3
+
 The example's unit test succeeded, but part 1 failed, 284 being too low.
 I refrained from implementing a too-complex implementation based on complex
 numbers (x/y), and operated directly on the indexable lines[][] area.
@@ -76,6 +80,7 @@ numbers (x/y), and operated directly on the indexable lines[][] area.
 Fail, Blattschuss.
 
 == Day 4
+
 First try 234 again too low.
 Needed an extra blank line at the end of the file to make sure last pass was
 validated.
