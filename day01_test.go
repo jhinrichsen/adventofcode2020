@@ -1,8 +1,6 @@
 package aoc2020
 
 import (
-	"fmt"
-	"strconv"
 	"testing"
 )
 
@@ -11,7 +9,7 @@ func testDay1(t *testing.T, filename string, want uint, part1 bool) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	m, err := parseUints(lines)
+	m, err := NewDay01(lines)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19,18 +17,6 @@ func testDay1(t *testing.T, filename string, want uint, part1 bool) {
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
-}
-
-func parseUints(lines []string) (map[uint]bool, error) {
-	is := make(map[uint]bool)
-	for i, line := range lines {
-		n, err := strconv.Atoi(line)
-		if err != nil {
-			return is, fmt.Errorf("error converting number #%d: %w", i, err)
-		}
-		is[uint(n)] = true
-	}
-	return is, nil
 }
 
 func TestDay01Part1Example(t *testing.T) {
