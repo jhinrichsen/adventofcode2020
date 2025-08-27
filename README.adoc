@@ -724,5 +724,7 @@ BenchmarkDay25-8   	      12	 107268929 ns/op	       0 B/op	       0 allocs/op
 
 == References
 
+https://www.dannyvankooten.com/blog/2021/solving-advent-of-code-2020-under-1-second/[C, the original subsecond]
+
 https://timvisee.com/blog/solving-aoc-2020-in-under-a-second/[Rust subsecond]
 
