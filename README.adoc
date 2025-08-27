@@ -721,3 +721,8 @@ Other than that, nothing special.
 BenchmarkDay25-8   	      12	 107268929 ns/op	       0 B/op	       0 allocs/op
 ----
 ====
+
+== References
+
+https://timvisee.com/blog/solving-aoc-2020-in-under-a-second/[Rust subsecond]
+
