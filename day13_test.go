@@ -2,8 +2,8 @@ package aoc2020
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math/big"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -11,7 +11,7 @@ import (
 )
 
 func testDay13(t *testing.T, filename string, part1 bool, want uint) {
-	buf, err := ioutil.ReadFile(filename)
+	buf, err := os.ReadFile(filename)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -38,8 +38,8 @@ func TestDay13Part1(t *testing.T) {
 }
 
 func BenchmarkDay13Part1(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		buf, err := ioutil.ReadFile(filename(13))
+	for b.Loop() {
+		buf, err := os.ReadFile(filename(13))
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -48,12 +48,12 @@ func BenchmarkDay13Part1(b *testing.B) {
 }
 
 func BenchmarkDay13Part1ExcludingReading(b *testing.B) {
-	buf, err := ioutil.ReadFile(filename(13))
+	buf, err := os.ReadFile(filename(13))
 	if err != nil {
 		b.Fatal(err)
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		_ = Day13(buf, true)
 	}
 }
