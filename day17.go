@@ -67,29 +67,29 @@ func (a *Day17) ActiveCubes() (n uint) {
 
 // Cycle runs one atomic generation change.
 func (a *Day17) Cycle() {
-    // Accumulate active-neighbour counts for the sparse frontier only
-    counts := make(map[cube]uint8)
-    for c := range a.Active {
-        for dz := -1; dz <= 1; dz++ {
-            for dy := -1; dy <= 1; dy++ {
-                for dx := -1; dx <= 1; dx++ {
-                    if dx == 0 && dy == 0 && dz == 0 {
-                        continue
-                    }
-                    n := cube{c.x + dx, c.y + dy, c.z + dz}
-                    counts[n]++
-                }
-            }
-        }
-    }
-    fb := make(map[cube]struct{}, len(a.Active))
-    for pos, n := range counts {
-        _, wasActive := a.Active[pos]
-        if NewState(wasActive, uint(n)) {
-            fb[pos] = struct{}{}
-        }
-    }
-    a.Active = fb
+	// Accumulate active-neighbour counts for the sparse frontier only
+	counts := make(map[cube]uint8)
+	for c := range a.Active {
+		for dz := -1; dz <= 1; dz++ {
+			for dy := -1; dy <= 1; dy++ {
+				for dx := -1; dx <= 1; dx++ {
+					if dx == 0 && dy == 0 && dz == 0 {
+						continue
+					}
+					n := cube{c.x + dx, c.y + dy, c.z + dz}
+					counts[n]++
+				}
+			}
+		}
+	}
+	fb := make(map[cube]struct{}, len(a.Active))
+	for pos, n := range counts {
+		_, wasActive := a.Active[pos]
+		if NewState(wasActive, uint(n)) {
+			fb[pos] = struct{}{}
+		}
+	}
+	a.Active = fb
 }
 
 // ActiveNeighbours returns the number of neighbours in active state, a number
@@ -205,31 +205,31 @@ func (a *Day17Hyper) ActiveCubes() (n uint) {
 
 // Cycle runs one atomic generation change in 4D.
 func (a *Day17Hyper) Cycle() {
-    // Accumulate active-neighbour counts sparsely in 4D
-    counts := make(map[hcube]uint8)
-    for c := range a.Active {
-        for dw := -1; dw <= 1; dw++ {
-            for dz := -1; dz <= 1; dz++ {
-                for dy := -1; dy <= 1; dy++ {
-                    for dx := -1; dx <= 1; dx++ {
-                        if dx == 0 && dy == 0 && dz == 0 && dw == 0 {
-                            continue
-                        }
-                        n := hcube{c.x + dx, c.y + dy, c.z + dz, c.w + dw}
-                        counts[n]++
-                    }
-                }
-            }
-        }
-    }
-    fb := make(map[hcube]struct{}, len(a.Active))
-    for pos, n := range counts {
-        _, wasActive := a.Active[pos]
-        if NewState(wasActive, uint(n)) {
-            fb[pos] = struct{}{}
-        }
-    }
-    a.Active = fb
+	// Accumulate active-neighbour counts sparsely in 4D
+	counts := make(map[hcube]uint8)
+	for c := range a.Active {
+		for dw := -1; dw <= 1; dw++ {
+			for dz := -1; dz <= 1; dz++ {
+				for dy := -1; dy <= 1; dy++ {
+					for dx := -1; dx <= 1; dx++ {
+						if dx == 0 && dy == 0 && dz == 0 && dw == 0 {
+							continue
+						}
+						n := hcube{c.x + dx, c.y + dy, c.z + dz, c.w + dw}
+						counts[n]++
+					}
+				}
+			}
+		}
+	}
+	fb := make(map[hcube]struct{}, len(a.Active))
+	for pos, n := range counts {
+		_, wasActive := a.Active[pos]
+		if NewState(wasActive, uint(n)) {
+			fb[pos] = struct{}{}
+		}
+	}
+	a.Active = fb
 }
 
 // ActiveNeighbours returns the number of neighbours in active state (0..80).

@@ -226,9 +226,9 @@ func orientations(g []string) [][]string {
 	return res
 }
 
-func topBorder(g []string) string   { return northBorder(g) }
-func leftBorder(g []string) string  { return westBorder(g) }
-func rightBorder(g []string) string { return eastBorder(g) }
+func topBorder(g []string) string    { return northBorder(g) }
+func leftBorder(g []string) string   { return westBorder(g) }
+func rightBorder(g []string) string  { return eastBorder(g) }
 func bottomBorder(g []string) string { return southBorder(g) }
 
 // assemble places all tiles on a puzzle grid using backtracking so that all borders match.

@@ -5,21 +5,21 @@ import (
 )
 
 func testDay19(t *testing.T, filename string, part1 bool, want uint) {
-    lines, err := linesFromFilename(filename)
-    if err != nil {
-        t.Fatal(err)
-    }
-    p, err := NewDay19(lines)
-    if err != nil {
-        t.Fatal(err)
-    }
-    got, err := Day19(p, part1)
-    if err != nil {
-        t.Fatal(err)
-    }
-    if want != got {
-        t.Fatalf("want %d but got %d", want, got)
-    }
+	lines, err := linesFromFilename(filename)
+	if err != nil {
+		t.Fatal(err)
+	}
+	p, err := NewDay19(lines)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, err := Day19(p, part1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
+	}
 }
 
 func TestDay19Example(t *testing.T) {
@@ -90,48 +90,48 @@ func TestDay19Part2Example(t *testing.T) {
 		"aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba",
 		"",
 	}
-    p, err := NewDay19(lines)
-    if err != nil {
-        t.Fatal(err)
-    }
-    got, err := Day19(p, false)
-    if err != nil {
-        t.Fatal(err)
-    }
-    const want = 12
-    if want != got {
-        t.Fatalf("want %d but got %d", want, got)
-    }
+	p, err := NewDay19(lines)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, err := Day19(p, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	const want = 12
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
+	}
 }
 
 func TestDay19Part2(t *testing.T) {
-    const (
-        part1 = false
-        want  = 304
-    )
-    testDay19(t, filename(19), part1, want)
+	const (
+		part1 = false
+		want  = 304
+	)
+	testDay19(t, filename(19), part1, want)
 }
 
 func BenchmarkDay19Part1(b *testing.B) {
-    lines := linesFromFilenameTB(b, filename(19))
-    p, err := NewDay19(lines)
-    if err != nil {
-        b.Fatal(err)
-    }
-    b.ResetTimer()
-    for b.Loop() {
-        _, _ = Day19(p, true)
-    }
+	lines := linesFromFilenameTB(b, filename(19))
+	p, err := NewDay19(lines)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for b.Loop() {
+		_, _ = Day19(p, true)
+	}
 }
 
 func BenchmarkDay19Part2(b *testing.B) {
-    lines := linesFromFilenameTB(b, filename(19))
-    p, err := NewDay19(lines)
-    if err != nil {
-        b.Fatal(err)
-    }
-    b.ResetTimer()
-    for b.Loop() {
-        _, _ = Day19(p, false)
-    }
+	lines := linesFromFilenameTB(b, filename(19))
+	p, err := NewDay19(lines)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for b.Loop() {
+		_, _ = Day19(p, false)
+	}
 }

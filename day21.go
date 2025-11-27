@@ -183,19 +183,19 @@ func (a *Day21) reduceN() (allergen, ingredient, bool) {
 
 // sortByOccurenceDesc converts a map into a sorted list.
 func sortByOccurenceDesc(m map[allergen]uint) []allergen {
-    // Collect keys and sort deterministically by count desc, then name asc.
-    as := make([]allergen, 0, len(m))
-    for k := range m {
-        as = append(as, k)
-    }
-    sort.Slice(as, func(i, j int) bool {
-        ci, cj := m[as[i]], m[as[j]]
-        if ci != cj {
-            return ci > cj
-        }
-        return string(as[i]) < string(as[j])
-    })
-    return as
+	// Collect keys and sort deterministically by count desc, then name asc.
+	as := make([]allergen, 0, len(m))
+	for k := range m {
+		as = append(as, k)
+	}
+	sort.Slice(as, func(i, j int) bool {
+		ci, cj := m[as[i]], m[as[j]]
+		if ci != cj {
+			return ci > cj
+		}
+		return string(as[i]) < string(as[j])
+	})
+	return as
 }
 
 // allergens returns a list of allergens, and their occurence in all food.

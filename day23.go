@@ -26,79 +26,79 @@ func parse(n int, buf *[Dim]int) int {
 // after performing 10,000,000 moves on a circle containing 1,000,000 cups.
 // This uses an array-backed linked list for O(1) operations per move.
 func Day23Part2(input int) uint64 {
-    // parse input digits to slice
-    var buf [Dim]int
-    nd := parse(input, &buf)
-    digits := make([]int, 0, nd)
-    for i := 0; i < nd; i++ {
-        if buf[i] != 0 { // parse() leaves leading zeros due to fixed buffer; filter
-            digits = append(digits, buf[i])
-        }
-    }
-    if len(digits) == 0 { // fallback: use original approach if something odd
-        // should not happen
-        return 0
-    }
+	// parse input digits to slice
+	var buf [Dim]int
+	nd := parse(input, &buf)
+	digits := make([]int, 0, nd)
+	for i := 0; i < nd; i++ {
+		if buf[i] != 0 { // parse() leaves leading zeros due to fixed buffer; filter
+			digits = append(digits, buf[i])
+		}
+	}
+	if len(digits) == 0 { // fallback: use original approach if something odd
+		// should not happen
+		return 0
+	}
 
-    maxLabel := 1_000_000
-    moves := 10_000_000
+	maxLabel := 1_000_000
+	moves := 10_000_000
 
-    // next[label] = next label clockwise
-    next := make([]int, maxLabel+1)
+	// next[label] = next label clockwise
+	next := make([]int, maxLabel+1)
 
-    // initialize links for given digits
-    prev := digits[0]
-    minLabel := digits[0]
-    maxInit := digits[0]
-    for i := 1; i < len(digits); i++ {
-        next[prev] = digits[i]
-        prev = digits[i]
-        if digits[i] < minLabel {
-            minLabel = digits[i]
-        }
-        if digits[i] > maxInit {
-            maxInit = digits[i]
-        }
-    }
-    // extend up to maxLabel
-    for label := maxInit + 1; label <= maxLabel; label++ {
-        next[prev] = label
-        prev = label
-    }
-    // close the circle
-    next[prev] = digits[0]
+	// initialize links for given digits
+	prev := digits[0]
+	minLabel := digits[0]
+	maxInit := digits[0]
+	for i := 1; i < len(digits); i++ {
+		next[prev] = digits[i]
+		prev = digits[i]
+		if digits[i] < minLabel {
+			minLabel = digits[i]
+		}
+		if digits[i] > maxInit {
+			maxInit = digits[i]
+		}
+	}
+	// extend up to maxLabel
+	for label := maxInit + 1; label <= maxLabel; label++ {
+		next[prev] = label
+		prev = label
+	}
+	// close the circle
+	next[prev] = digits[0]
 
-    current := digits[0]
-    for i := 0; i < moves; i++ {
-        // pick up three
-        p1 := next[current]
-        p2 := next[p1]
-        p3 := next[p2]
-        after := next[p3]
-        // remove picked
-        next[current] = after
-        // select destination
-        dest := current - 1
-        if dest < 1 {
-            dest = maxLabel
-        }
-        for dest == p1 || dest == p2 || dest == p3 {
-            dest--
-            if dest < 1 {
-                dest = maxLabel
-            }
-        }
-        // splice picked after dest
-        destNext := next[dest]
-        next[dest] = p1
-        next[p3] = destNext
-        // advance
-        current = next[current]
-    }
+	current := digits[0]
+	for i := 0; i < moves; i++ {
+		// pick up three
+		p1 := next[current]
+		p2 := next[p1]
+		p3 := next[p2]
+		after := next[p3]
+		// remove picked
+		next[current] = after
+		// select destination
+		dest := current - 1
+		if dest < 1 {
+			dest = maxLabel
+		}
+		for dest == p1 || dest == p2 || dest == p3 {
+			dest--
+			if dest < 1 {
+				dest = maxLabel
+			}
+		}
+		// splice picked after dest
+		destNext := next[dest]
+		next[dest] = p1
+		next[p3] = destNext
+		// advance
+		current = next[current]
+	}
 
-    a := next[1]
-    b := next[a]
-    return uint64(a) * uint64(b)
+	a := next[1]
+	b := next[a]
+	return uint64(a) * uint64(b)
 }
 
 // Day23 returns the number of labels.

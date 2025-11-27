@@ -69,26 +69,26 @@ func BenchmarkDay23(b *testing.B) {
 }
 
 func TestDay23Part2Example(t *testing.T) {
-    const input = 389125467
-    const want uint64 = 149245887792
-    got := Day23Part2(input)
-    if want != got {
-        t.Fatalf("want %d but got %d", want, got)
-    }
+	const input = 389125467
+	const want uint64 = 149245887792
+	got := Day23Part2(input)
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
+	}
 }
 
 func TestDay23Part2(t *testing.T) {
-    const input = 962713854
-    got := Day23Part2(input)
-    const want uint64 = 287230227046
-    if want != got {
-        t.Fatalf("want %d but got %d", want, got)
-    }
+	const input = 962713854
+	got := Day23Part2(input)
+	const want uint64 = 287230227046
+	if want != got {
+		t.Fatalf("want %d but got %d", want, got)
+	}
 }
 
 func BenchmarkDay23Part2(b *testing.B) {
-    for i := 0; i < b.N; i++ {
-        const input = 962713854
-        _ = Day23Part2(input)
-    }
+	for i := 0; i < b.N; i++ {
+		const input = 962713854
+		_ = Day23Part2(input)
+	}
 }

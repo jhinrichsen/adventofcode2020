@@ -49,17 +49,17 @@ func TestDay14Part2(t *testing.T) {
 }
 
 func BenchmarkDay14Part1(b *testing.B) {
-    lines := linesFromFilenameTB(b, filename(14))
-    b.ResetTimer()
-    for b.Loop() {
-        _, _ = Day14(lines, true)
-    }
+	lines := linesFromFilenameTB(b, filename(14))
+	b.ResetTimer()
+	for b.Loop() {
+		_, _ = Day14(lines, true)
+	}
 }
 
 func BenchmarkDay14Part2(b *testing.B) {
-    lines := linesFromFilenameTB(b, filename(14))
-    b.ResetTimer()
-    for b.Loop() {
-        _, _ = Day14(lines, false)
-    }
+	lines := linesFromFilenameTB(b, filename(14))
+	b.ResetTimer()
+	for b.Loop() {
+		_, _ = Day14(lines, false)
+	}
 }
