@@ -132,13 +132,13 @@ BenchmarkDay09Part2-16    	    7819	    153314 ns/op	       0 B/op	       0 allo
 BenchmarkDay09Part2-16    	    6831	    155675 ns/op	       0 B/op	       0 allocs/op
 BenchmarkDay09Part2-16    	    6322	    160997 ns/op	       0 B/op	       0 allocs/op
 BenchmarkDay11Part1
-BenchmarkDay11Part1-16    	     127	   9306271 ns/op	 1469669 B/op	   12301 allocs/op
-BenchmarkDay11Part1-16    	     127	   9334534 ns/op	 1469678 B/op	   12301 allocs/op
-BenchmarkDay11Part1-16    	     127	   9384912 ns/op	 1469689 B/op	   12301 allocs/op
+BenchmarkDay11Part1-16    	     309	   3891098 ns/op	   36808 B/op	     110 allocs/op
+BenchmarkDay11Part1-16    	     310	   3925194 ns/op	   36808 B/op	     110 allocs/op
+BenchmarkDay11Part1-16    	     301	   3896192 ns/op	   36809 B/op	     110 allocs/op
 BenchmarkDay11Part2
-BenchmarkDay11Part2-16    	      62	  18676453 ns/op	 1000976 B/op	    8365 allocs/op
-BenchmarkDay11Part2-16    	      63	  18283913 ns/op	 1000974 B/op	    8364 allocs/op
-BenchmarkDay11Part2-16    	      64	  18591611 ns/op	 1000966 B/op	    8364 allocs/op
+BenchmarkDay11Part2-16    	      49	  23390568 ns/op	   36828 B/op	     110 allocs/op
+BenchmarkDay11Part2-16    	      51	  23009686 ns/op	   36826 B/op	     110 allocs/op
+BenchmarkDay11Part2-16    	      50	  22933737 ns/op	   36827 B/op	     110 allocs/op
 BenchmarkDay12Part1
 BenchmarkDay12Part1-16    	   32164	     37565 ns/op	   71708 B/op	     801 allocs/op
 BenchmarkDay12Part1-16    	   31922	     37793 ns/op	   71708 B/op	     801 allocs/op
@@ -220,13 +220,13 @@ BenchmarkDay23Part2-16    	       6	 180616582 ns/op	 8003664 B/op	       2 allo
 BenchmarkDay23Part2-16    	       6	 181704759 ns/op	 8003664 B/op	       2 allocs/op
 BenchmarkDay23Part2-16    	       6	 183443320 ns/op	 8003664 B/op	       2 allocs/op
 BenchmarkDay24Part1
-BenchmarkDay24Part1-16    	    6478	    186085 ns/op	  374603 B/op	    2237 allocs/op
-BenchmarkDay24Part1-16    	    5216	    193047 ns/op	  374604 B/op	    2237 allocs/op
-BenchmarkDay24Part1-16    	    5574	    187002 ns/op	  374602 B/op	    2237 allocs/op
+BenchmarkDay24Part1-16    	    6534	    192037 ns/op	  374599 B/op	    2237 allocs/op
+BenchmarkDay24Part1-16    	    6627	    194015 ns/op	  374603 B/op	    2237 allocs/op
+BenchmarkDay24Part1-16    	    5976	    187339 ns/op	  374604 B/op	    2237 allocs/op
 BenchmarkDay24Part2
-BenchmarkDay24Part2-16    	       4	 250334907 ns/op	14529576 B/op	    4699 allocs/op
-BenchmarkDay24Part2-16    	       4	 250536864 ns/op	14597864 B/op	    4705 allocs/op
-BenchmarkDay24Part2-16    	       5	 251016088 ns/op	14513270 B/op	    4699 allocs/op
+BenchmarkDay24Part2-16    	      82	  14486485 ns/op	  489388 B/op	    2239 allocs/op
+BenchmarkDay24Part2-16    	      81	  14524705 ns/op	  489410 B/op	    2239 allocs/op
+BenchmarkDay24Part2-16    	      84	  14642372 ns/op	  489386 B/op	    2239 allocs/op
 ----
 
 Min-sum: 1260790603 ns (1260.791 ms, 1.260791 s)
@@ -408,11 +408,25 @@ I feel proud because i figured out the O(n) solution all by myself.
 
 Blattschuss, Blattschuss.
 
+=== iter.Seq Optimization (2024)
+
+Refactored to use flat array storage and `C8Indices` iterator from `grid.go` for Part 1.
+The iterator provides pre-computed 8-connectivity neighbor indices without bounds checking.
+
+|===
+| Metric | Before | After | Improvement
+
+| Time (Part 1) | 10.1 ms | 3.9 ms | 2.6x faster
+| Memory | 1.47 MB | 37 KB | 40x less
+| Allocations | 12,301 | 110 | 112x fewer
+|===
+
+Part 2 uses ray-casting (visibility) which doesn't fit the iter.Seq pattern, but still benefits from flat array storage.
+
 ====
 ----
-BenchmarkDay11Part1-16    	      50	  22479241 ns/op	 1469160 B/op	   12301 allocs/op
-BenchmarkDay11Part2
-BenchmarkDay11Part2-16    	      26	  42891330 ns/op	 1000564 B/op	    8365 allocs/op
+BenchmarkDay11Part1-16    	     309	   3891098 ns/op	   36808 B/op	     110 allocs/op
+BenchmarkDay11Part2-16    	      49	  23390568 ns/op	   36828 B/op	     110 allocs/op
 ----
 ====
 
@@ -702,10 +716,25 @@ traversed the list `for _, c := range []HexFloor{1 + 0i, 0 + 1i, 0 - 1i,
 
 Hard to spot.
 
+=== iter.Seq Optimization (2024)
+
+Refactored Part 2 to use dense array storage and `C6Indices` iterator from `grid.go`.
+The iterator provides pre-computed 6-connectivity (hexagonal) neighbor indices.
+
+|===
+| Metric | Before | After | Improvement
+
+| Time (Part 2) | 262 ms | 14.5 ms | 18x faster
+| Memory | 14.5 MB | 489 KB | 30x less
+| Allocations | 4,701 | 2,239 | 2x fewer
+|===
+
+The original sparse `map[complex128]` approach required iterating over a bounding box and checking map membership for each neighbor. The dense array with pre-computed indices eliminates this overhead.
+
 ====
 ----
-BenchmarkDay24Part1-8   	    2373	    631966 ns/op	  377559 B/op	    2256 allocs/op
-BenchmarkDay24Part2-8   	       2	 613236738 ns/op	13700448 B/op	    9230 allocs/op
+BenchmarkDay24Part1-16    	    6627	    194015 ns/op	  374603 B/op	    2237 allocs/op
+BenchmarkDay24Part2-16    	      84	  14642372 ns/op	  489386 B/op	    2239 allocs/op
 ----
 ====
 

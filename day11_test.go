@@ -143,3 +143,4 @@ func BenchmarkDay11Part2(b *testing.B) {
 		}
 	}
 }
+

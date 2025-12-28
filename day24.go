@@ -9,7 +9,12 @@ type hexFloor = complex128 // type alias
 // Day24 represents a 2D-list of directions, and a hexagonal floor.
 type Day24 struct {
 	directions [][]hexFloor
-	tiles      map[hexFloor]struct{} // active tiles set
+	tiles      map[hexFloor]struct{} // active tiles set (used for Part1 and conversion)
+	// Dense array for Part2
+	grid   []bool
+	next   []bool
+	w, h   int
+	ox, oy int // origin offset
 }
 
 // NewDay24 parses lines of text into a Day24 struct.
@@ -51,102 +56,102 @@ func NewDay24(lines []string) (Day24, error) {
 // Part1 solves day 24, part #1.
 func (a *Day24) Part1() {
 	for _, path := range a.directions {
-		// ref needs to be flipped?
 		ref := 0 + 0i
 		for j := range path {
 			ref += path[j]
 		}
-		// only flip last tile, not complete path!
-		// active tiles are stored as a set
 		if _, ok := a.tiles[ref]; ok {
-			// was active -> flip to inactive
 			delete(a.tiles, ref)
 		} else {
-			// was inactive -> flip to active
 			a.tiles[ref] = struct{}{}
 		}
 	}
 }
 
 // Flipped returns number of active tiles.
-// As we only store active tiles, the number of tiles on the floor.
 func (a Day24) Flipped() uint {
-	return uint(len(a.tiles))
-}
-
-// Dimension returns the lower left and upper right corner stones.
-func (a Day24) Dimension() (hexFloor, hexFloor) {
-	var minX, minY, maxX, maxY float64
-
-	// cleanly initialize min and max from any random tile
-	for k := range a.tiles {
-		minX, maxX = real(k), real(k)
-		minY, maxY = imag(k), imag(k)
-		break
-	}
-
-	for k := range a.tiles {
-		if real(k) < minX {
-			minX = real(k)
-		} else if real(k) > maxX {
-			maxX = real(k)
-		}
-		if imag(k) < minY {
-			minY = imag(k)
-		} else if imag(k) > maxY {
-			maxY = imag(k)
-		}
-	}
-	return complex(minX, minY), complex(maxX, maxY)
-}
-
-// Part2 solves day 24 part #2.
-func (a *Day24) Part2(days uint) {
-	activeNeighbours := func(tile hexFloor) byte {
-		var n byte
-		for _, c := range []hexFloor{1 + 0i, 0 + 1i, 0 - 1i, -1 + 1i, 1 - 1i, -1 + 0i} {
-			if _, ok := a.tiles[tile+c]; ok {
+	if a.grid != nil {
+		var n uint
+		for _, v := range a.grid {
+			if v {
 				n++
 			}
 		}
 		return n
 	}
-	newState := func(tile hexFloor, active bool) bool {
-		n := activeNeighbours(tile)
-		// fmt.Printf("tile %f has %d active neighbours\n", tile, n)
+	return uint(len(a.tiles))
+}
+
+// initDenseGrid converts sparse tiles to dense array with margin for growth.
+func (a *Day24) initDenseGrid(margin int) {
+	var minX, minY, maxX, maxY float64
+	first := true
+	for k := range a.tiles {
+		if first {
+			minX, maxX = real(k), real(k)
+			minY, maxY = imag(k), imag(k)
+			first = false
+			continue
+		}
+		if real(k) < minX {
+			minX = real(k)
+		}
+		if real(k) > maxX {
+			maxX = real(k)
+		}
+		if imag(k) < minY {
+			minY = imag(k)
+		}
+		if imag(k) > maxY {
+			maxY = imag(k)
+		}
+	}
+
+	a.ox = int(minX) - margin
+	a.oy = int(minY) - margin
+	a.w = int(maxX) - int(minX) + 1 + 2*margin
+	a.h = int(maxY) - int(minY) + 1 + 2*margin
+
+	a.grid = make([]bool, a.w*a.h)
+	for k := range a.tiles {
+		x := int(real(k)) - a.ox
+		y := int(imag(k)) - a.oy
+		a.grid[y*a.w+x] = true
+	}
+	a.next = make([]bool, a.w*a.h)
+}
+
+// step performs one Game of Life step using C6Indices.
+func (a *Day24) step() {
+	g := Grid{W: a.w, H: a.h}
+	for idx, nbrs := range g.C6Indices() {
+		var count int
+		for nidx := range nbrs {
+			if a.grid[nidx] {
+				count++
+			}
+		}
+
+		active := a.grid[idx]
+		newActive := active
 		if active {
-			if n == 0 || n > 2 {
-				// fmt.Printf("tile %f comes alive\n", tile)
-				return false
+			if count == 0 || count > 2 {
+				newActive = false
 			}
 		} else {
-			if activeNeighbours(tile) == 2 {
-				// fmt.Printf("tile %f dies\n", tile)
-				return true
+			if count == 2 {
+				newActive = true
 			}
 		}
-		return active // no change
+		a.next[idx] = newActive
 	}
-	for i := uint(0); i < days; i++ {
-		offscreen := make(map[hexFloor]struct{})
-		min, max := a.Dimension()
+	a.grid, a.next = a.next, a.grid
+}
 
-		// allow floor to expand at its borders
-		grow := 1 + 1i
-		min -= grow
-		max += grow
-		for y := imag(min); y <= imag(max); y++ {
-			for x := real(min); x <= real(max); x++ {
-				tile := complex(x, y)
-				_, wasActive := a.tiles[tile]
-				active := newState(tile, wasActive)
-				// only store active tiles
-				if active { // change
-					offscreen[tile] = struct{}{}
-				}
-			}
-		}
-		a.tiles = offscreen
-		// fmt.Printf("Day %d: %d\n", 1+i, a.Flipped())
+// Part2 solves day 24 part #2.
+func (a *Day24) Part2(days uint) {
+	a.initDenseGrid(int(days) + 1)
+	for i := uint(0); i < days; i++ {
+		a.step()
 	}
 }

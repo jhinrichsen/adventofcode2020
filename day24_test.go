@@ -87,3 +87,4 @@ func BenchmarkDay24Part2(b *testing.B) {
 		_ = d.Flipped()
 	}
 }
+

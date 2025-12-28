@@ -5,151 +5,142 @@ const (
 	occupied = '#'
 )
 
-// Day11 holds a grid.
+// Day11 holds a grid using flat array storage.
 type Day11 struct {
-	Grid  [][]byte
+	grid  []byte
+	next  []byte
+	w, h  int
 	part1 bool
 }
 
 // NewDay11 parses puzzle input into a Day11 struct.
 func NewDay11(lines []string, part1 bool) Day11 {
-	buf := make([][]byte, len(lines))
-	for y := 0; y < len(lines); y++ {
-		buf[y] = []byte(lines[y])
+	h := len(lines)
+	w := len(lines[0])
+	size := w * h
 
+	grid := make([]byte, size)
+	for y, line := range lines {
+		for x := 0; x < len(line); x++ {
+			grid[y*w+x] = line[x]
+		}
 	}
-	return Day11{buf, part1}
+
+	return Day11{
+		grid:  grid,
+		next:  make([]byte, size),
+		w:     w,
+		h:     h,
+		part1: part1,
+	}
 }
 
-// Adjacents returns number of occupied neighbours.
-func (a *Day11) Adjacents(x, y int) (count byte) {
-	dimx, dimy := len(a.Grid[0]), len(a.Grid)
+// countNeighborsPart2 counts visible occupied seats using ray-casting.
+func (d *Day11) countNeighborsPart2(idx int) int {
+	x, y := idx%d.w, idx/d.w
 
-	if a.part1 {
-		seat := func(y, x int) byte {
-			if 0 <= x && x < dimx && 0 <= y && y < dimy && a.Grid[y][x] == occupied {
-				return 1
+	var count int
+	for _, dir := range [][2]int{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}} {
+		dy, dx := dir[0], dir[1]
+		ny, nx := y+dy, x+dx
+		for ny >= 0 && ny < d.h && nx >= 0 && nx < d.w {
+			cell := d.grid[ny*d.w+nx]
+			if cell == occupied {
+				count++
+				break
 			}
-			return 0
+			if cell == empty {
+				break
+			}
+			ny += dy
+			nx += dx
 		}
-		// N
-		count += seat(y-1, x)
-		// NE
-		count += seat(y-1, x+1)
-		// E
-		count += seat(y, x+1)
-		// SE
-		count += seat(y+1, x+1)
-		// S
-		count += seat(y+1, x)
-		// SW
-		count += seat(y+1, x-1)
-		// W
-		count += seat(y, x-1)
-		// NW
-		count += seat(y-1, x-1)
-	} else {
-		seat := func(y, x, dy, dx int) byte {
-			x += dx
-			y += dy
-			for 0 <= y && y < dimy && 0 <= x && x < dimx {
-				switch a.Grid[y][x] {
-				case occupied:
-					return 1
-				case empty: // empty seats break visibility
-					return 0
+	}
+	return count
+}
+
+// Step processes one step. Returns true if any seat changed.
+func (d *Day11) Step() bool {
+	changed := false
+	threshold := 4
+	if !d.part1 {
+		threshold = 5
+	}
+
+	if d.part1 {
+		// Use C8Indices for Part 1 - no bounds checking needed
+		g := Grid{W: d.w, H: d.h}
+		for idx, nbrs := range g.C8Indices() {
+			cell := d.grid[idx]
+			if cell == '.' {
+				d.next[idx] = '.'
+				continue
+			}
+
+			var count int
+			for nidx := range nbrs {
+				if d.grid[nidx] == occupied {
+					count++
 				}
-				x += dx
-				y += dy
 			}
-			return 0
-		}
-		// N
-		count += seat(y, x, -1, +0)
-		// NE
-		count += seat(y, x, -1, +1)
-		// E
-		count += seat(y, x, +0, +1)
-		// SE
-		count += seat(y, x, +1, +1)
-		// S
-		count += seat(y, x, +1, +0)
-		// SW
-		count += seat(y, x, +1, -1)
-		// W
-		count += seat(y, x, +0, -1)
-		// NW
-		count += seat(y, x, -1, -1)
-	}
-	return
-}
 
-// Copy creates a clone of a Day11 structure, game of life operates on a framebuffer.
-func (a *Day11) Copy() Day11 {
-	cp := make([][]byte, len(a.Grid))
-	for i := 0; i < len(a.Grid); i++ {
-		cp[i] = make([]byte, len(a.Grid[i]))
-		copy(cp[i], a.Grid[i])
+			newCell := cell
+			if cell == empty && count == 0 {
+				newCell = occupied
+			} else if cell == occupied && count >= threshold {
+				newCell = empty
+			}
+
+			if newCell != cell {
+				changed = true
+			}
+			d.next[idx] = newCell
+		}
+	} else {
+		// Part 2: ray-casting visibility
+		for idx := range d.grid {
+			cell := d.grid[idx]
+			if cell == '.' {
+				d.next[idx] = '.'
+				continue
+			}
+
+			count := d.countNeighborsPart2(idx)
+
+			newCell := cell
+			if cell == empty && count == 0 {
+				newCell = occupied
+			} else if cell == occupied && count >= threshold {
+				newCell = empty
+			}
+
+			if newCell != cell {
+				changed = true
+			}
+			d.next[idx] = newCell
+		}
 	}
-	return Day11{cp, a.part1}
+
+	d.grid, d.next = d.next, d.grid
+	return changed
 }
 
 // Occupied returns number of occupied seats.
-func (a *Day11) Occupied() (n uint) {
-	for _, s := range a.Grid {
-		for _, c := range s {
-			if c == occupied {
-				n++
-			}
+func (d *Day11) Occupied() uint {
+	var count uint
+	for _, c := range d.grid {
+		if c == occupied {
+			count++
 		}
 	}
-	return
+	return count
 }
 
-// Redact returns a String representation of a Day 11 structure.
-func (a *Day11) Redact() []string {
-	var ss []string
-	for i := range a.Grid {
-		ss = append(ss, string(a.Grid[i]))
+// Redact returns a String representation of a Day11 structure.
+func (d *Day11) Redact() []string {
+	ss := make([]string, d.h)
+	for y := 0; y < d.h; y++ {
+		ss[y] = string(d.grid[y*d.w : (y+1)*d.w])
 	}
 	return ss
-}
-
-// NewState calculates the new state based on current state and number of
-// neighbours.
-func (a *Day11) NewState(state byte, adjacents byte) byte {
-	var requiredAdjacents byte
-	if a.part1 {
-		requiredAdjacents = 4
-	} else {
-		requiredAdjacents = 5
-	}
-
-	if state == empty && adjacents == 0 {
-		return occupied
-	} else if state == occupied && adjacents >= requiredAdjacents {
-		return empty
-	}
-	return state
-}
-
-// Step processes one step in an atomic-like fashion.
-func (a *Day11) Step() bool {
-	var changed bool
-	fb := a.Copy()
-	for y := range fb.Grid {
-		for x := range fb.Grid[y] {
-			st := a.Grid[y][x]
-			n := a.Adjacents(x, y)
-			st2 := a.NewState(st, n)
-			if st != st2 {
-				fb.Grid[y][x] = st2
-				changed = true
-			}
-		}
-	}
-	if changed {
-		a.Grid = fb.Grid
-	}
-	return changed
 }
