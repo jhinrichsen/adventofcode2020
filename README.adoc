@@ -39,16 +39,16 @@ Unit test data, both examples and puzzle input, is in `testdata/day{{.n}}.txt`, 
 
 | 1   |   1    |   1
 | 2   |   1    |   1
-| 3   |   2    |   1
-| 4   |   2    |   1
+| 3   |   2 <1>|   1
+| 4   |   2 <2>|   1
 | 5   |   1    |   1
 | 6   |   1    |   1
 | 7   |   1    |   1
-| 8   |   1    |   2
+| 8   |   1    |   2 <3>
 | 9   |   1    |   1
 | 10  |   1    |   1
 | 11  |   1    |   1
-| 12  |   2    |   1
+| 12  |   2 <4>|   1
 | 13  |   1    |   1
 | 14  |   1    |   1
 | 15  |   1    |   1
@@ -63,6 +63,10 @@ Unit test data, both examples and puzzle input, is in `testdata/day{{.n}}.txt`, 
 | 24  |   1    |   1
 | 25  |   1    |   -
 |===
+<1> answer too low, indexed lines[][] instead of complex numbers
+<2> answer too low, missing trailing blank line to trigger last passport validation
+<3> answer too low, program must terminate at last instruction, not just anywhere
+<4> ignored turn magnitude (T vs T90/T180/T270)
 
 == Day 1: Report Repair
 
