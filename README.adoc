@@ -1,17 +1,25 @@
-= Advent Of Code (AOC) 2020
+= Advent of Code 2020
+:doctype: book
+:toc: macro
+:sectnums:
 
-My take on the AOC, documenting my errors.
+image:https://godoc.org/gitlab.com/jhinrichsen/adventofcode2020?status.svg["godoc", link="https://godoc.org/gitlab.com/jhinrichsen/adventofcode2020"]
+image:https://goreportcard.com/badge/gitlab.com/jhinrichsen/adventofcode2020["Go report card", link="https://goreportcard.com/report/gitlab.com/jhinrichsen/adventofcode2020"]
+image:https://gitlab.com/jhinrichsen/adventofcode2020/badges/master/pipeline.svg[link="https://gitlab.com/jhinrichsen/adventofcode2020/-/commits/master",title="pipeline status"]
+image:https://gitlab.com/jhinrichsen/adventofcode2020/badges/master/coverage.svg[link="https://gitlab.com/jhinrichsen/adventofcode2020/-/commits/master",title="coverage report"]
 
+image::aoc-stars.png[Advent of Code Stars - 524 total]
+
+toc::[]
+
+My take on https://adventofcode.com/2020/ in Go.
 Usually, i don't go for implementation speed, because that does not resonate well with me.
-
-My second highest priority is runtime performance, and priority number one is
-getting it right the first time.
+My second highest priority is runtime performance, and priority number one is getting it right the first time.
 Therefore, i always provide complete coverage via unit tests.
 Go just makes this _so_ easy.
 
 This document does not include solutions so no worries to read it at any point in time.
-Solutions are hardcoded into unit tests, so you won't see any solutions as
-long as you avoid looking at `*_test.go` files.
+Solutions are hardcoded into unit tests, so you won't see any solutions as long as you avoid looking at `*_test.go` files.
 
 == Environment
 
@@ -22,44 +30,467 @@ long as you avoid looking at `*_test.go` files.
 - AMD Ryzen 5 3400G on a Gigabyte B450
 
 Each day lives separately in a `day{{.n}}.go` and `day{{.n}}_test.go` file.
-Unit test data, both examples and puzzle input, is in
-`testdata/day{{.n}}.txt`, and `testdata/day{{.n}}_example.txt`.
+Unit test data, both examples and puzzle input, is in `testdata/day{{.n}}.txt`, and `testdata/day{{.n}}_example.txt`.
 
-|====
-| Day | Tries
-|  1  |  2
-|  1  |  2
-|  2  |  2
-|  2  |  2
-|  3  | *3*
-|  3  |  2
-|  4  | *3*
-|  5  |  2
-|  6  |  2
-|  7  |  2
-|  8  | *3*
-|  9  |  2
-| 10  |  2
-| 11  |  2
-| 12  |  2
-| 13  |  2
-| 14  |  2
-| 15  |  2
-| 16  |  2
-| 17  |  2
-| 18  |  2
-| 19  |  2
-| 20  |  2
-| 21  |  2
-| 22  |  2
-| 23  |  2
-| 24  |  2
-| 25  |  1
-|====
+== Number of tries
 
-Numbers in (brackets) indicate tries so far (part #2 not solved yet).
+|===
+| Day | Part 1 | Part 2
 
-== Benchmark overview
+| 1   |   1    |   1
+| 2   |   1    |   1
+| 3   |   2    |   1
+| 4   |   2    |   1
+| 5   |   1    |   1
+| 6   |   1    |   1
+| 7   |   1    |   1
+| 8   |   1    |   2
+| 9   |   1    |   1
+| 10  |   1    |   1
+| 11  |   1    |   1
+| 12  |   2    |   1
+| 13  |   1    |   1
+| 14  |   1    |   1
+| 15  |   1    |   1
+| 16  |   1    |   1
+| 17  |   1    |   1
+| 18  |   1    |   1
+| 19  |   1    |   1
+| 20  |   1    |   1
+| 21  |   1    |   1
+| 22  |   1    |   1
+| 23  |   1    |   1
+| 24  |   1    |   1
+| 25  |   1    |   -
+|===
+
+== Day 1: Report Repair
+
+Warmup, nice and smooth.
+
+Blattschuss, Blattschuss (answer correct on first try).
+
+=== Optimization
+
+Using a custom parser, and allocating a length optimized map:
+
+----
+goos: linux
+goarch: amd64
+pkg: gitlab.com/jhinrichsen/adventofcode2020
+cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics
+                        │     b0      │                 b1                  │
+                        │   sec/op    │   sec/op     vs base                │
+Day01Part1-16             9.239µ ± 1%   5.885µ ± 1%  -36.30% (p=0.000 n=10)
+Day01Part2-16             201.5µ ± 6%   114.1µ ± 2%  -43.39% (p=0.000 n=10)
+Day01Part1Concurrent-16                 26.00µ ± 1%
+Day01Part2Concurrent-16                 143.5µ ± 1%
+geomean                   43.15µ        39.78µ       -39.95%
+
+                        │      b0      │                  b1                   │
+                        │     B/op     │     B/op       vs base                │
+Day01Part1-16             9.320Ki ± 0%   18.039Ki ± 0%  +93.55% (p=0.000 n=10)
+Day01Part2-16             9.320Ki ± 0%   18.039Ki ± 0%  +93.55% (p=0.000 n=10)
+Day01Part1Concurrent-16                   18.20Ki ± 0%
+Day01Part2Concurrent-16                   18.20Ki ± 0%
+geomean                   9.320Ki         18.12Ki       +93.55%
+
+                        │     b0      │                 b1                 │
+                        │  allocs/op  │ allocs/op   vs base                │
+Day01Part1-16             13.000 ± 0%   3.000 ± 0%  -76.92% (p=0.000 n=10)
+Day01Part2-16             13.000 ± 0%   3.000 ± 0%  -76.92% (p=0.000 n=10)
+Day01Part1Concurrent-16                 5.000 ± 0%
+Day01Part2Concurrent-16                 5.000 ± 0%
+geomean                    13.00        3.873       -76.92%
+----
+
+The size of the allocation doubles using a conservative map size, but the number of allocations drop 4x.
+Concurrent uses an async chan between parser and solver, but as usual, the channel introduces more overhead than it shaves off the runtime.
+
+== Day 2: Password Philosophy
+
+Warmup, nice and smooth.
+
+Blattschuss, Blattschuss.
+
+== Day 3: Toboggan Trajectory
+
+The example's unit test succeeded, but part 1 failed, 284 being too low.
+I refrained from implementing a too-complex implementation based on complex numbers (x/y), and operated directly on the indexable lines[][] area.
+
+Fail, Blattschuss.
+
+== Day 4: Passport Processing
+
+First try 234 again too low.
+Needed an extra blank line at the end of the file to make sure last pass was validated.
+
+For part 2, unit testing found an error before submitting the correct result.
+
+Fail, Blattschuss.
+
+`Hair color` is defined as `a # followed by exactly six characters 0-9 or a-f`.
+So check for a leading '#', and then iterate the remaining slice:
+
+====
+----
+if s[0] != '#' {
+    return false
+}
+for i := range s[1:] {
+    if '0' <= s[i] && s[i] <= '9' { // WRONG
+        ...
+    }
+}
+----
+====
+
+`s[1:]` is the correct slice, `i` is `0` for the first iteration, indexing `s[i]` does _not_ index the slice but the original string, so it will point to `#`.
+====
+----
+num := s[1:]
+for i := range num {
+    if '0' <= num[i] && num[i] <= '9' { // CORRECT
+        ...
+    }
+}
+----
+====
+
+== Day 5: Binary Boarding
+
+Blattschuss, Blattschuss.
+
+== Day 6: Custom Customs
+
+Blattschuss, Blattschuss.
+
+== Day 7: Handy Haversacks
+
+Blattschuss, Blattschuss.
+
+Coming back to part #2, reusing the shunting yard algorithm from day 18.
+
+== Day 8: Handheld Halting
+
+Blattschuss.
+
+Part 2 ran like a champ, but the answer was not accepted, too low. After re-reading the instructions, the program must terminate at the last line, not somewhere.
+
+== Day 9: Encoding Error
+
+Blattschuss, Blattschuss.
+
+== Day 10: Adapter Array
+
+Blattschuss, Blattschuss.
+
+I feel proud because i figured out the O(n) solution all by myself.
+
+== Day 11: Seating System
+
+Blattschuss, Blattschuss.
+
+=== iter.Seq Optimization (2024)
+
+Refactored to use flat array storage and `C8Indices` iterator from `grid.go` for Part 1.
+The iterator provides pre-computed 8-connectivity neighbor indices without bounds checking.
+
+|===
+| Metric | Before | After | Improvement
+
+| Time (Part 1) | 10.1 ms | 3.9 ms | 2.6x faster
+| Memory | 1.47 MB | 37 KB | 40x less
+| Allocations | 12,301 | 110 | 112x fewer
+|===
+
+Part 2 uses ray-casting (visibility) which doesn't fit the iter.Seq pattern, but still benefits from flat array storage.
+
+== Day 12: Rain Risk
+
+Bad first guess for part #1. Upon debugging, i realized `turn` commands come with a number, so instead of `T` turning right, one needs to consider `T90`, `T180` and the like.
+The example contained a 'R90', but not multiple turns, so this one went unnoticed.
+Second try was correct.
+
+Implementation is based on complex numbers (again), and Go's native support shows in 0 allocations:
+
+====
+----
+BenchmarkDay12Part1-8   	  508400	      2472 ns/op	       0 B/op	       0 allocs/op
+----
+====
+
+2 to 3 μs for 774 commands, nice. Reading input not included.
+
+== Day 13: Shuttle Search
+
+Blattschuss, Blattschuss.
+
+====
+----
+BenchmarkDay13Part1-8                   	  124407	      8468 ns/op	    1080 B/op	       6 allocs/op
+BenchmarkDay13Part1ExcludingReading-8   	 3922741	       291 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay13Part2-8                   	   40670	     29423 ns/op	    8298 B/op	     129 allocs/op
+BenchmarkDay13Part2ExcludingReading-8   	   81009	     15642 ns/op	    2296 B/op	     118 allocs/op
+----
+====
+
+== Day 14: Docking Data
+
+Blattschuss.
+
+== Day 15: Rambunctious Recitation
+
+Blattschuss. Blattschuss.
+
+Started implementation using arrays and indices, but soon ran out of control with zero-based versus one-based and my beloved off-by-one. Restarted using a map, runs like a charm.
+
+No changes for part 2, benchmarks look ok:
+
+====
+----
+BenchmarkDay15Part2/[0_3_6]-8         	       1	7025673926 ns/op	1723750824 B/op	13671118 allocs/op
+BenchmarkDay15Part2/[1_3_2]-8         	       1	6637869463 ns/op	1725309776 B/op	13670596 allocs/op
+BenchmarkDay15Part2/[2_1_3]-8         	       1	7122904051 ns/op	1725006832 B/op	13670445 allocs/op
+BenchmarkDay15Part2/[1_2_3]-8         	       1	6876302588 ns/op	1724477424 B/op	13670918 allocs/op
+BenchmarkDay15Part2/[2_3_1]-8         	       1	7039378239 ns/op	1723657952 B/op	13669432 allocs/op
+BenchmarkDay15Part2/[3_2_1]-8         	       1	6679612463 ns/op	1724078544 B/op	13669214 allocs/op
+BenchmarkDay15Part2/[3_1_2]-8         	       1	6478310634 ns/op	1724842464 B/op	13671933 allocs/op
+----
+====
+
+That's about 6 to 7 seconds per sample.
+I expect interesting solutions from the guys that really squeeze for performance.
+Will be hard to come up with a O(1), i guess.
+
+== Day 16: Ticket Translation
+
+Blattschuss, Blattschuss.
+
+== Day 17: Conway Cubes
+
+Blattschuss.
+
+Nearly-bug #1: when figuring out the neighbours in 3D space, the number of neighbours is fixed 26.
+I created an array with appropriate capacity:
+
+====
+----
+cubes := make([]cube, 3*3*3-1)
+----
+====
+
+and then happily `append`ed
+====
+----
+cubes = append(cubes, neighbour)
+----
+====
+
+instead of writing directly to the array (`cubes[idx] = ...` ), creating 52 neighbours.
+Not sure how to categorize this kind of error - muscle memory?
+
+Nearly-bug #2: i started in optimized mode, in this puzzle z population grows symmetrically in -z and +z. Considering only z >= 0, and mirroring -z somehow into +z got me to 58 instead of 112 active cubes in the example. As soon as i dropped this idea, it worked.
+
+And yes, code became cleaner, and runtime performance, well...
+
+====
+----
+BenchmarkDay17Part1-8   	      13	  95051825 ns/op	24855773 B/op	   38779 allocs/op
+----
+====
+
+That's about 100 ms.
+Fast enough for all practical purposes.
+
+
+[quote, Donald Knuth]
+Premature optimization is the root of all evil.
+
+== Day 18: Operation Order
+
+Blattschuss, Blattschuss.
+
+Shunting Yard to the rescue, see doc/MR35.PDF.
+Dijkstra, _1961_.
+
+Part 2 needed just a slight reconfiguration of operator precedence, lucky me.
+
+== Day 19: Monster Messages
+
+Blattschuss.
+
+== Day 20: Jurassic Jigsaw
+
+Blattschuss.
+
+This one needed a bit of trial and error.
+I keep vim open in an editing session terminal, and run continuous `go test -run=Day20 -timeout=10s` in a second window.
+
+The implemenation is pretty clumsy, but hey.
+
+====
+----
+BenchmarkDay20Part1-8   	     307	   3722067 ns/op	  335614 B/op	    4964 allocs/op
+----
+====
+
+3 ms, including loading puzzle input, finding corners, and validating expected result.
+
+== Day 21: Allergen Assessment
+
+Blattschuss. Blattschuss.
+
+It took me an hour to understand the problem, and i had to look for help in reddit. Still did not understand anything, that's when i took a piece of paper and a pen to get going.
+
+== Day 22: Crab Combat
+
+Blattschuss. Blattschuss.
+
+1:56 h for both parts including full test coverage, no benchmarks.
+
+====
+----
+BenchmarkDay22Part1-8   	   18188	     75114 ns/op	   46359 B/op	     193 allocs/op
+BenchmarkDay22Part2-8   	       1	1691123872 ns/op	127223480 B/op	 8367252 allocs/op
+----
+====
+
+That's 75μs for part #1, and 1.7s for part 2, including all I/O.
+
+Here's the CPU profile:
+
+====
+----
+(pprof) top 50
+Showing nodes accounting for 2.25s, 94.14% of 2.39s total
+Dropped 37 nodes (cum <= 0.01s)
+Showing top 50 nodes out of 62
+      flat  flat%   sum%        cum   cum%
+     0.33s 13.81% 13.81%      0.48s 20.08%  fmt.(*fmt).fmtInteger
+     0.27s 11.30% 25.10%      0.38s 15.90%  runtime.mallocgc
+     0.24s 10.04% 35.15%      0.27s 11.30%  runtime.(*itabTableType).find
+     0.22s  9.21% 44.35%      0.49s 20.50%  runtime.getitab
+     0.15s  6.28% 50.63%      1.99s 83.26%  fmt.(*pp).printValue
+     0.13s  5.44% 56.07%      0.13s  5.44%  runtime.memmove
+     0.10s  4.18% 60.25%      0.53s 22.18%  reflect.packEface
+     0.09s  3.77% 64.02%      0.15s  6.28%  fmt.(*fmt).pad
+     0.06s  2.51% 66.53%      0.61s 25.52%  fmt.(*pp).handleMethods
+     0.06s  2.51% 69.04%      0.59s 24.69%  reflect.valueInterface
+     0.06s  2.51% 71.55%      0.55s 23.01%  runtime.assertE2I2
+     0.05s  2.09% 73.64%      0.05s  2.09%  runtime.nextFreeFast (inline)
+     0.04s  1.67% 75.31%      0.06s  2.51%  fmt.(*buffer).write (inline)
+     0.04s  1.67% 76.99%      0.04s  1.67%  fmt.(*buffer).writeByte (inline)
+     0.04s  1.67% 78.66%      0.05s  2.09%  reflect.Value.Len
+     0.04s  1.67% 80.33%      0.30s 12.55%  reflect.unsafe_New
+     0.03s  1.26% 81.59%      0.62s 25.94%  reflect.Value.Interface (inline)
+     0.03s  1.26% 82.85%      0.04s  1.67%  runtime.evacuate_faststr
+     0.02s  0.84% 83.68%      0.02s  0.84%  aeshashbody
+     0.02s  0.84% 84.52%      2.07s 86.61%  fmt.(*pp).doPrintf
+     0.02s  0.84% 85.36%      0.50s 20.92%  fmt.(*pp).fmtInteger
+     0.02s  0.84% 86.19%      0.02s  0.84%  reflect.(*rtype).Kind (inline)
+     0.02s  0.84% 87.03%      0.04s  1.67%  reflect.Value.Index
+     0.02s  0.84% 87.87%      0.02s  0.84%  reflect.flag.kind (inline)
+     0.02s  0.84% 88.70%      0.02s  0.84%  reflect.ifaceIndir (inline)
+     0.02s  0.84% 89.54%      0.02s  0.84%  runtime.add (inline)
+     0.02s  0.84% 90.38%      0.02s  0.84%  runtime.memclrNoHeapPointers
+     0.02s  0.84% 91.21%      0.02s  0.84%  runtime.scanblock
+     0.01s  0.42% 91.63%      2.34s 97.91%  _/home/jot/repos/aoc2020.Day22Part2
+     0.01s  0.42% 92.05%      2.05s 85.77%  fmt.(*pp).printArg
+     0.01s  0.42% 92.47%      0.11s  4.60%  reflect.typedmemmove
+     0.01s  0.42% 92.89%      0.07s  2.93%  runtime.convTslice
+     0.01s  0.42% 93.31%      0.08s  3.35%  runtime.mapassign_faststr
+     0.01s  0.42% 93.72%      0.07s  2.93%  runtime.slicebytetostring
+     0.01s  0.42% 94.14%      0.07s  2.93%  runtime.systemstack
+         0     0% 94.14%      2.23s 93.31%  _/home/jot/repos/aoc2020.Day22Part2.func2 (inline)
+         0     0% 94.14%      2.34s 97.91%  _/home/jot/repos/aoc2020.TestDay22Part2
+         0     0% 94.14%      2.34s 97.91%  _/home/jot/repos/aoc2020.testDay22
+         0     0% 94.14%      2.16s 90.38%  fmt.Sprintf
+         0     0% 94.14%      0.02s  0.84%  reflect.ValueOf (inline)
+         0     0% 94.14%      0.02s  0.84%  reflect.unpackEface (inline)
+         0     0% 94.14%      0.02s  0.84%  runtime.(*mcache).nextFree
+----
+====
+
+Clearly, the memoization pattern `fmt.Sprintf("%v", deck)` needs some love.
+Switching card type from `uint` to `byte`, and using an MD5 checksum:
+
+
+====
+----
+BenchmarkDay22Part1-8   	   21796	     49385 ns/op	   10891 B/op	     151 allocs/op
+BenchmarkDay22Part2-8   	       4	 257035024 ns/op	21759206 B/op	   82268 allocs/op
+----
+====
+
+Runtime drops to 65%, i.e. the change shaved off 1/3 for part #1, which is more than i expected because part #1 does not use memoization at all.
+
+For part #2, runtime drops to 15%, i.e. 7 times faster.
+In absolute values, from 1.6s to 260ms.
+
+
+== Day 23: Crab Cups
+
+Blattschuss.
+
+What a lovely number cruncher.
+It's puzzles like this i enjoy the most.
+Of course i got completely lost in index layers, off-by-one and the like, until i hit DEL and restarted from scratch.
+
+Criticism of Go mostly circles around missing generics, and that it is a garbage collected language.
+Unless you produce garbage, there's nothing to collect:
+
+====
+----
+BenchmarkDay23Example10-8     	 2150487	       582 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23Example100-8    	  218787	      5099 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23-8              	  217854	      4785 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay23_10_000_000-8   	       3	 447351347 ns/op	       0 B/op	       0 allocs/op
+----
+====
+
+The first example (10 moves) executes in 582 _nanoseconds_, that's 0.6μs, or 0.0006 milliseconds.
+Not optimized yet.
+
+Part #2 obviously picks a number range that is too high to compute (1 million cups, 10 million moves).
+With runtime performance like this (10 million moves for 10 cups in 0.5s), i'm tempted to number crunch part #2.
+The algorithm should be O(n), so 50.000s which is equal to half a day.
+Longer than Eric's usual runtime promise, but hey.
+
+== Day 24: Lobby Layout
+
+Blattschuss. Blattschuss.
+
+Again one of those absolutely adorable puzzles.
+Once i figured out on a piece of paper how to transform a hexagonal floor into something i can move on, it went smooth.
+
+Except for one nasty bug in part 2, when checking for active neighbours i traversed the list `for _, c := range []HexFloor{1 + 0i, 0 + 1i, 0 - 1i, -1 + 1i, 1 + 1i, -1 + 0i} {`, but should instead have traversed `for _, c := range []HexFloor{1 + 0i, 0 + 1i, 0 - 1i, -1 + 1i, 1 - 1i, -1 + 0i} {`.
+
+Hard to spot.
+
+=== iter.Seq Optimization (2024)
+
+Refactored Part 2 to use dense array storage and `C6Indices` iterator from `grid.go`.
+The iterator provides pre-computed 6-connectivity (hexagonal) neighbor indices.
+
+|===
+| Metric | Before | After | Improvement
+
+| Time (Part 2) | 262 ms | 14.5 ms | 18x faster
+| Memory | 14.5 MB | 489 KB | 30x less
+| Allocations | 4,701 | 2,239 | 2x fewer
+|===
+
+The original sparse `map[complex128]` approach required iterating over a bounding box and checking map membership for each neighbor. The dense array with pre-computed indices eliminates this overhead.
+
+== Day 25: Combo Breaker
+
+Blattschuss.
+
+Using the smaller of the two loop sizes to calculate the encryption key.
+Other than that, nothing special.
+
+== Benchmarks
 
 ----
 $ go test -v -run=^$ -bench=Day..Part.$ -benchmem -count=3
@@ -231,526 +662,6 @@ BenchmarkDay24Part2-16    	      84	  14642372 ns/op	  489386 B/op	    2239 allo
 
 Min-sum: 1260790603 ns (1260.791 ms, 1.260791 s)
 
-== Day 1
-
-Warmup, nice and smooth.
-
-Blattschuss, Blattschuss (answer correct on first try).
-
-
-Baseline
-
-----
-$ go test -run=^$ -bench=Day01 -benchmem -count=10
-goos: linux
-goarch: amd64
-pkg: gitlab.com/jhinrichsen/adventofcode2020
-cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics
-BenchmarkDay01Part1-16                    126535              9146 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    124532              9374 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    128012              9236 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    127933              9223 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    126952              9145 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    122469              9280 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    123217              9045 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    121120              9241 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    125018              9242 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part1-16                    124299              9309 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      5820            203553 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      6472            206767 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      5389            213131 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      5908            213779 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      5270            202413 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      5754            197027 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      6098            199462 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      6312            200622 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      5878            198426 ns/op            9544 B/op         13 allocs/op
-BenchmarkDay01Part2-16                      5851            200129 ns/op            9544 B/op         13 allocs/op
-----
-
-Using a custom parser, and allocating a length optimized map:
-
-----
-goos: linux
-goarch: amd64
-pkg: gitlab.com/jhinrichsen/adventofcode2020
-cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics
-                        │     b0      │                 b1                  │
-                        │   sec/op    │   sec/op     vs base                │
-Day01Part1-16             9.239µ ± 1%   5.885µ ± 1%  -36.30% (p=0.000 n=10)
-Day01Part2-16             201.5µ ± 6%   114.1µ ± 2%  -43.39% (p=0.000 n=10)
-Day01Part1Concurrent-16                 26.00µ ± 1%
-Day01Part2Concurrent-16                 143.5µ ± 1%
-geomean                   43.15µ        39.78µ       -39.95%
-
-                        │      b0      │                  b1                   │
-                        │     B/op     │     B/op       vs base                │
-Day01Part1-16             9.320Ki ± 0%   18.039Ki ± 0%  +93.55% (p=0.000 n=10)
-Day01Part2-16             9.320Ki ± 0%   18.039Ki ± 0%  +93.55% (p=0.000 n=10)
-Day01Part1Concurrent-16                   18.20Ki ± 0%
-Day01Part2Concurrent-16                   18.20Ki ± 0%
-geomean                   9.320Ki         18.12Ki       +93.55%
-
-                        │     b0      │                 b1                 │
-                        │  allocs/op  │ allocs/op   vs base                │
-Day01Part1-16             13.000 ± 0%   3.000 ± 0%  -76.92% (p=0.000 n=10)
-Day01Part2-16             13.000 ± 0%   3.000 ± 0%  -76.92% (p=0.000 n=10)
-Day01Part1Concurrent-16                 5.000 ± 0%
-Day01Part2Concurrent-16                 5.000 ± 0%
-geomean                    13.00        3.873       -76.92%
----
-
-The size of the allocation doubles using a conservative map size, but the number of allocations drop 4x.
-Concurrent uses an async chan between parser and solver, but as usual, the channel introduces more overhead than it shaves off the runtime.
-
-== Day 2
-
-Warmup, nice and smooth.
-
-Blattschuss, Blattschuss.
-
-== Day 3
-
-The example's unit test succeeded, but part 1 failed, 284 being too low.
-I refrained from implementing a too-complex implementation based on complex
-numbers (x/y), and operated directly on the indexable lines[][] area.
-
-Fail, Blattschuss.
-
-== Day 4
-
-First try 234 again too low.
-Needed an extra blank line at the end of the file to make sure last pass was
-validated.
-
-For part 2, unit testing found an error before submitting the correct result.
-
-Fail, Blattschuss.
-
-`Hair color` is defined as `a # followed by exactly six characters 0-9 or a-f`.
-So check for a leading '#', and then iterate the remaining slice:
-
-====
-----
-if s[0] != '#' {
-    return false
-}
-for i := range s[1:] {
-    if '0' <= s[i] && s[i] <= '9' { // WRONG
-        ...
-    }
-}
-----
-====
-
-`s[1:]` is the correct slice, `i` is `0` for the first iteration, indexing
-`s[i]` does _not_ index the slice but the original string, so it will point
-to `#`.
-====
-----
-num := s[1:]
-for i := range num {
-    if '0' <= num[i] && num[i] <= '9' { // CORRECT
-        ...
-    }
-}
-----
-====
-
-Benchmark for part 2:
-====
-----
-go test -benchmem -run=^$ -bench ^(BenchmarkDay4Part2|BenchmarkDay4Part2IncludingInput)$
-
-goos: linux
-goarch: amd64
-BenchmarkDay4Part2-8                 	    1064	   1220554 ns/op	  199106 B/op	    3504 allocs/op
-BenchmarkDay4Part2IncludingInput-8   	     757	   1547982 ns/op	  281552 B/op	    4327 allocs/op
-PASS
-----
-====
-
-A seven digit ns/op is a two digit ms/op, so 12 resp. 15 ms/op.
-
-== Day 5
-
-Blattschuss, Blattschuss.
-
-== Day 6
-
-Blattschuss, Blattschuss.
-
-== Day 7
-
-Blattschuss, Blattschuss.
-
-Coming back to part #2, reusing the shunting yard algorithm from day 18.
-
-== Day 8
-
-Blattschuss.
-
-Part 2 ran like a champ, but the answer was not accepted, too low. After
-re-reading the instructions, the program must terminate at the last line, not
-somewhere.
-
-== Day 9
-
-Blattschuss, Blattschuss.
-
-== Day 10
-
-Blattschuss, Blattschuss.
-
-I feel proud because i figured out the O(n) solution all by myself.
-
-== Day 11
-
-Blattschuss, Blattschuss.
-
-=== iter.Seq Optimization (2024)
-
-Refactored to use flat array storage and `C8Indices` iterator from `grid.go` for Part 1.
-The iterator provides pre-computed 8-connectivity neighbor indices without bounds checking.
-
-|===
-| Metric | Before | After | Improvement
-
-| Time (Part 1) | 10.1 ms | 3.9 ms | 2.6x faster
-| Memory | 1.47 MB | 37 KB | 40x less
-| Allocations | 12,301 | 110 | 112x fewer
-|===
-
-Part 2 uses ray-casting (visibility) which doesn't fit the iter.Seq pattern, but still benefits from flat array storage.
-
-====
-----
-BenchmarkDay11Part1-16    	     309	   3891098 ns/op	   36808 B/op	     110 allocs/op
-BenchmarkDay11Part2-16    	      49	  23390568 ns/op	   36828 B/op	     110 allocs/op
-----
-====
-
-== Day 12
-
-Bad first guess for part #1. Upon debugging, i realized `turn` commands come
-with a number, so instead of `T` turning right, one needs to consider `T90`,
-`T180` and the like.
-The example contained a 'R90', but not multiple turns, so this one went
-unnoticed.
-Second try was correct.
-
-Implementation is based on complex numbers (again), and Go's native support shows in 0 allocations:
-
-====
-----
-BenchmarkDay12Part1-8   	  508400	      2472 ns/op	       0 B/op	       0 allocs/op
-----
-====
-
-2 to 3 μs for 774 commands, nice. Reading input not included.
-
-== Day 13
-
-Blattschuss, Blattschuss.
-
-====
-----
-BenchmarkDay13Part1-8                   	  124407	      8468 ns/op	    1080 B/op	       6 allocs/op
-BenchmarkDay13Part1ExcludingReading-8   	 3922741	       291 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay13Part2-8                   	   40670	     29423 ns/op	    8298 B/op	     129 allocs/op
-BenchmarkDay13Part2ExcludingReading-8   	   81009	     15642 ns/op	    2296 B/op	     118 allocs/op
-----
-====
-
-== Day 14
-
-Blattschuss.
-
-== Day 15
-
-Blattschuss. Blattschuss.
-
-Started implementation using arrays and indices, but soon ran out of control
-with zero-based versus one-based and my beloved off-by-one. Restarted using a
-map, runs like a charm.
-
-No changes for part 2, benchmarks look ok:
-
-====
-----
-BenchmarkDay15Part2/[0_3_6]-8         	       1	7025673926 ns/op	1723750824 B/op	13671118 allocs/op
-BenchmarkDay15Part2/[1_3_2]-8         	       1	6637869463 ns/op	1725309776 B/op	13670596 allocs/op
-BenchmarkDay15Part2/[2_1_3]-8         	       1	7122904051 ns/op	1725006832 B/op	13670445 allocs/op
-BenchmarkDay15Part2/[1_2_3]-8         	       1	6876302588 ns/op	1724477424 B/op	13670918 allocs/op
-BenchmarkDay15Part2/[2_3_1]-8         	       1	7039378239 ns/op	1723657952 B/op	13669432 allocs/op
-BenchmarkDay15Part2/[3_2_1]-8         	       1	6679612463 ns/op	1724078544 B/op	13669214 allocs/op
-BenchmarkDay15Part2/[3_1_2]-8         	       1	6478310634 ns/op	1724842464 B/op	13671933 allocs/op
-----
-====
-
-That's about 6 to 7 seconds per sample.
-I expect interesting solutions from the guys that really squeeze for performance.
-Will be hard to come up with a O(1), i guess.
-
-== Day 16
-
-Blattschuss, Blattschuss.
-
-== Day 17
-
-Blattschuss.
-
-Nearly-bug #1: when figuring out the neighbours in 3D space, the number of neighbours
-is fixed 26.
-I created an array with appropriate capacity:
-
-====
-----
-cubes := make([]cube, 3*3*3-1)
-----
-====
-
-and then happily `append`ed
-====
-----
-cubes = append(cubes, neighbour)
-----
-====
-
-instead of writing directly to the array (`cubes[idx] = ...` ), creating 52
-neighbours.
-Not sure how to categorize this kind of error - muscle memory?
-
-Nearly-bug #2: i started in optimized mode, in this puzzle z population grows
-symmetrically in -z and +z. Considering only z >= 0, and mirroring -z somehow
-into +z got me to 58 instead of 112 active cubes in the example. As soon as i
-dropped this idea, it worked.
-
-And yes, code became cleaner, and runtime performance, well...
-
-====
-----
-BenchmarkDay17Part1-8   	      13	  95051825 ns/op	24855773 B/op	   38779 allocs/op
-----
-====
-
-That's about 100 ms.
-Fast enough for all practical purposes.
-
-
-[quote, Donald Knuth]
-Premature optimization is the root of all evil.
-
-== Day 18
-
-Blattschuss, Blattschuss.
-
-Shunting Yard to the rescue, see doc/MR35.PDF.
-Dijkstra, _1961_.
-
-Part 2 needed just a slight reconfiguration of operator precedence, lucky me.
-
-== Day 19
-
-Blattschuss.
-
-== Day 20
-
-Blattschuss.
-
-This one needed a bit of trial and error.
-I keep vim open in an editing session terminal, and run continuous
-`go test -run=Day20 -timeout=10s` in a second window.
-
-The implemenation is pretty clumsy, but hey.
-
-====
-----
-BenchmarkDay20Part1-8   	     307	   3722067 ns/op	  335614 B/op	    4964 allocs/op
-----
-====
-
-3 ms, including loading puzzle input, finding corners, and validating expected
-result.
-
-== Day 21
-
-Blattschuss. Blattschuss.
-
-It took me an hour to understand the problem, and i had to look for help in
-reddit. Still did not understand anything, that's when i took a piece of paper
-and a pen to get going.
-
-== Day 22
-
-Blattschuss. Blattschus.
-
-1:56 h for both parts including full test coverage, no benchmarks.
-
-====
-----
-BenchmarkDay22Part1-8   	   18188	     75114 ns/op	   46359 B/op	     193 allocs/op
-BenchmarkDay22Part2-8   	       1	1691123872 ns/op	127223480 B/op	 8367252 allocs/op
-----
-====
-
-That's 75μs for part #1, and 1.7s for part 2, including all I/O.
-
-Here's the CPU profile:
-
-====
-----
-(pprof) top 50
-Showing nodes accounting for 2.25s, 94.14% of 2.39s total
-Dropped 37 nodes (cum <= 0.01s)
-Showing top 50 nodes out of 62
-      flat  flat%   sum%        cum   cum%
-     0.33s 13.81% 13.81%      0.48s 20.08%  fmt.(*fmt).fmtInteger
-     0.27s 11.30% 25.10%      0.38s 15.90%  runtime.mallocgc
-     0.24s 10.04% 35.15%      0.27s 11.30%  runtime.(*itabTableType).find
-     0.22s  9.21% 44.35%      0.49s 20.50%  runtime.getitab
-     0.15s  6.28% 50.63%      1.99s 83.26%  fmt.(*pp).printValue
-     0.13s  5.44% 56.07%      0.13s  5.44%  runtime.memmove
-     0.10s  4.18% 60.25%      0.53s 22.18%  reflect.packEface
-     0.09s  3.77% 64.02%      0.15s  6.28%  fmt.(*fmt).pad
-     0.06s  2.51% 66.53%      0.61s 25.52%  fmt.(*pp).handleMethods
-     0.06s  2.51% 69.04%      0.59s 24.69%  reflect.valueInterface
-     0.06s  2.51% 71.55%      0.55s 23.01%  runtime.assertE2I2
-     0.05s  2.09% 73.64%      0.05s  2.09%  runtime.nextFreeFast (inline)
-     0.04s  1.67% 75.31%      0.06s  2.51%  fmt.(*buffer).write (inline)
-     0.04s  1.67% 76.99%      0.04s  1.67%  fmt.(*buffer).writeByte (inline)
-     0.04s  1.67% 78.66%      0.05s  2.09%  reflect.Value.Len
-     0.04s  1.67% 80.33%      0.30s 12.55%  reflect.unsafe_New
-     0.03s  1.26% 81.59%      0.62s 25.94%  reflect.Value.Interface (inline)
-     0.03s  1.26% 82.85%      0.04s  1.67%  runtime.evacuate_faststr
-     0.02s  0.84% 83.68%      0.02s  0.84%  aeshashbody
-     0.02s  0.84% 84.52%      2.07s 86.61%  fmt.(*pp).doPrintf
-     0.02s  0.84% 85.36%      0.50s 20.92%  fmt.(*pp).fmtInteger
-     0.02s  0.84% 86.19%      0.02s  0.84%  reflect.(*rtype).Kind (inline)
-     0.02s  0.84% 87.03%      0.04s  1.67%  reflect.Value.Index
-     0.02s  0.84% 87.87%      0.02s  0.84%  reflect.flag.kind (inline)
-     0.02s  0.84% 88.70%      0.02s  0.84%  reflect.ifaceIndir (inline)
-     0.02s  0.84% 89.54%      0.02s  0.84%  runtime.add (inline)
-     0.02s  0.84% 90.38%      0.02s  0.84%  runtime.memclrNoHeapPointers
-     0.02s  0.84% 91.21%      0.02s  0.84%  runtime.scanblock
-     0.01s  0.42% 91.63%      2.34s 97.91%  _/home/jot/repos/aoc2020.Day22Part2
-     0.01s  0.42% 92.05%      2.05s 85.77%  fmt.(*pp).printArg
-     0.01s  0.42% 92.47%      0.11s  4.60%  reflect.typedmemmove
-     0.01s  0.42% 92.89%      0.07s  2.93%  runtime.convTslice
-     0.01s  0.42% 93.31%      0.08s  3.35%  runtime.mapassign_faststr
-     0.01s  0.42% 93.72%      0.07s  2.93%  runtime.slicebytetostring
-     0.01s  0.42% 94.14%      0.07s  2.93%  runtime.systemstack
-         0     0% 94.14%      2.23s 93.31%  _/home/jot/repos/aoc2020.Day22Part2.func2 (inline)
-         0     0% 94.14%      2.34s 97.91%  _/home/jot/repos/aoc2020.TestDay22Part2
-         0     0% 94.14%      2.34s 97.91%  _/home/jot/repos/aoc2020.testDay22
-         0     0% 94.14%      2.16s 90.38%  fmt.Sprintf
-         0     0% 94.14%      0.02s  0.84%  reflect.ValueOf (inline)
-         0     0% 94.14%      0.02s  0.84%  reflect.unpackEface (inline)
-         0     0% 94.14%      0.02s  0.84%  runtime.(*mcache).nextFree
-----
-====
-
-Clearly, the memoization pattern `fmt.Sprintf("%v", deck)` needs some love.
-Switching card type from `uint` to `byte`, and using an MD5 checksum:
-
-
-====
-----
-BenchmarkDay22Part1-8   	   21796	     49385 ns/op	   10891 B/op	     151 allocs/op
-BenchmarkDay22Part2-8   	       4	 257035024 ns/op	21759206 B/op	   82268 allocs/op
-----
-====
-
-Runtime drops to 65%, i.e. the change shaved off 1/3 for part #1, which is more
-than i expected because part #1 does not use memoization at all.
-
-For part #2, runtime drops to 15%, i.e. 7 times faster.
-In absolute values, from 1.6s to 260ms.
-
-
-== Day 23
-
-Blattschuss.
-
-What a lovely number cruncher.
-It's puzzles like this i enjoy the most.
-Of course i got completely lost in index layers, off-by-one and the like, until
-i hit DEL and restarted from scratch.
-
-Criticism of Go mostly circles around missing generics, and that it is a
-garbage collected language.
-Unless you produce garbage, there's nothing to collect:
-
-====
-----
-BenchmarkDay23Example10-8     	 2150487	       582 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay23Example100-8    	  218787	      5099 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay23-8              	  217854	      4785 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay23_10_000_000-8   	       3	 447351347 ns/op	       0 B/op	       0 allocs/op
-----
-====
-
-The first example (10 moves) executes in 582 _nanoseconds_, that's 0.6μs, or
-0.0006 milliseconds.
-Not optimized yet.
-
-Part #2 obviously picks a number range that is too high to compute (1 million
-cups, 10 million moves).
-With runtime performance like this (10 million moves for 10 cups in 0.5s), i'm
-tempted to number crunch part #2.
-The algorithm should be O(n), so 50.000s which is equal to half a day.
-Longer than Eric's usual runtime promise, but hey.
-
-== Day 24
-
-Blattschuss. Blattschuss.
-
-Again one of those absolutely adorable puzzles.
-Once i figured out on a piece of paper how to transform a hexagonal floor
-into something i can move on, it went smooth.
-
-Except for one nasty bug in part 2, when checking for active neighbours i
-traversed the list `for _, c := range []HexFloor{1 + 0i, 0 + 1i, 0 - 1i,
--1 + 1i, 1 + 1i, -1 + 0i} {`, but should instead have traversed `for _, c := range
-[]HexFloor{1 + 0i, 0 + 1i, 0 - 1i, -1 + 1i, 1 - 1i, -1 + 0i} {`.
-
-Hard to spot.
-
-=== iter.Seq Optimization (2024)
-
-Refactored Part 2 to use dense array storage and `C6Indices` iterator from `grid.go`.
-The iterator provides pre-computed 6-connectivity (hexagonal) neighbor indices.
-
-|===
-| Metric | Before | After | Improvement
-
-| Time (Part 2) | 262 ms | 14.5 ms | 18x faster
-| Memory | 14.5 MB | 489 KB | 30x less
-| Allocations | 4,701 | 2,239 | 2x fewer
-|===
-
-The original sparse `map[complex128]` approach required iterating over a bounding box and checking map membership for each neighbor. The dense array with pre-computed indices eliminates this overhead.
-
-====
-----
-BenchmarkDay24Part1-16    	    6627	    194015 ns/op	  374603 B/op	    2237 allocs/op
-BenchmarkDay24Part2-16    	      84	  14642372 ns/op	  489386 B/op	    2239 allocs/op
-----
-====
-
-== Day 25
-
-Blattschuss.
-
-Using the smaller of the two loop sizes to calculate the encryption key.
-Other than that, nothing special.
-
-====
-----
-BenchmarkDay25-8   	      12	 107268929 ns/op	       0 B/op	       0 allocs/op
-----
-====
-
 == References
 
 https://www.dannyvankooten.com/blog/2021/solving-advent-of-code-2020-under-1-second/[C, the original subsecond]
@@ -776,7 +687,7 @@ Our CI pipeline uses:
 - Test Reports: go-junit-report/v2 → JUnit XML format
   * Integrates test results into GitLab's test report UI
 
-- Coverage Reports: gocover-cobertura → Cobertura XML format  
+- Coverage Reports: gocover-cobertura → Cobertura XML format
   * Shows coverage metrics and trends in merge requests
 
 - Vulnerability Scanning: govulncheck (periodic, scheduled pipeline)
