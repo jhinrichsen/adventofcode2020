@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// Puzzle02 holds all password policy entries for Day 02.
-type Puzzle02 []struct {
+// Day02Puzzle holds all password policy entries for Day 02.
+type Day02Puzzle []struct {
 	min      uint
 	max      uint
 	char     byte
@@ -15,8 +15,8 @@ type Puzzle02 []struct {
 }
 
 // NewDay02 parses input lines into a Puzzle02 structure.
-func NewDay02(lines []string) (Puzzle02, error) {
-	var p Puzzle02
+func NewDay02(lines []string) (Day02Puzzle, error) {
+	var p Day02Puzzle
 	for _, line := range lines {
 		ps := strings.Fields(line)
 		if len(ps) != 3 {
@@ -50,7 +50,7 @@ func NewDay02(lines []string) (Puzzle02, error) {
 }
 
 // Day02 returns number of valid passwords for Part 1 or Part 2.
-func Day02(p Puzzle02, part1 bool) uint {
+func Day02(p Day02Puzzle, part1 bool) uint {
 	var n uint
 	for _, d := range p {
 		if part1 {

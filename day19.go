@@ -10,14 +10,14 @@ import (
 // rules maps a numerical index to a sequence of token.
 type rules map[string][]string
 
-// Puzzle19 holds parsed rules and input messages.
-type Puzzle19 struct {
+// Day19Puzzle holds parsed rules and input messages.
+type Day19Puzzle struct {
 	rls  rules
 	msgs []string
 }
 
 // NewDay19 parses the input lines into a Puzzle19 structure.
-func NewDay19(lines []string) (Puzzle19, error) {
+func NewDay19(lines []string) (Day19Puzzle, error) {
 	rls := make(map[string][]string)
 	var msgs []string
 	isRule := func(s string) bool { // 0: 4 1 5
@@ -31,7 +31,7 @@ func NewDay19(lines []string) (Puzzle19, error) {
 			fs := strings.Split(line, ":")
 			if len(fs) != 2 {
 				msg := "line %d: want %q but got %q"
-				return Puzzle19{}, fmt.Errorf(msg, i, "key: value", line)
+				return Day19Puzzle{}, fmt.Errorf(msg, i, "key: value", line)
 			}
 			key := fs[0]
 			// tokenize rule values
@@ -42,7 +42,7 @@ func NewDay19(lines []string) (Puzzle19, error) {
 				s, err := strconv.Unquote(fs[0])
 				if err != nil {
 					msg := "line %d: error unquoting %q: %w"
-					return Puzzle19{}, fmt.Errorf(msg, i, fs[0], err)
+					return Day19Puzzle{}, fmt.Errorf(msg, i, fs[0], err)
 				}
 				fs[0] = s
 			}
@@ -52,12 +52,12 @@ func NewDay19(lines []string) (Puzzle19, error) {
 		}
 		// ignore blank lines
 	}
-	return Puzzle19{rls: rls, msgs: msgs}, nil
+	return Day19Puzzle{rls: rls, msgs: msgs}, nil
 }
 
 // Day19 returns the number of messages that match rule 0.
 // If part1 is false, apply Part 2 semantics: rules 8 and 11 become recursive.
-func Day19(p Puzzle19, part1 bool) (uint, error) {
+func Day19(p Day19Puzzle, part1 bool) (uint, error) {
 	rls, msgs := p.rls, p.msgs
 
 	buildRegex := func() (string, error) {

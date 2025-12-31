@@ -5,15 +5,15 @@ import (
 	"iter"
 )
 
-// Grid defines board dimensions.
-type Grid struct {
+// grid defines board dimensions.
+type grid struct {
 	W, H int
 }
 
 // C6Indices yields (index, neighbors) for 6-connectivity (hexagonal grid).
 // Uses axial coordinates: E(+1), W(-1), NE(+W), SW(-W), NW(+W-1), SE(-W+1)
 // Row 0 is bottom, row H-1 is top.
-func (g Grid) C6Indices() iter.Seq2[int, iter.Seq[int]] {
+func (g grid) C6Indices() iter.Seq2[int, iter.Seq[int]] {
 	w, h := g.W, g.H
 
 	return func(yield func(int, iter.Seq[int]) bool) {
@@ -105,7 +105,7 @@ func (g Grid) C6Indices() iter.Seq2[int, iter.Seq[int]] {
 }
 
 // C4Indices yields (index, neighbors) for 4-connectivity.
-func (g Grid) C4Indices() iter.Seq2[int, iter.Seq[int]] {
+func (g grid) C4Indices() iter.Seq2[int, iter.Seq[int]] {
 	w, h := g.W, g.H
 
 	return func(yield func(int, iter.Seq[int]) bool) {
@@ -194,7 +194,7 @@ func (g Grid) C4Indices() iter.Seq2[int, iter.Seq[int]] {
 }
 
 // C8Indices yields (index, neighbors) for 8-connectivity.
-func (g Grid) C8Indices() iter.Seq2[int, iter.Seq[int]] {
+func (g grid) C8Indices() iter.Seq2[int, iter.Seq[int]] {
 	w, h := g.W, g.H
 
 	return func(yield func(int, iter.Seq[int]) bool) {
@@ -285,7 +285,7 @@ func (g Grid) C8Indices() iter.Seq2[int, iter.Seq[int]] {
 }
 
 // C4Points yields (pos, neighbors) for 4-connectivity.
-func (g Grid) C4Points() iter.Seq2[image.Point, iter.Seq[image.Point]] {
+func (g grid) C4Points() iter.Seq2[image.Point, iter.Seq[image.Point]] {
 	w, h := g.W, g.H
 
 	return func(yield func(image.Point, iter.Seq[image.Point]) bool) {
@@ -367,7 +367,7 @@ func (g Grid) C4Points() iter.Seq2[image.Point, iter.Seq[image.Point]] {
 }
 
 // C8Points yields (pos, neighbors) for 8-connectivity.
-func (g Grid) C8Points() iter.Seq2[image.Point, iter.Seq[image.Point]] {
+func (g grid) C8Points() iter.Seq2[image.Point, iter.Seq[image.Point]] {
 	w, h := g.W, g.H
 
 	return func(yield func(image.Point, iter.Seq[image.Point]) bool) {

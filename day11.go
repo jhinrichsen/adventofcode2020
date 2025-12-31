@@ -5,8 +5,8 @@ const (
 	occupied = '#'
 )
 
-// Day11 holds a grid using flat array storage.
-type Day11 struct {
+// day11State holds a grid using flat array storage.
+type day11State struct {
 	grid  []byte
 	next  []byte
 	w, h  int
@@ -14,7 +14,7 @@ type Day11 struct {
 }
 
 // NewDay11 parses puzzle input into a Day11 struct.
-func NewDay11(lines []string, part1 bool) Day11 {
+func NewDay11(lines []string, part1 bool) day11State {
 	h := len(lines)
 	w := len(lines[0])
 	size := w * h
@@ -26,7 +26,7 @@ func NewDay11(lines []string, part1 bool) Day11 {
 		}
 	}
 
-	return Day11{
+	return day11State{
 		grid:  grid,
 		next:  make([]byte, size),
 		w:     w,
@@ -36,7 +36,7 @@ func NewDay11(lines []string, part1 bool) Day11 {
 }
 
 // countNeighborsPart2 counts visible occupied seats using ray-casting.
-func (d *Day11) countNeighborsPart2(idx int) int {
+func (d *day11State) countNeighborsPart2(idx int) int {
 	x, y := idx%d.w, idx/d.w
 
 	var count int
@@ -60,7 +60,7 @@ func (d *Day11) countNeighborsPart2(idx int) int {
 }
 
 // Step processes one step. Returns true if any seat changed.
-func (d *Day11) Step() bool {
+func (d *day11State) Step() bool {
 	changed := false
 	threshold := 4
 	if !d.part1 {
@@ -69,7 +69,7 @@ func (d *Day11) Step() bool {
 
 	if d.part1 {
 		// Use C8Indices for Part 1 - no bounds checking needed
-		g := Grid{W: d.w, H: d.h}
+		g := grid{W: d.w, H: d.h}
 		for idx, nbrs := range g.C8Indices() {
 			cell := d.grid[idx]
 			if cell == '.' {
@@ -126,7 +126,7 @@ func (d *Day11) Step() bool {
 }
 
 // Occupied returns number of occupied seats.
-func (d *Day11) Occupied() uint {
+func (d *day11State) Occupied() uint {
 	var count uint
 	for _, c := range d.grid {
 		if c == occupied {
@@ -137,7 +137,7 @@ func (d *Day11) Occupied() uint {
 }
 
 // Redact returns a String representation of a Day11 structure.
-func (d *Day11) Redact() []string {
+func (d *day11State) Redact() []string {
 	ss := make([]string, d.h)
 	for y := 0; y < d.h; y++ {
 		ss[y] = string(d.grid[y*d.w : (y+1)*d.w])

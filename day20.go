@@ -135,27 +135,27 @@ func westBorder(lines []string) string {
 	return verticalBorder(lines, 0)
 }
 
-// BorderInfo keeps a numerical representation of a tile's borders.
-type BorderInfo struct {
+// borderInfo keeps a numerical representation of a tile's borders.
+type borderInfo struct {
 	tileID  uint
 	borders [8]uint // north, east, south, west, both regular and flipped
 }
 
 // Borders sets up border information for each tile.
-func (a *Day20) borders() []BorderInfo {
-	var bis []BorderInfo
+func (a *Day20) borders() []borderInfo {
+	var bis []borderInfo
 	for k, v := range a.grid {
-		bi := BorderInfo{
+		bi := borderInfo{
 			k,
 			[8]uint{
-				BorderID(northBorder(v)),
-				BorderID(Reverse(northBorder(v))),
-				BorderID(eastBorder(v)),
-				BorderID(Reverse(eastBorder(v))),
-				BorderID(southBorder(v)),
-				BorderID(Reverse(southBorder(v))),
-				BorderID(westBorder(v)),
-				BorderID(Reverse(westBorder(v))),
+				borderID(northBorder(v)),
+				borderID(reverse(northBorder(v))),
+				borderID(eastBorder(v)),
+				borderID(reverse(eastBorder(v))),
+				borderID(southBorder(v)),
+				borderID(reverse(southBorder(v))),
+				borderID(westBorder(v)),
+				borderID(reverse(westBorder(v))),
 			},
 		}
 		bis = append(bis, bi)
@@ -163,8 +163,8 @@ func (a *Day20) borders() []BorderInfo {
 	return bis
 }
 
-// BorderID generates a unique ID for a textual border.
-func BorderID(s string) uint {
+// borderID generates a unique ID for a textual border.
+func borderID(s string) uint {
 	var n uint
 	for i := 0; i < len(s); i++ {
 		n = n << 1
@@ -175,8 +175,8 @@ func BorderID(s string) uint {
 	return n
 }
 
-// Reverse implements the missing strings.Reverse (string -> string)
-func Reverse(s string) string {
+// reverse implements the missing strings.reverse (string -> string)
+func reverse(s string) string {
 	var sb strings.Builder
 	for i := len(s) - 1; i >= 0; i-- {
 		sb.WriteByte(s[i])
@@ -209,7 +209,7 @@ func rotate90(g []string) []string {
 func flipH(g []string) []string {
 	out := make([]string, len(g))
 	for i := range g {
-		out[i] = Reverse(g[i])
+		out[i] = reverse(g[i])
 	}
 	return out
 }
@@ -228,8 +228,8 @@ func orientations(g []string) [][]string {
 
 // tileVariant holds pre-computed border IDs for fast matching during assembly.
 type tileVariant struct {
-	id                         uint
-	data                       []string
+	id                               uint
+	data                             []string
 	topID, rightID, bottomID, leftID uint
 }
 
@@ -395,14 +395,13 @@ func removeBorders(placed [][]tileGrid) []string {
 	return out
 }
 
-// sea monster pattern as relative coordinates (dx, dy) where '#'
-var seaMonster = []struct{ x, y int }{
-	{18, 0},
-	{0, 1}, {5, 1}, {6, 1}, {11, 1}, {12, 1}, {17, 1}, {18, 1}, {19, 1},
-	{1, 2}, {4, 2}, {7, 2}, {10, 2}, {13, 2}, {16, 2},
-}
-
 func findSeaMonsters(img []string) (int, map[[2]int]bool) {
+	// sea monster pattern as relative coordinates (dx, dy) where '#'
+	seaMonster := []struct{ x, y int }{
+		{18, 0},
+		{0, 1}, {5, 1}, {6, 1}, {11, 1}, {12, 1}, {17, 1}, {18, 1}, {19, 1},
+		{1, 2}, {4, 2}, {7, 2}, {10, 2}, {13, 2}, {16, 2},
+	}
 	H := len(img)
 	W := len(img[0])
 	marked := make(map[[2]int]bool)

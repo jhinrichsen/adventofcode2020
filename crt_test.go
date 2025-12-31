@@ -10,7 +10,7 @@ import (
 // math (american english), maths (british english)
 func TestCRTJaysExample(t *testing.T) {
 	want := big.NewInt(78)
-	got, err := CRT([]*big.Int{
+	got, err := crt([]*big.Int{
 		big.NewInt(3),
 		big.NewInt(1),
 		big.NewInt(6),

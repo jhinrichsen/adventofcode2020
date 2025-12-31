@@ -94,7 +94,7 @@ func Day13Part2CRT(input []int) (uint, error) {
 		ks = append(ks, big.NewInt(int64(bus)))
 	}
 
-	x, err := CRT(as, ks)
+	x, err := crt(as, ks)
 	if err != nil {
 		return 0, err
 	}

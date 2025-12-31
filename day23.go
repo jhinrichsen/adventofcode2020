@@ -4,11 +4,11 @@ import (
 	"fmt"
 )
 
-// Dim is the number of digits in input.
-const Dim = 10
+// dim is the number of digits in input.
+const dim = 10
 
 // parses n into its digits, returning number of digits
-func parse(n int, buf *[Dim]int) int {
+func parse(n int, buf *[dim]int) int {
 	var digits int
 	for n > 0 {
 		digits++
@@ -16,8 +16,8 @@ func parse(n int, buf *[Dim]int) int {
 		n /= 10
 	}
 	// reverse
-	for i := 0; i < Dim/2; i++ {
-		(*buf)[i], (*buf)[Dim-1-i] = (*buf)[Dim-1-i], (*buf)[i]
+	for i := 0; i < dim/2; i++ {
+		(*buf)[i], (*buf)[dim-1-i] = (*buf)[dim-1-i], (*buf)[i]
 	}
 	return digits
 }
@@ -27,7 +27,7 @@ func parse(n int, buf *[Dim]int) int {
 // This uses an array-backed linked list for O(1) operations per move.
 func Day23Part2(input int) uint64 {
 	// parse input digits to slice
-	var buf [Dim]int
+	var buf [dim]int
 	nd := parse(input, &buf)
 	digits := make([]int, 0, nd)
 	for i := 0; i < nd; i++ {
@@ -103,7 +103,7 @@ func Day23Part2(input int) uint64 {
 
 // Day23 returns the number of labels.
 func Day23(input int, moves int) int {
-	var cups, picked [Dim]int
+	var cups, picked [dim]int
 
 	ncups, npicked := parse(input, &cups), 0
 

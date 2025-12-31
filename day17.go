@@ -5,11 +5,11 @@ import (
 )
 
 const (
-	// CubeActive is one of the only two states a cube can have.
-	CubeActive = '#'
-	// CubeInactive is one of the only two states a cube can have.
+	// cubeActive is one of the only two states a cube can have.
+	cubeActive = '#'
+	// cubeInactive is one of the only two states a cube can have.
 	// Inactive sounds so much better than 0x13 0x14 0x10 0x13.
-	CubeInactive = '.'
+	cubeInactive = '.'
 )
 
 type cube struct {
@@ -36,15 +36,15 @@ func (a cube) Neighbours() []cube {
 	return cubes
 }
 
-// Day17 models Conway's game of life in 3D.
-type Day17 struct {
+// day17State models Conway's game of life in 3D.
+type day17State struct {
 	Active           map[cube]struct{}
 	DimX, DimY, DimZ int // dimension of our universe
 }
 
 // NewDay17 parses a 2D cell grid into a Day17 (z=0).
-func NewDay17(lines []string) (Day17, error) {
-	d := Day17{}
+func NewDay17(lines []string) (day17State, error) {
+	d := day17State{}
 	d.Active = make(map[cube]struct{})
 	d.DimX = len(lines[0])
 	d.DimY = len(lines)
@@ -52,7 +52,7 @@ func NewDay17(lines []string) (Day17, error) {
 	z := 0
 	for y := 0; y < d.DimY; y++ {
 		for x := 0; x < d.DimX; x++ {
-			if lines[y][x] == CubeActive {
+			if lines[y][x] == cubeActive {
 				d.Active[cube{x, y, z}] = struct{}{}
 			}
 		}
@@ -61,12 +61,12 @@ func NewDay17(lines []string) (Day17, error) {
 }
 
 // ActiveCubes returns number of active cubes in 3D universe.
-func (a *Day17) ActiveCubes() (n uint) {
+func (a *day17State) ActiveCubes() (n uint) {
 	return uint(len(a.Active))
 }
 
 // Cycle runs one atomic generation change.
-func (a *Day17) Cycle() {
+func (a *day17State) Cycle() {
 	// Accumulate active-neighbour counts for the sparse frontier only
 	counts := make(map[cube]uint8)
 	for c := range a.Active {
@@ -85,7 +85,7 @@ func (a *Day17) Cycle() {
 	fb := make(map[cube]struct{}, len(a.Active))
 	for pos, n := range counts {
 		_, wasActive := a.Active[pos]
-		if NewState(wasActive, uint(n)) {
+		if newState(wasActive, uint(n)) {
 			fb[pos] = struct{}{}
 		}
 	}
@@ -94,7 +94,7 @@ func (a *Day17) Cycle() {
 
 // ActiveNeighbours returns the number of neighbours in active state, a number
 // between 0 and 26.
-func (a Day17) ActiveNeighbours(c cube) (n uint) {
+func (a day17State) ActiveNeighbours(c cube) (n uint) {
 	ns := c.Neighbours()
 	for i := 0; i < len(ns); i++ {
 		c := ns[i]
@@ -106,22 +106,22 @@ func (a Day17) ActiveNeighbours(c cube) (n uint) {
 }
 
 // Expand grows the universe by one unit on each axis.
-func (a *Day17) Expand() {
+func (a *day17State) Expand() {
 	a.DimX++
 	a.DimY++
 	a.DimZ++
 }
 
 // Rep returns a two-dimensional string representation for axis z.
-func (a Day17) Rep(z int) string {
+func (a day17State) Rep(z int) string {
 	var sb strings.Builder
 	for y := 0; y < a.DimY; y++ {
 		for x := 0; x < a.DimX; x++ {
 			d := cube{x, y, z}
 			if _, ok := a.Active[d]; ok {
-				sb.WriteRune(CubeActive)
+				sb.WriteRune(cubeActive)
 			} else {
-				sb.WriteRune(CubeInactive)
+				sb.WriteRune(cubeInactive)
 			}
 		}
 		if y < a.DimY-1 { // new line except for last one
@@ -131,9 +131,9 @@ func (a Day17) Rep(z int) string {
 	return sb.String()
 }
 
-// NewState determines the state upon a generation cycle, depending on the
+// newState determines the state upon a generation cycle, depending on the
 // current state and the state of immediate neighbours.
-func NewState(activeMe bool, activeNeighbours uint) bool {
+func newState(activeMe bool, activeNeighbours uint) bool {
 	if activeMe {
 		if activeNeighbours == 2 || activeNeighbours == 3 {
 			return true
@@ -173,15 +173,15 @@ func (a hcube) Neighbours() []hcube {
 	return cubes
 }
 
-// Day17Hyper models Conway's game of life in 4D.
-type Day17Hyper struct {
+// day17HyperState models Conway's game of life in 4D.
+type day17HyperState struct {
 	Active                 map[hcube]struct{}
 	DimX, DimY, DimZ, DimW int // dimension of our universe per axis (half-extent)
 }
 
 // NewDay17Hyper parses a 2D cell grid into a Day17Hyper (z=0, w=0).
-func NewDay17Hyper(lines []string) (Day17Hyper, error) {
-	d := Day17Hyper{}
+func NewDay17Hyper(lines []string) (day17HyperState, error) {
+	d := day17HyperState{}
 	d.Active = make(map[hcube]struct{})
 	d.DimX = len(lines[0])
 	d.DimY = len(lines)
@@ -190,7 +190,7 @@ func NewDay17Hyper(lines []string) (Day17Hyper, error) {
 	z, w := 0, 0
 	for y := 0; y < d.DimY; y++ {
 		for x := 0; x < d.DimX; x++ {
-			if lines[y][x] == CubeActive {
+			if lines[y][x] == cubeActive {
 				d.Active[hcube{x, y, z, w}] = struct{}{}
 			}
 		}
@@ -199,12 +199,12 @@ func NewDay17Hyper(lines []string) (Day17Hyper, error) {
 }
 
 // ActiveCubes returns number of active cubes in 4D universe.
-func (a *Day17Hyper) ActiveCubes() (n uint) {
+func (a *day17HyperState) ActiveCubes() (n uint) {
 	return uint(len(a.Active))
 }
 
 // Cycle runs one atomic generation change in 4D.
-func (a *Day17Hyper) Cycle() {
+func (a *day17HyperState) Cycle() {
 	// Accumulate active-neighbour counts sparsely in 4D
 	counts := make(map[hcube]uint8)
 	for c := range a.Active {
@@ -225,7 +225,7 @@ func (a *Day17Hyper) Cycle() {
 	fb := make(map[hcube]struct{}, len(a.Active))
 	for pos, n := range counts {
 		_, wasActive := a.Active[pos]
-		if NewState(wasActive, uint(n)) {
+		if newState(wasActive, uint(n)) {
 			fb[pos] = struct{}{}
 		}
 	}
@@ -233,7 +233,7 @@ func (a *Day17Hyper) Cycle() {
 }
 
 // ActiveNeighbours returns the number of neighbours in active state (0..80).
-func (a Day17Hyper) ActiveNeighbours(c hcube) (n uint) {
+func (a day17HyperState) ActiveNeighbours(c hcube) (n uint) {
 	ns := c.Neighbours()
 	for i := 0; i < len(ns); i++ {
 		c := ns[i]
@@ -245,7 +245,7 @@ func (a Day17Hyper) ActiveNeighbours(c hcube) (n uint) {
 }
 
 // Expand grows the universe by one unit on each axis.
-func (a *Day17Hyper) Expand() {
+func (a *day17HyperState) Expand() {
 	a.DimX++
 	a.DimY++
 	a.DimZ++
@@ -253,15 +253,15 @@ func (a *Day17Hyper) Expand() {
 }
 
 // Rep returns a two-dimensional string representation for axes z,w fixed (debug).
-func (a Day17Hyper) Rep(z, w int) string {
+func (a day17HyperState) Rep(z, w int) string {
 	var sb strings.Builder
 	for y := 0; y < a.DimY; y++ {
 		for x := 0; x < a.DimX; x++ {
 			d := hcube{x, y, z, w}
 			if _, ok := a.Active[d]; ok {
-				sb.WriteRune(CubeActive)
+				sb.WriteRune(cubeActive)
 			} else {
-				sb.WriteRune(CubeInactive)
+				sb.WriteRune(cubeInactive)
 			}
 		}
 		if y < a.DimY-1 {

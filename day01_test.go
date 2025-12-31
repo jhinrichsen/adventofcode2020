@@ -57,7 +57,7 @@ func BenchmarkDay01Part1Concurrent(b *testing.B) {
 	buf := contentFromFilename(b, filename(1))
 	b.ResetTimer()
 	for b.Loop() {
-		_ = Day01Concurrent(buf, true)
+		_ = day01Concurrent(buf, true)
 	}
 }
 
@@ -65,7 +65,7 @@ func BenchmarkDay01Part2Concurrent(b *testing.B) {
 	buf := contentFromFilename(b, filename(1))
 	b.ResetTimer()
 	for b.Loop() {
-		_ = Day01Concurrent(buf, false)
+		_ = day01Concurrent(buf, false)
 	}
 }
 
@@ -73,7 +73,7 @@ func BenchmarkDay01Part2Concurrent(b *testing.B) {
 
 func testDay01Pull(t *testing.T, filename string, want uint, part1 bool) {
 	buf := contentFromFilename(t, filename)
-	got := Day01Pull(buf, part1)
+	got := day01Pull(buf, part1)
 	if want != got {
 		t.Fatalf("want %d but got %d", want, got)
 	}
@@ -91,7 +91,7 @@ func BenchmarkDay01Part1Pull(b *testing.B) {
 	buf := contentFromFilename(b, filename(1))
 	b.ResetTimer()
 	for b.Loop() {
-		_ = Day01Pull(buf, true)
+		_ = day01Pull(buf, true)
 	}
 }
 
@@ -99,6 +99,6 @@ func BenchmarkDay01Part2Pull(b *testing.B) {
 	buf := contentFromFilename(b, filename(1))
 	b.ResetTimer()
 	for b.Loop() {
-		_ = Day01Pull(buf, false)
+		_ = day01Pull(buf, false)
 	}
 }

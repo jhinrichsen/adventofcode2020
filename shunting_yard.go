@@ -6,18 +6,18 @@ import (
 	"strings"
 )
 
-// OperatorConfiguration holds custom operator precedence rules.
-type OperatorConfiguration map[string]OpCfg
+// operatorConfiguration holds custom operator precedence rules.
+type operatorConfiguration map[string]opCfg
 
-// OpCfg configures operator metadata.
-type OpCfg struct {
+// opCfg configures operator metadata.
+type opCfg struct {
 	precedence       int
 	rightAssociative bool
 }
 
-// DefaultOperatorConfiguration configures the standard math set such as *
+// defaultOperatorConfiguration configures the standard math set such as *
 // before +.
-var DefaultOperatorConfiguration = OperatorConfiguration{
+var defaultOperatorConfiguration = operatorConfiguration{
 	"^": {4, true},
 	"*": {3, false},
 	"/": {3, false},
@@ -25,9 +25,9 @@ var DefaultOperatorConfiguration = OperatorConfiguration{
 	"-": {2, false},
 }
 
-// ShuntingYard will transform an infix expression into reverse polish notation
+// shuntingYard will transform an infix expression into reverse polish notation
 // (RPN).
-func ShuntingYard(infix string, cfg OperatorConfiguration) (rpn string) {
+func shuntingYard(infix string, cfg operatorConfiguration) (rpn string) {
 	var stack []string // holds operators and left parenthesis
 	for _, tok := range strings.Fields(infix) {
 		switch tok {

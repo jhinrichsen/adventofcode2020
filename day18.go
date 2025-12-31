@@ -5,19 +5,19 @@ import (
 	"strings"
 )
 
-var part1Cfg = OperatorConfiguration{
+var part1Cfg = operatorConfiguration{
 	"+": {1, false},
 	"*": {1, false},
 }
 
-var part2Cfg = OperatorConfiguration{
+var part2Cfg = operatorConfiguration{
 	"+": {2, false},
 	"*": {1, false},
 }
 
 // Day18 calculates the result of each line, and returns the sum of all lines.
 func Day18(lines []string, part1 bool) (int, error) {
-	var cfg OperatorConfiguration
+	var cfg operatorConfiguration
 	if part1 {
 		cfg = part1Cfg
 	} else {
@@ -29,7 +29,7 @@ func Day18(lines []string, part1 bool) (int, error) {
 		line = strings.ReplaceAll(line, "(", " ( ")
 		line = strings.ReplaceAll(line, ")", " ) ")
 
-		line = ShuntingYard(line, cfg)
+		line = shuntingYard(line, cfg)
 		n, err := evalRPN(line)
 		if err != nil {
 			return 0, fmt.Errorf("line %d: %q results in %w",

@@ -6,49 +6,49 @@ import (
 )
 
 const (
-	// LeftTurn rotates a complex number by 90 degree anticlockwise when multiplied.
-	LeftTurn = 0 + 1i
+	// leftTurn rotates a complex number by 90 degree anticlockwise when multiplied.
+	leftTurn = 0 + 1i
 
-	// RightTurn rotates a complex number by 90 degree clockwise when multiplied.
-	RightTurn = 0 - 1i
+	// rightTurn rotates a complex number by 90 degree clockwise when multiplied.
+	rightTurn = 0 - 1i
 )
 
-// Day12 holds a parsed puzzle input.
-type Day12 struct {
+// day12State holds a parsed puzzle input.
+type day12State struct {
 	Position     complex128
 	Direction    complex128
-	Instructions []Instruction
+	Instructions []instruction
 }
 
-// Instruction holds one line of puzzle input, e.g. "N10".
-type Instruction struct {
+// instruction holds one line of puzzle input, e.g. "N10".
+type instruction struct {
 	Action byte
 	Value  uint
 }
 
-func (a Instruction) String() string {
+func (a instruction) String() string {
 	return fmt.Sprintf("%c%d", a.Action, a.Value)
 }
 
 // NewDay12 parses puzzle input for day 12.
-func NewDay12(lines []string) (Day12, error) {
+func NewDay12(lines []string) (day12State, error) {
 	position := 0 + 0i
 	direction := 1 + 0i // "The ship starts by facing east."
-	var is []Instruction
+	var is []instruction
 	for i := range lines {
 		action := lines[i][0]
 		s := lines[i][1:]
 		value, err := strconv.Atoi(s)
 		if err != nil {
-			return Day12{}, fmt.Errorf("line %d: error parsing number %q", i, s)
+			return day12State{}, fmt.Errorf("line %d: error parsing number %q", i, s)
 		}
-		is = append(is, Instruction{action, uint(value)})
+		is = append(is, instruction{action, uint(value)})
 	}
-	return Day12{position, direction, is}, nil
+	return day12State{position, direction, is}, nil
 }
 
 // Part1 processes a puzzle according to the rules of first part.
-func (a *Day12) Part1() {
+func (a *day12State) Part1() {
 	for _, in := range a.Instructions {
 		f := float64(in.Value)
 
@@ -64,12 +64,12 @@ func (a *Day12) Part1() {
 		case 'L':
 			// turn left n times
 			for n := in.Value / 90; n > 0; n-- {
-				a.Direction *= LeftTurn
+				a.Direction *= leftTurn
 			}
 		case 'R':
 			// turn right n times
 			for n := in.Value / 90; n > 0; n-- {
-				a.Direction *= RightTurn
+				a.Direction *= rightTurn
 			}
 		case 'F':
 			a.Position += a.Direction * complex(f, 0)
@@ -78,7 +78,7 @@ func (a *Day12) Part1() {
 }
 
 // Part2 processes a puzzle according to the rules of second part.
-func (a *Day12) Part2() {
+func (a *day12State) Part2() {
 	waypoint := 10 + 1i // "waypoint starts 10 units east and 1 unit north"
 	for _, in := range a.Instructions {
 		f := float64(in.Value)
@@ -94,12 +94,12 @@ func (a *Day12) Part2() {
 		case 'L':
 			// turn left n times
 			for n := in.Value / 90; n > 0; n-- {
-				waypoint *= LeftTurn
+				waypoint *= leftTurn
 			}
 		case 'R':
 			// turn right n times
 			for n := in.Value / 90; n > 0; n-- {
-				waypoint *= RightTurn
+				waypoint *= rightTurn
 			}
 		case 'F':
 			scale := complex(float64(in.Value), 0)
@@ -110,12 +110,12 @@ func (a *Day12) Part2() {
 
 // ManhattanDistance starts at (0,0), executes all instructions and return the
 // resulting distance.
-func (a Day12) ManhattanDistance() uint {
-	return Abs(real(a.Position)) + Abs(imag(a.Position))
+func (a day12State) ManhattanDistance() uint {
+	return abs(real(a.Position)) + abs(imag(a.Position))
 }
 
-// Abs returns absolute value.
-func Abs(f float64) uint {
+// abs returns absolute value.
+func abs(f float64) uint {
 	n := int(f)
 	if n < 0 {
 		return uint(-n)

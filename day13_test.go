@@ -152,7 +152,7 @@ func TestDay13Part2CheckCRTCallingConvention(t *testing.T) {
 		as = append(as, big.NewInt(int64(rem)))
 		ks = append(ks, big.NewInt(int64(bus)))
 	}
-	got, err := CRT(as, ks)
+	got, err := crt(as, ks)
 	if err != nil {
 		t.Fatal(err)
 	}

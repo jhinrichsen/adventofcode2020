@@ -34,9 +34,9 @@ func Day01(buf []byte, part1 bool) uint {
 	return 0
 }
 
-// Day01Concurrent has no error checking on valid digits 0..9.
+// day01Concurrent has no error checking on valid digits 0..9.
 // garbage in, garbage out
-func Day01Concurrent(buf []byte, part1 bool) uint {
+func day01Concurrent(buf []byte, part1 bool) uint {
 	c := make(chan uint)
 	go func() {
 		var n uint
@@ -82,17 +82,17 @@ func Day01Concurrent(buf []byte, part1 bool) uint {
 }
 
 // Zero-cost pull iterator (no goroutines, no callback).
-type NumIter struct {
+type numIter struct {
 	b    []byte
 	i    int
 	done bool
 }
 
-func NewNumIter(b []byte) NumIter { return NumIter{b: b} }
+func newNumIter(b []byte) numIter { return numIter{b: b} }
 
 // Next returns the next number from the input buffer.
 // The last line must be newline terminated.
-func (it *NumIter) Next() (uint, bool) {
+func (it *numIter) Next() (uint, bool) {
 	if it.done {
 		return 0, false
 	}
@@ -108,10 +108,10 @@ func (it *NumIter) Next() (uint, bool) {
 	return 0, false
 }
 
-// Day01Pull uses streamable iter to return early on first match without parsing complete input.
-func Day01Pull(buf []byte, part1 bool) uint {
+// day01Pull uses streamable iter to return early on first match without parsing complete input.
+func day01Pull(buf []byte, part1 bool) uint {
 	var maxDim = len(buf) / 2 // single digit + newline
-	seq := NewNumIter(buf)
+	seq := newNumIter(buf)
 	if part1 {
 		seen := make(map[uint]struct{}, maxDim)
 		for n, ok := seq.Next(); ok; n, ok = seq.Next() {
@@ -136,58 +136,6 @@ func Day01Pull(buf []byte, part1 bool) uint {
 			pairs[n+v] = n * v
 		}
 		vals = append(vals, n)
-	}
-	return 0
-}
-
-// Day01Array parses once and returns either Part 1 (two-sum to 2020) or Part 2 (three-sum to 2020).
-// Numbers are from an “expense report”, therefore it is safe to assume positive decimal integers.
-// Any n > target cannot contribute and is skipped.
-func Day01Array(buf []byte, part1 bool) uint {
-	const target uint = 2020
-	var n uint
-
-	if part1 {
-		var seen [target + 1]bool // [0..target] inclusive
-		for _, c := range buf {
-			if c != '\n' {
-				n = n*10 + uint(c-'0')
-				continue
-			}
-			if n <= target { // safe pruning
-				r := target - n
-				if seen[r] {
-					return n * r
-				}
-				seen[n] = true
-			}
-			n = 0
-		}
-		return 0
-	}
-
-	// Part 2: running pair sums (sum -> product) and values seen so far.
-	pairs := make(map[uint]uint, 256)
-	vals := make([]uint, 0, 128)
-
-	for i := 0; i < len(buf); i++ {
-		c := buf[i]
-		if c != '\n' {
-			n = n*10 + uint(c-'0')
-			continue
-		}
-		if n <= target { // safe pruning
-			if prod, ok := pairs[target-n]; ok {
-				return prod * n
-			}
-			for _, v := range vals {
-				if s := n + v; s <= target {
-					pairs[s] = n * v
-				}
-			}
-			vals = append(vals, n)
-		}
-		n = 0
 	}
 	return 0
 }

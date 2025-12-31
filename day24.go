@@ -123,7 +123,7 @@ func (a *Day24) initDenseGrid(margin int) {
 
 // step performs one Game of Life step using C6Indices.
 func (a *Day24) step() {
-	g := Grid{W: a.w, H: a.h}
+	g := grid{W: a.w, H: a.h}
 	for idx, nbrs := range g.C6Indices() {
 		var count int
 		for nidx := range nbrs {

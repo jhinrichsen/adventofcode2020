@@ -17,13 +17,13 @@ var day18Examples = []struct {
 
 func TestDay18Examples(t *testing.T) {
 	f := func(t *testing.T, part1 bool, infix string, want int) {
-		var cfg OperatorConfiguration
+		var cfg operatorConfiguration
 		if part1 {
 			cfg = part1Cfg
 		} else {
 			cfg = part2Cfg
 		}
-		rpn := ShuntingYard(infix, cfg)
+		rpn := shuntingYard(infix, cfg)
 		got, err := evalRPN(rpn)
 		if err != nil {
 			t.Fatal(err)

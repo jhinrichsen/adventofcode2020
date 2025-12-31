@@ -5,14 +5,14 @@ import (
 	"math/big"
 )
 
-// CRT solves simultaneous congruences, also known as the Chinese Remainder
+// crt solves simultaneous congruences, also known as the Chinese Remainder
 // Theoreom.
 //
 // x ≡ a₁ ( mod n₁ )
 // x ≡ a₂ ( mod n₂ )
 // ⋮
 // x ≡ aₖ ( mod nₖ )
-func CRT(a, n []*big.Int) (*big.Int, error) {
+func crt(a, n []*big.Int) (*big.Int, error) {
 	var one = big.NewInt(1)
 
 	p := new(big.Int).Set(n[0])

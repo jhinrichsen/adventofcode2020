@@ -8,20 +8,20 @@ import (
 
 type color = string
 
-// Bag contains 0..n other bags.
-type Bag struct {
+// bag contains 0..n other bags.
+type bag struct {
 	N     uint
 	Color color
 }
 
-// Bags of a certain color contain n other bags.
-type Bags map[color]map[Bag]struct{}
+// bags of a certain color contain n other bags.
+type bags map[color]map[bag]struct{}
 
 // NewDay07 parses one input line in the form "light red bags contain 1 bright
 // white bag, 2 muted yellow bags.".
 // Bags that contain no other bags are dismissed.
-func NewDay07(lines []string) (Bags, error) {
-	allBags := make(Bags)
+func NewDay07(lines []string) (bags, error) {
+	allBags := make(bags)
 	for i, line := range lines {
 		fs := strings.Fields(line)
 		if fs[2] != "bags" {
@@ -36,7 +36,7 @@ func NewDay07(lines []string) (Bags, error) {
 
 		s := strings.Join(fs[4:], " ")
 		ps := strings.Split(s, ",")
-		bags := make(map[Bag]struct{})
+		bags := make(map[bag]struct{})
 		for j := range ps {
 			fs := strings.Fields(ps[j])
 			if len(fs) != 4 {
@@ -48,7 +48,7 @@ func NewDay07(lines []string) (Bags, error) {
 				return allBags, fmt.Errorf("line %d: cannot convert number of %d. bag: %q", i, j, ps[0])
 			}
 			color := fs[1] + " " + fs[2]
-			bags[Bag{uint(n), color}] = struct{}{}
+			bags[bag{uint(n), color}] = struct{}{}
 		}
 		allBags[keyColor] = bags
 	}
@@ -57,7 +57,7 @@ func NewDay07(lines []string) (Bags, error) {
 
 // Day7Part1 returns number of bag colors that can eventually contain at least one
 // shiny gold bag.
-func Day7Part1(bags Bags) uint {
+func Day7Part1(bags bags) uint {
 	// Build inverted index: inner color -> list of outer colors that contain it
 	containedBy := make(map[color][]color)
 	for outer, contents := range bags {
@@ -83,7 +83,7 @@ func Day7Part1(bags Bags) uint {
 }
 
 // Day7Part2 returns number of bags embedded in a shiny gold bag.
-func Day7Part2(bags Bags) uint {
+func Day7Part2(bags bags) uint {
 	const theBag = "shiny gold"
 
 	resolve1 := func(symbol string) []string { // resolve 1 symbol into its inner bags
@@ -139,7 +139,7 @@ poorMansTailCallOptimization:
 	}
 
 	// infix -> rpn
-	rpn := ShuntingYard(strings.Join(ops, " "), DefaultOperatorConfiguration)
+	rpn := shuntingYard(strings.Join(ops, " "), defaultOperatorConfiguration)
 	n, err := evalRPN(rpn)
 	if err != nil {
 		// cannot evaluate an expression we constructed ourself
