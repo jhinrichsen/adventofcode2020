@@ -1,61 +1,27 @@
 package aoc2020
 
 // Day15 returns the n-th number of the starting sequence.
-// Optimized to O(idx1) time with O(U) memory, where U is the range of numbers encountered.
-// Uses a dynamically grown slice of last-seen indices to avoid map and slice allocations.
+// Optimized to O(idx1) time with O(idx1) memory.
+// Pre-allocates full array to avoid bounds checks and function call overhead in hot loop.
 func Day15(numbers []uint, idx1 int) uint {
-	// lastSeen[v] = last index where value v appeared (0-based). -1 means unseen.
-	// We start with a modest capacity; will grow as needed when values exceed current length.
-	lastSeen := make([]int, 1)
-	for i := range lastSeen {
-		lastSeen[i] = -1
-	}
+	// lastSeen[v] = last index where value v appeared (1-based to avoid -1 sentinel).
+	// 0 means unseen. Pre-allocate for all possible values.
+	lastSeen := make([]int32, idx1)
 
-	ensureCap := func(v int) {
-		if v < len(lastSeen) {
-			return
-		}
-		// Grow to at least v+1. Double strategy for amortized O(1).
-		newLen := len(lastSeen)
-		if newLen == 0 {
-			newLen = 1
-		}
-		for newLen <= v {
-			newLen *= 2
-		}
-		// Cap upper bound to idx1+1 to avoid runaway growth (v won't exceed idx1 in AoC15).
-		if newLen > idx1+1 {
-			newLen = idx1 + 1
-		}
-		old := lastSeen
-		lastSeen = make([]int, newLen)
-		copy(lastSeen, old)
-		for i := len(old); i < newLen; i++ {
-			lastSeen[i] = -1
-		}
-	}
-
-	// Seed initial numbers except last; track last number spoken
-	var last uint
+	// Seed initial numbers except last
 	for i := 0; i < len(numbers)-1; i++ {
-		v := int(numbers[i])
-		ensureCap(v)
-		lastSeen[v] = i
+		lastSeen[numbers[i]] = int32(i + 1) // 1-based
 	}
-	last = numbers[len(numbers)-1]
+	last := int(numbers[len(numbers)-1])
 
 	for i := len(numbers); i < idx1; i++ {
-		v := int(last)
-		ensureCap(v)
-		prev := lastSeen[v]
-		var next uint
-		if prev == -1 {
-			next = 0
+		prev := lastSeen[last]
+		lastSeen[last] = int32(i) // store current position (1-based: i = i-1+1)
+		if prev == 0 {
+			last = 0
 		} else {
-			next = uint((i - 1) - prev)
+			last = i - int(prev)
 		}
-		lastSeen[v] = i - 1
-		last = next
 	}
-	return last
+	return uint(last)
 }

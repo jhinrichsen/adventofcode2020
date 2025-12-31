@@ -226,20 +226,85 @@ func orientations(g []string) [][]string {
 	return res
 }
 
-func topBorder(g []string) string    { return northBorder(g) }
-func leftBorder(g []string) string   { return westBorder(g) }
-func rightBorder(g []string) string  { return eastBorder(g) }
-func bottomBorder(g []string) string { return southBorder(g) }
+// tileVariant holds pre-computed border IDs for fast matching during assembly.
+type tileVariant struct {
+	id                         uint
+	data                       []string
+	topID, rightID, bottomID, leftID uint
+}
+
+// borderIDTop computes border ID for top edge without allocations.
+func borderIDTop(g []string) uint {
+	var n uint
+	line := g[0]
+	for i := 0; i < len(line); i++ {
+		n = n << 1
+		if line[i] == '#' {
+			n++
+		}
+	}
+	return n
+}
+
+// borderIDBottom computes border ID for bottom edge without allocations.
+func borderIDBottom(g []string) uint {
+	var n uint
+	line := g[len(g)-1]
+	for i := 0; i < len(line); i++ {
+		n = n << 1
+		if line[i] == '#' {
+			n++
+		}
+	}
+	return n
+}
+
+// borderIDLeft computes border ID for left edge without allocations.
+func borderIDLeft(g []string) uint {
+	var n uint
+	for i := 0; i < len(g); i++ {
+		n = n << 1
+		if g[i][0] == '#' {
+			n++
+		}
+	}
+	return n
+}
+
+// borderIDRight computes border ID for right edge without allocations.
+func borderIDRight(g []string) uint {
+	var n uint
+	w := len(g[0]) - 1
+	for i := 0; i < len(g); i++ {
+		n = n << 1
+		if g[i][w] == '#' {
+			n++
+		}
+	}
+	return n
+}
 
 // assemble places all tiles on a puzzle grid using backtracking so that all borders match.
 func (a Day20) assemble() ([][]tileGrid, error) {
-	// Prepare all orientation variants for each tile ID
-	type variants struct{ grids [][]string }
-	all := make(map[uint]variants)
+	// Pre-compute all orientation variants with border IDs for each tile
+	type variantList struct{ variants []tileVariant }
+	all := make(map[uint]variantList)
 	ids := make([]uint, 0, len(a.grid))
 	for id, g := range a.grid {
 		ids = append(ids, id)
-		all[id] = variants{grids: orientations(g)}
+		orients := orientations(g)
+		vars := make([]tileVariant, len(orients))
+		for i, og := range orients {
+			vars[i] = tileVariant{
+				id:       id,
+				data:     og,
+				topID:    borderIDTop(og),
+				rightID:  borderIDRight(og),
+				bottomID: borderIDBottom(og),
+				leftID:   borderIDLeft(og),
+			}
+		}
+		all[id] = variantList{variants: vars}
 	}
 
 	// grid size
@@ -249,9 +314,9 @@ func (a Day20) assemble() ([][]tileGrid, error) {
 		return nil, fmt.Errorf("tile count %d not a perfect square", n)
 	}
 
-	placed := make([][]tileGrid, size)
+	placed := make([][]tileVariant, size)
 	for i := range placed {
-		placed[i] = make([]tileGrid, size)
+		placed[i] = make([]tileVariant, size)
 	}
 	used := make(map[uint]struct{})
 
@@ -266,22 +331,22 @@ func (a Day20) assemble() ([][]tileGrid, error) {
 			if _, ok := used[id]; ok {
 				continue
 			}
-			for _, g := range all[id].grids {
-				// Check top neighbor
+			for _, v := range all[id].variants {
+				// Check top neighbor using pre-computed IDs
 				if r > 0 {
-					up := placed[r-1][c].data
-					if topBorder(g) != bottomBorder(up) {
+					up := placed[r-1][c]
+					if v.topID != up.bottomID {
 						continue
 					}
 				}
-				// Check left neighbor
+				// Check left neighbor using pre-computed IDs
 				if c > 0 {
-					left := placed[r][c-1].data
-					if leftBorder(g) != rightBorder(left) {
+					left := placed[r][c-1]
+					if v.leftID != left.rightID {
 						continue
 					}
 				}
-				placed[r][c] = tileGrid{id: id, data: g}
+				placed[r][c] = v
 				used[id] = struct{}{}
 				if dfs(pos + 1) {
 					return true
@@ -295,7 +360,16 @@ func (a Day20) assemble() ([][]tileGrid, error) {
 	if !dfs(0) {
 		return nil, fmt.Errorf("failed to assemble image")
 	}
-	return placed, nil
+
+	// Convert to tileGrid for compatibility
+	result := make([][]tileGrid, size)
+	for i := range result {
+		result[i] = make([]tileGrid, size)
+		for j := range result[i] {
+			result[i][j] = tileGrid{id: placed[i][j].id, data: placed[i][j].data}
+		}
+	}
+	return result, nil
 }
 
 // removeBorders trims the outermost border from each tile and stitches to a single image.

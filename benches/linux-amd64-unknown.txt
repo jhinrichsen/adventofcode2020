@@ -1,0 +1,17 @@
+goos: linux
+goarch: amd64
+pkg: gitlab.com/jhinrichsen/adventofcode2020
+cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics     
+BenchmarkDay01Part1-16    	  114163	     11051 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay01Part2-16    	    4064	    271103 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay02Part1-16    	   61635	     19276 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay02Part2-16    	  373437	      3318 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part1-16    	  926272	      1250 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part2-16    	  221508	      5835 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay04Part2-16    	    2767	    445773 ns/op	  199104 B/op	    3504 allocs/op
+BenchmarkDay05Part1-16    	  100150	     12300 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay06Part1-16    	    1567	    792923 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay06Part2-16    	    1341	    902220 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay07Part1-16    	      14	  74848979 ns/op	  588361 B/op	    6436 allocs/op
+BenchmarkDay07Part2-16    	     849	   1387695 ns/op	  677392 B/op	    6693 allocs/op
+BenchmarkDay08Part1-16    	   34380	     34353 ns/op	   16104 B/op	     222 allocs/op

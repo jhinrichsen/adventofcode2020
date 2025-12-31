@@ -175,6 +175,21 @@ Blattschuss, Blattschuss.
 
 Coming back to part #2, reusing the shunting yard algorithm from day 18.
 
+=== Optimization (2025)
+
+Part 1 originally used a fixed-point iteration approach with O(n²) complexity, scanning all bag rules repeatedly until no new containing bags were found. CPU profiling showed 57% of time spent in map iteration.
+
+Replaced with an inverted index + BFS approach:
+1. Build inverted index: inner color → list of outer colors that contain it
+2. BFS from "shiny gold" outward through the containment graph
+
+|===
+| Metric | Before | After | Improvement
+
+| Time (Part 1) | 38 ms | 636 µs | 60x faster
+| Allocations | 6,436 | 7,537 | Similar (index construction)
+|===
+
 == Day 8: Handheld Halting
 
 Blattschuss.
@@ -249,23 +264,17 @@ Blattschuss. Blattschuss.
 
 Started implementation using arrays and indices, but soon ran out of control with zero-based versus one-based and my beloved off-by-one. Restarted using a map, runs like a charm.
 
-No changes for part 2, benchmarks look ok:
+=== Optimization (2025)
 
-====
-----
-BenchmarkDay15Part2/[0_3_6]-8         	       1	7025673926 ns/op	1723750824 B/op	13671118 allocs/op
-BenchmarkDay15Part2/[1_3_2]-8         	       1	6637869463 ns/op	1725309776 B/op	13670596 allocs/op
-BenchmarkDay15Part2/[2_1_3]-8         	       1	7122904051 ns/op	1725006832 B/op	13670445 allocs/op
-BenchmarkDay15Part2/[1_2_3]-8         	       1	6876302588 ns/op	1724477424 B/op	13670918 allocs/op
-BenchmarkDay15Part2/[2_3_1]-8         	       1	7039378239 ns/op	1723657952 B/op	13669432 allocs/op
-BenchmarkDay15Part2/[3_2_1]-8         	       1	6679612463 ns/op	1724078544 B/op	13669214 allocs/op
-BenchmarkDay15Part2/[3_1_2]-8         	       1	6478310634 ns/op	1724842464 B/op	13671933 allocs/op
-----
-====
+Replaced map with pre-allocated int32 array for O(1) lookups. Since values are always less than idx1 (30 million), we pre-allocate the full array to avoid bounds checks and use int32 to halve memory usage.
 
-That's about 6 to 7 seconds per sample.
-I expect interesting solutions from the guys that really squeeze for performance.
-Will be hard to come up with a O(1), i guess.
+|===
+| Metric | Before | After | Improvement
+
+| Time (Part 2) | 6.5 s | 362 ms | 18x faster
+| Memory | 1.7 GB | 120 MB | 14x less
+| Allocations | 13.6M | 1 | 13.6M fewer
+|===
 
 == Day 16: Ticket Translation
 
@@ -340,6 +349,23 @@ BenchmarkDay20Part1-8   	     307	   3722067 ns/op	  335614 B/op	    4964 allocs
 ====
 
 3 ms, including loading puzzle input, finding corners, and validating expected result.
+
+=== Part 2 Optimization (2025)
+
+CPU profiling revealed that 70% of Part 2 runtime was spent in `verticalBorder()` creating string representations during backtracking tile assembly. Each border comparison allocated new strings.
+
+Replaced string-based border matching with pre-computed numeric border IDs:
+1. Pre-compute all 8 orientations for each tile at startup
+2. Calculate border IDs (binary representation of `#`/`.` patterns) for all edges
+3. During assembly, compare uint IDs instead of strings
+
+|===
+| Metric | Before | After | Improvement
+
+| Time (Part 2) | 198 ms | 10.9 ms | 18x faster
+| Memory | 96 MB | 1 MB | 90x less
+| Allocations | 8M | 31K | 250x fewer
+|===
 
 == Day 21: Allergen Assessment
 
@@ -449,17 +475,12 @@ Unless you produce garbage, there's nothing to collect:
 BenchmarkDay23Example10-8     	 2150487	       582 ns/op	       0 B/op	       0 allocs/op
 BenchmarkDay23Example100-8    	  218787	      5099 ns/op	       0 B/op	       0 allocs/op
 BenchmarkDay23-8              	  217854	      4785 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay23_10_000_000-8   	       3	 447351347 ns/op	       0 B/op	       0 allocs/op
 ----
 ====
 
 The first example (10 moves) executes in 582 _nanoseconds_, that's 0.6μs, or 0.0006 milliseconds.
-Not optimized yet.
 
-Part #2 obviously picks a number range that is too high to compute (1 million cups, 10 million moves).
-With runtime performance like this (10 million moves for 10 cups in 0.5s), i'm tempted to number crunch part #2.
-The algorithm should be O(n), so 50.000s which is equal to half a day.
-Longer than Eric's usual runtime promise, but hey.
+Part 2 scales to 1 million cups and 10 million moves using an array-backed linked list for O(1) operations per move. The `next[]` array stores the clockwise neighbor of each cup label, enabling constant-time pickup and splice operations.
 
 == Day 24: Lobby Layout
 
@@ -502,51 +523,51 @@ goos: linux
 goarch: amd64
 pkg: gitlab.com/jhinrichsen/adventofcode2020
 cpu: AMD Ryzen 7 7840HS w/ Radeon 780M Graphics
-BenchmarkDay01Part1-16    	  223525	      5100 ns/op	   18472 B/op	       3 allocs/op
-BenchmarkDay01Part2-16    	   10000	    112695 ns/op	   18472 B/op	       3 allocs/op
-BenchmarkDay02Part1-16    	  132546	      8934 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay02Part2-16    	  803187	      1528 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay03Part1-16    	 1607378	       753.6 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay03Part2-16    	  314352	      3768 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay04Part2-16    	    6130	    186646 ns/op	  199104 B/op	    3504 allocs/op
-BenchmarkDay05Part1-16    	  207204	      5616 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay06Part1-16    	    2856	    406834 ns/op	   95184 B/op	    2489 allocs/op
-BenchmarkDay06Part2-16    	    2396	    484886 ns/op	   95184 B/op	    2489 allocs/op
-BenchmarkDay07Part1-16    	      37	  38416665 ns/op	  588360 B/op	    6436 allocs/op
-BenchmarkDay07Part2-16    	    2246	    529484 ns/op	  677519 B/op	    6693 allocs/op
-BenchmarkDay08Part1-16    	   82772	     16123 ns/op	   16104 B/op	     222 allocs/op
-BenchmarkDay08Part2-16    	   85209	     13122 ns/op	   12848 B/op	     212 allocs/op
-BenchmarkDay09Part1-16    	   45751	     26495 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay09Part2-16    	    6410	    180569 ns/op	       0 B/op	       0 allocs/op
-BenchmarkDay11Part1-16    	     297	   3915520 ns/op	   36811 B/op	     110 allocs/op
-BenchmarkDay11Part2-16    	      50	  22618299 ns/op	   36827 B/op	     110 allocs/op
-BenchmarkDay12Part1-16    	   35974	     31928 ns/op	   71708 B/op	     801 allocs/op
-BenchmarkDay13Part1-16    	  175358	      6853 ns/op	     872 B/op	       6 allocs/op
-BenchmarkDay13Part2-16    	   95488	     10581 ns/op	    8029 B/op	     105 allocs/op
-BenchmarkDay14Part1-16    	   18978	     63628 ns/op	   34152 B/op	     491 allocs/op
-BenchmarkDay14Part2-16    	      43	  29108422 ns/op	20284263 B/op	  161171 allocs/op
-BenchmarkDay15Part1-16    	  175717	      7225 ns/op	   32736 B/op	      10 allocs/op
-BenchmarkDay15Part2-16    	       2	 788202172 ns/op	508436448 B/op	      24 allocs/op
-BenchmarkDay16Part1-16    	     781	   1321237 ns/op	 1671416 B/op	    2513 allocs/op
-BenchmarkDay16Part2-16    	     480	   2556748 ns/op	 1691559 B/op	    2596 allocs/op
-BenchmarkDay17Part1-16    	    1202	   1001564 ns/op	  891864 B/op	     147 allocs/op
-BenchmarkDay18Part1-16    	    1354	    871958 ns/op	  931683 B/op	   15359 allocs/op
-BenchmarkDay18Part2-16    	    1407	    888407 ns/op	  936588 B/op	   15436 allocs/op
-BenchmarkDay19Part1-16    	     199	   6346152 ns/op	25669521 B/op	    4623 allocs/op
-BenchmarkDay19Part2-16    	      46	  22481734 ns/op	36111029 B/op	   20120 allocs/op
-BenchmarkDay20Part1-16    	    1377	    898676 ns/op	  294665 B/op	    4664 allocs/op
-BenchmarkDay20Part2-16    	      12	 197939841 ns/op	96532342 B/op	 7991779 allocs/op
-BenchmarkDay21Part1-16    	    3931	    300658 ns/op	  405110 B/op	     969 allocs/op
-BenchmarkDay22Part1-16    	   81596	     14195 ns/op	   11064 B/op	     156 allocs/op
-BenchmarkDay22Part2-16    	      15	  72351809 ns/op	16800932 B/op	   71791 allocs/op
-BenchmarkDay23Part2-16    	       5	 226440488 ns/op	 8003664 B/op	       2 allocs/op
-BenchmarkDay24Part1-16    	    6675	    170947 ns/op	  374602 B/op	    2237 allocs/op
-BenchmarkDay24Part2-16    	      88	  13803546 ns/op	  489396 B/op	    2239 allocs/op
+BenchmarkDay01Part1-16    	  243764	      4790 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay01Part2-16    	   10000	    112435 ns/op	   18472 B/op	       3 allocs/op
+BenchmarkDay02Part1-16    	  130416	      9030 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay02Part2-16    	  789385	      1537 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part1-16    	 1603873	       747.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay03Part2-16    	  313024	      4002 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay04Part2-16    	    6093	    183518 ns/op	  199104 B/op	    3504 allocs/op
+BenchmarkDay05Part1-16    	  210368	      5610 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay06Part1-16    	    2808	    409082 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay06Part2-16    	    2548	    470025 ns/op	   95184 B/op	    2489 allocs/op
+BenchmarkDay07Part1-16    	    1738	    636028 ns/op	  690160 B/op	    7537 allocs/op
+BenchmarkDay07Part2-16    	    2274	    533472 ns/op	  677474 B/op	    6693 allocs/op
+BenchmarkDay08Part1-16    	   76083	     14349 ns/op	   16104 B/op	     222 allocs/op
+BenchmarkDay08Part2-16    	   94119	     13992 ns/op	   12845 B/op	     212 allocs/op
+BenchmarkDay09Part1-16    	   44006	     26258 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay09Part2-16    	    8010	    149504 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDay11Part1-16    	     315	   3692740 ns/op	   36806 B/op	     110 allocs/op
+BenchmarkDay11Part2-16    	      52	  21882107 ns/op	   36825 B/op	     110 allocs/op
+BenchmarkDay12Part1-16    	   38139	     31405 ns/op	   71708 B/op	     801 allocs/op
+BenchmarkDay13Part1-16    	  180252	      6622 ns/op	     872 B/op	       6 allocs/op
+BenchmarkDay13Part2-16    	  129460	      9333 ns/op	    8029 B/op	     105 allocs/op
+BenchmarkDay14Part1-16    	   18876	     63130 ns/op	   34152 B/op	     491 allocs/op
+BenchmarkDay14Part2-16    	      42	  28037050 ns/op	20284266 B/op	  161171 allocs/op
+BenchmarkDay15Part1-16    	  300290	      3995 ns/op	    8192 B/op	       1 allocs/op
+BenchmarkDay15Part2-16    	       3	 362190474 ns/op	120004640 B/op	       1 allocs/op
+BenchmarkDay16Part1-16    	     987	   1197489 ns/op	 1671414 B/op	    2512 allocs/op
+BenchmarkDay16Part2-16    	     508	   2303542 ns/op	 1691562 B/op	    2595 allocs/op
+BenchmarkDay17Part1-16    	    1206	    930423 ns/op	  891864 B/op	     147 allocs/op
+BenchmarkDay18Part1-16    	    1478	    798539 ns/op	  931683 B/op	   15359 allocs/op
+BenchmarkDay18Part2-16    	    1538	    864548 ns/op	  936588 B/op	   15436 allocs/op
+BenchmarkDay19Part1-16    	     219	   5507438 ns/op	25670908 B/op	    4623 allocs/op
+BenchmarkDay19Part2-16    	      58	  20489534 ns/op	36524484 B/op	   20134 allocs/op
+BenchmarkDay20Part1-16    	    1365	    862829 ns/op	  294669 B/op	    4664 allocs/op
+BenchmarkDay20Part2-16    	     123	  10941713 ns/op	 1086368 B/op	   31217 allocs/op
+BenchmarkDay21Part1-16    	    3898	    283259 ns/op	  405111 B/op	     969 allocs/op
+BenchmarkDay22Part1-16    	   92055	     13333 ns/op	   11064 B/op	     156 allocs/op
+BenchmarkDay22Part2-16    	      15	  68976226 ns/op	16801087 B/op	   71791 allocs/op
+BenchmarkDay23Part2-16    	       4	 335815908 ns/op	 8003664 B/op	       2 allocs/op
+BenchmarkDay24Part1-16    	    6334	    163116 ns/op	  374604 B/op	    2237 allocs/op
+BenchmarkDay24Part2-16    	      82	  14631478 ns/op	  489400 B/op	    2239 allocs/op
 PASS
-ok  	gitlab.com/jhinrichsen/adventofcode2020	53.849s
+ok  	gitlab.com/jhinrichsen/adventofcode2020	51.604s
 ----
 
-Total: 1431751806.60 ns (1431.752 ms, 1.432 s)
+Total: 882270610.20 ns (882.271 ms, 0.882 s)
 
 == References
 

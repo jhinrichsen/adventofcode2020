@@ -58,26 +58,28 @@ func NewDay07(lines []string) (Bags, error) {
 // Day7Part1 returns number of bag colors that can eventually contain at least one
 // shiny gold bag.
 func Day7Part1(bags Bags) uint {
-	allBags := make(map[color]struct{})
-	allBags["shiny gold"] = struct{}{}
-	changed := true
-	for changed {
-		changed = false
-		for c := range allBags {
-			for outer, w := range bags {
-				for inner := range w {
-					if inner.Color == c {
-						// already recorded?
-						if _, ok := allBags[outer]; !ok {
-							allBags[outer] = struct{}{}
-							changed = true
-						}
-					}
-				}
+	// Build inverted index: inner color -> list of outer colors that contain it
+	containedBy := make(map[color][]color)
+	for outer, contents := range bags {
+		for inner := range contents {
+			containedBy[inner.Color] = append(containedBy[inner.Color], outer)
+		}
+	}
+
+	// BFS from shiny gold outward
+	visited := make(map[color]struct{})
+	queue := []color{"shiny gold"}
+	for len(queue) > 0 {
+		curr := queue[0]
+		queue = queue[1:]
+		for _, outer := range containedBy[curr] {
+			if _, ok := visited[outer]; !ok {
+				visited[outer] = struct{}{}
+				queue = append(queue, outer)
 			}
 		}
 	}
-	return uint(len(allBags)) - 1 // don't count shiny gold itself
+	return uint(len(visited))
 }
 
 // Day7Part2 returns number of bags embedded in a shiny gold bag.
