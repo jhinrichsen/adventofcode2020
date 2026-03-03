@@ -76,13 +76,6 @@ func TestDay13Part2ExamplesBruteForce(t *testing.T) {
 	for _, tt := range day13Part2Examples {
 		id := fmt.Sprintf("%+v", tt.input)
 		t.Run(id, func(t *testing.T) {
-			// skip last example in short testing mode
-			if testing.Short() && tt.want > 10_000_000 {
-				msg := fmt.Sprintf("skipping long running %+v",
-					tt.input)
-				t.Skip(msg)
-			}
-
 			got := Day13Part2BruteForce(tt.input)
 			if tt.want != got {
 				t.Fatalf("want %d but got %d", tt.want, got)
@@ -90,30 +83,6 @@ func TestDay13Part2ExamplesBruteForce(t *testing.T) {
 		})
 	}
 }
-
-/*
-func TestDay13Part2ExamplesCRT(t *testing.T) {
-	for _, tt := range day13Part2Examples {
-		id := fmt.Sprintf("%+v", tt.input)
-		t.Run(id, func(t *testing.T) {
-			// skip last example in short testing mode
-			if testing.Short() && tt.want > 10_000_000 {
-				msg := fmt.Sprintf("skipping long running %+v",
-					tt.input)
-				t.Skip(msg)
-			}
-
-			got, err := Day13Part2CRT(tt.input)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if tt.want != got {
-				t.Fatalf("want %d but got %d", tt.want, got)
-			}
-		})
-	}
-}
-*/
 
 // convert bus lines into remainders.
 func remainders(buses []int) []int {

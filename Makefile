@@ -37,7 +37,7 @@ tidy: ## Format check and lint
 
 .PHONY: test
 test: ## Run all tests
-	$(GO) test -short
+	$(GO) test -run=Day..Part.$
 
 $(BENCH_FILE): .cpuname $(wildcard *.go)
 	@mkdir -p benches
